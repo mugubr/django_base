@@ -12,12 +12,16 @@ This is a modern base project for Django development, fully configured to run in
   <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
   <img src="https://img.shields.io/badge/DRF-A30000?style=for-the-badge&logo=django-rest-framework&logoColor=white" alt="Django REST Framework">
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx">
+  <img src="https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white" alt="Gunicorn">
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/Ruff-D7B092?style=for-the-badge&logo=ruff&logoColor=black" alt="Ruff">
   <img src="https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white" alt="Prometheus">
   <img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white" alt="Grafana">
 </div>
 
+-   **Web Server:** Nginx
+-   **Application Server:** Gunicorn
 -   **Backend:** Django, Django REST Framework
 -   **Database:** PostgreSQL
 -   **Package Manager:** `uv`
@@ -28,56 +32,67 @@ This is a modern base project for Django development, fully configured to run in
 -   **Testing:** `django.test` with `coverage`
 -   **Observability:** `Prometheus` & `Grafana`
 -   **Environment Variables:** `python-decouple`
--   **Development Server:** `django-extensions` with `watchdog` for hot-reloading.
+-   **Development Tools:** `django-extensions` with `watchdog` for hot-reloading.
 
-### 🏁 Getting Started (Docker)
+### 🏁 Running the Project (Docker)
 
-#### Prerequisites
+#### 💻 Development Mode (`dev` profile)
 
--   Docker
--   Docker Compose
+This mode is for active development. It uses Django's development server with hot-reloading and provides detailed logs.
 
-#### Steps
-
-1.  **Clone the Repository:**
+1.  **First-Time Setup:**
     ```bash
-    git clone <your-repository-url>
-    cd django_base
-    ```
-
-2.  **Create the Environment File:**
-    Copy the example file. The default values are suitable for development.
-    ```bash
+    # Clone the repo and enter the directory
+    git clone <your-repository-url> && cd django_base
+    
+    # Create the environment file
     cp .env.example .env
+    
+    # Build the images
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev build
+    
+    # Run database migrations (using 'run' for a temporary container)
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm web python manage.py migrate
+    
+    # Create a superuser
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm web python manage.py createsuperuser
     ```
 
-3.  **Build Images and Start Containers:**
+2.  **To Start the Development Server:**
+    *This command will attach to your terminal and show live logs. Press `Ctrl + C` to stop.*
     ```bash
-    docker-compose build
-    docker-compose up -d
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up
     ```
 
-4.  **Run Database Migrations:**
+#### 🚀 Production Mode (`prod` profile)
+
+This mode runs the production-like stack with Nginx and Gunicorn.
+
+1.  **To Start the Production Stack:**
     ```bash
-    docker-compose exec web python manage.py migrate
+    docker-compose --profile prod up -d --build
     ```
 
-5.  **Create a Superuser:**
+2.  **Required Commands (after starting):**
     ```bash
-    docker-compose exec web python manage.py createsuperuser
+    # Run migrations
+    docker-compose --profile prod exec web python manage.py migrate
+    # Collect static files for Nginx
+    docker-compose --profile prod exec web python manage.py collectstatic --no-input
     ```
 
-After these steps, your environment will be up and running!
+The application will be available at `http://localhost:8000` with hot-reload enabled.
+
+After these steps, your environment will be running
+-   **Application:** `http://localhost:8000`
 -   **Example API Endpoint:** `http://localhost:8000/api/v1/hello/`
 -   **Django Admin:** `http://localhost:8000/admin`
 -   **Prometheus:** `http://localhost:9090`
--   **Grafana:** `http://localhost:3000` (default login: `admin`/`admin`)
+-   **Grafana:** `http://localhost:3000` (login: `admin`/`admin`)
 
 ---
 
 ### 💻 Local Development (Without Docker)
-
-For running the project directly on your machine.
 
 #### Prerequisites
 
@@ -106,6 +121,8 @@ For running the project directly on your machine.
         source .venv/bin/activate
         # Activate it (Windows PowerShell)
         .venv\Scripts\Activate.ps1
+        # or Windows (Command Prompt)
+        .venv\Scripts\activate.bat
         # Install all dependencies
         uv sync --dev
         ```
@@ -118,6 +135,8 @@ For running the project directly on your machine.
         source .venv/bin/activate
         # Activate it (Windows PowerShell)
         .venv\Scripts\Activate.ps1
+        # or Windows (Command Prompt)
+        .venv\Scripts\activate.bat
         # Install all dependencies from requirements.txt
         pip install -r requirements.txt
         ```
@@ -151,7 +170,7 @@ The `pyproject.toml` file is the source of truth for dependencies. Use the CLI c
 
 1.  **Run the install command inside the `web` container:**
     ```bash
-    # For a PRODUCTION dependency
+    # For a production dependency
     docker-compose exec web uv add "some-package"
 
     # For a development dependency (like a testing tool)
@@ -189,11 +208,14 @@ The `pyproject.toml` file is the source of truth for dependencies. Use the CLI c
 
 #### How to Create a New App
 
-1.  **Run the `startapp` command:**
-    * **Docker:** `docker-compose exec web python manage.py startapp my_new_app`
-    * **Local:** `python manage.py startapp my_new_app`
-2.  Add `'my_new_app'` to the `INSTALLED_APPS` list in `django_base/settings.py`.
-3.  Create a `my_new_app/urls.py` and include its routes in the main `django_base/urls.py`.
+1.  Ensure your **development** environment is running.
+2.  Execute the `startapp` command:
+    ```bash
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec web python manage.py startapp my_new_app
+    ```
+3.  Move the new `my_new_app` folder from the project root into the `src/` directory.
+4.  Add `'my_new_app'` to `INSTALLED_APPS` in `src/django_base/settings.py`.
+5.  Create and configure the app's `urls.py`.
 
 ---
 
@@ -293,12 +315,16 @@ Este é um projeto base moderno para desenvolvimento com Django, totalmente conf
   <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" alt="Django">
   <img src="https://img.shields.io/badge/DRF-A30000?style=for-the-badge&logo=django-rest-framework&logoColor=white" alt="Django REST Framework">
   <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx">
+  <img src="https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white" alt="Gunicorn">
   <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker">
   <img src="https://img.shields.io/badge/Ruff-D7B092?style=for-the-badge&logo=ruff&logoColor=black" alt="Ruff">
   <img src="https://img.shields.io/badge/Prometheus-E6522C?style=for-the-badge&logo=prometheus&logoColor=white" alt="Prometheus">
   <img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white" alt="Grafana">
 </div>
 
+-   **Servidor Web:** Nginx
+-   **Servidor de Aplicação:** Gunicorn
 -   **Backend:** Django, Django REST Framework
 -   **Banco de Dados:** PostgreSQL
 -   **Gerenciador de Pacotes:** `uv`
@@ -309,57 +335,64 @@ Este é um projeto base moderno para desenvolvimento com Django, totalmente conf
 -   **Testes:** `django.test` com `coverage`
 -   **Observabilidade:** `Prometheus` e `Grafana`
 -   **Variáveis de Ambiente:** `python-decouple`
--   **Servidor de Desenvolvimento:** `django-extensions` com `watchdog` para hot-reloading.
+-   **Ferramentas de Desenvolvimento:** `django-extensions` com `watchdog` para hot-reloading.
 
-### 🏁 Configuração Inicial (Docker)
+### 🏁 Executando o Projeto (Docker)
 
-#### Pré-requisitos
+#### 💻 Modo de Desenvolvimento (perfil `dev`)
 
--   Docker
--   Docker Compose
+Este modo é para o desenvolvimento ativo. Ele usa o servidor de desenvolvimento do Django com hot-reloading e logs detalhados.
 
-#### Passos
-
-1.  **Clone o Repositório:**
+1.  **Setup da Primeira Vez:**
     ```bash
-    git clone <url-do-seu-repositorio>
-    cd django_base
-    ```
-
-2.  **Crie o Arquivo de Ambiente:**
-    Copie o arquivo de exemplo. Os valores padrão já funcionam para desenvolvimento.
-    ```bash
+    # Clone o repositório e entre na pasta
+    git clone <url-do-seu-repositorio> && cd django_base
+    
+    # Crie o arquivo de ambiente
     cp .env.example .env
+    
+    # Construa as imagens
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev build
+    
+    # Rode as migrações (usando 'run' para um container temporário)
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm web python manage.py migrate
+    
+    # Crie um superusuário
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml run --rm web python manage.py createsuperuser
     ```
 
-3.  **Construa as Imagens e Inicie os Contêineres:**
+2.  **Para Iniciar o Servidor de Desenvolvimento:**
+    *Este comando vai "prender" seu terminal e mostrar os logs ao vivo. Pressione `Ctrl + C` para parar.*
     ```bash
-    docker-compose build
-    docker-compose up -d
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up
     ```
 
-4.  **Execute as Migrações do Banco de Dados:**
+#### 🚀 Modo de Produção (perfil `prod`)
+
+Este modo executa a stack de produção com Nginx e Gunicorn.
+
+1.  **Para Iniciar a Stack de Produção:**
     ```bash
-    docker-compose exec web python manage.py migrate
+    docker-compose --profile prod up -d --build
     ```
 
-5.  **Crie um Superusuário:**
-    Necessário para acessar o painel de administração do Django.
+2.  **Comandos Necessários (após iniciar):**
     ```bash
-    docker-compose exec web python manage.py createsuperuser
+    # Rodar migrações
+    docker-compose --profile prod exec web python manage.py migrate
+    # Coletar arquivos estáticos para o Nginx
+    docker-compose --profile prod exec web python manage.py collectstatic --no-input
     ```
 
 Após esses passos, seu ambiente estará no ar!
+-   **Aplicação:** `http://localhost:8000`
 -   **Endpoint de API de Exemplo:** `http://localhost:8000/api/v1/hello/`
 -   **Admin do Django:** `http://localhost:8000/admin`
 -   **Prometheus:** `http://localhost:9090`
 -   **Grafana:** `http://localhost:3000` (login: `admin`/`admin`)
-
 ---
 
 ### 💻 Desenvolvimento Local (Sem Docker)
-
-Para rodar o projeto diretamente na sua máquina.
 
 #### Pré-requisitos
 
@@ -388,6 +421,8 @@ Para rodar o projeto diretamente na sua máquina.
         source .venv/bin/activate
         # Ative o ambiente (Windows PowerShell)
         .venv\Scripts\Activate.ps1
+        # ou no Windows (Command Prompt)
+        .venv\Scripts\activate.bat
         # Instale todas as dependências
         uv sync --dev
         ```
@@ -400,6 +435,8 @@ Para rodar o projeto diretamente na sua máquina.
         source .venv/bin/activate
         # Ative o ambiente (Windows PowerShell)
         .venv\Scripts\Activate.ps1
+        # ou no Windows (Command Prompt)
+        .venv\Scripts\activate.bat
         # Instale as dependências a partir do requirements.txt
         pip install -r requirements.txt
         ```
@@ -453,7 +490,7 @@ O arquivo `pyproject.toml` é a fonte da verdade para as dependências. Use os c
     # Para uma dependência de produção
     uv add "nome-do-pacote"
 
-    # Para uma dependência de DESENVOLVIMENTO
+    # Para uma dependência de desenvolvimento
     uv add "nome-do-pacote" --dev
     ```
 * **Usando `Poetry`:**
@@ -471,12 +508,14 @@ O arquivo `pyproject.toml` é a fonte da verdade para as dependências. Use os c
 
 #### Como Criar uma Nova App
 
-1.  **Execute o comando `startapp`:**
-    * **Docker:** `docker-compose exec web python manage.py startapp meu_novo_app`
-    * **Local:** `python manage.py startapp meu_novo_app`
-2.  Adicione `'meu_novo_app'` à lista `INSTALLED_APPS` no arquivo `django_base/settings.py`.
-3.  Crie um arquivo `meu_novo_app/urls.py` e inclua suas rotas no `django_base/urls.py` principal.
-
+1.  **Garanta que seu ambiente de desenvolvimento esteja rodando.**
+2.  Execute o comando `startapp`:
+    ```bash
+    docker-compose -f docker-compose.yml -f docker-compose.dev.yml exec web python manage.py startapp meu_novo_app
+    ```
+3.  Mova a nova pasta `meu_novo_app` da raiz do projeto para dentro do diretório `src/`.
+4.  Adicione `'meu_novo_app'` à lista `INSTALLED_APPS` no arquivo `src/django_base/settings.py`.
+5.  Crie e configure o arquivo `urls.py` da sua nova app, e inclua-o no `urls.py` principal.
 ---
 
 ### 🚀 Comandos do Dia a Dia (Docker)

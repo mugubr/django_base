@@ -4,7 +4,7 @@ from decouple import Csv, config
 
 # Path to the project's root directory.
 # Caminho para o diretório raiz do projeto.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Secret key for cryptographic signing. Keep this secret!
 # Chave secreta para assinaturas criptográficas. Mantenha em segredo!
@@ -79,6 +79,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "django_base.wsgi.application"
+ASGI_APPLICATION = "django_base.asgi.application"
 
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 DATABASES = {
@@ -87,9 +88,8 @@ DATABASES = {
         "NAME": config("POSTGRES_DB"),
         "USER": config("POSTGRES_USER"),
         "PASSWORD": config("POSTGRES_PASSWORD"),
-        "HOST": "db",
-        # localhost for local development/localhost para desenvolvimento local
-        "PORT": 5432,
+        "HOST": config("POSTGRES_HOST", default="db"),
+        "PORT": config("POSTGRES_PORT", default=5432, cast=int),
     }
 }
 
@@ -100,13 +100,13 @@ AUTH_PASSWORD_VALIDATORS = [
         "UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation." "MinimumLengthValidator",
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation." "CommonPasswordValidator",
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation." "NumericPasswordValidator",
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 # Internationalization / Internacionalização
@@ -121,7 +121,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images) / Arquivos estáticos (CSS, JavaScript, Imagens)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-STATIC_URL = "static/"
+STATIC_URL = "staticfiles/"
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = "mediafiles/"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

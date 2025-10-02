@@ -15,17 +15,20 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    profiles: ["prod", "dev"]
 
   web:
     build: .
-    container_name: django_web
-    command: /app/.venv/bin/python manage.py runserver_plus 0.0.0.0:8000
+    container_name: django_web_prod
+    command: /app/.venv/bin/gunicorn django_base.wsgi:application --bind 0.0.0.0:8000
+    profiles: ["prod"]
     volumes:
-      - .:/app
+      - ./src:/app/src
       - venv_data:/app/.venv
-    ports:
-      - "8000:8000"
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
     environment:
+      - PYTHONPATH=/app/src
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -40,10 +43,12 @@ services:
     build: .
     container_name: django_qcluster
     command: /app/.venv/bin/python manage.py qcluster
+    profiles: ["prod", "dev"]
     volumes:
-      - .:/app
+      - ./src:/app/src
       - venv_data:/app/.venv
     environment:
+      - PYTHONPATH=/app/src
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -56,9 +61,22 @@ services:
       db:
         condition: service_healthy
 
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    profiles: ["prod"]
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    ports:
+      - "8000:80"
+    depends_on:
+      - web
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
+    profiles: ["prod", "dev"]
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -70,6 +88,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
+    profiles: ["prod", "dev"]
     ports:
       - "3000:3000"
     depends_on:
@@ -79,4 +98,5 @@ volumes:
   postgres_data:
   venv_data:
   prometheus_data:
-  
+  static_volume:
+  media_volume:

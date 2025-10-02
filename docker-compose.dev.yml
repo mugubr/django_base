@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    container_name: django_web_dev
+    command: /app/.venv/bin/python manage.py runserver_plus 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app/src
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=True
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    depends_on:
+      db:
+        condition: service_healthy
+    profiles: ["dev"]
+
+  nginx:
+    ports: []
+
+volumes:
+  postgres_data:
+  venv_data:
+  prometheus_data:
