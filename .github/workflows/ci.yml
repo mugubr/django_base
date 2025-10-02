@@ -44,9 +44,9 @@ jobs:
       # Passo 5: Rodar o Ruff para verificar a formatação e o linting
       # A flag --check não altera os arquivos, apenas falha se não estiverem formatados
       - name: Verificar formatação com Ruff
-        run: python -m ruff format --check .
+        run: uv run ruff format --check .
       - name: Verificar linting com Ruff
-        run: python -m ruff check .
+        run: uv run ruff check .
 
       # Step 6: Run tests with coverage
       # For CI, tests run against an in-memory SQLite database, which is fast
