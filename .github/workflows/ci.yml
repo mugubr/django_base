@@ -37,7 +37,7 @@ jobs:
       # Passo 4: Instala as dependências de desenvolvimento
       # O uv usará o cache automaticamente para acelerar builds futuros
       - name: Instalar dependências
-        run: uv pip install .[dev]
+        run: uv venv && uv sync --dev
 
       # Step 5: Run Ruff to check formatting and linting
       # The --check flag does not modify files, it just fails if they are not formatted
