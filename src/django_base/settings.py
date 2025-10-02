@@ -93,6 +93,15 @@ DATABASES = {
     }
 }
 
+# Ormar Database Configuration
+import databases
+import sqlalchemy
+
+DATABASE_URL = f"postgresql://{config('POSTGRES_USER')}:{config('POSTGRES_PASSWORD')}@{config('POSTGRES_HOST', default='db')}:{config('POSTGRES_PORT', default=5432, cast=int)}/{config('POSTGRES_DB')}"
+
+database = databases.Database(DATABASE_URL)
+metadata = sqlalchemy.MetaData()
+
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
