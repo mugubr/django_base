@@ -55,11 +55,11 @@ jobs:
       # Para CI, os testes rodam contra um banco de dados SQLite em memória, que é
       # rápido e não requer um serviço de banco de dados externo. O Django faz isso por padrão.
       - name: Rodar testes e gerar cobertura
-        run: python -m coverage run manage.py test
+        run: uv run coverage run manage.py test
 
       # Step 7: Check if test coverage meets the target
       # The pipeline will fail if the total coverage is below 80%
       # Passo 7: Verificar se a cobertura de testes atingiu a meta
       # O pipeline falhará se a cobertura total for menor que 80%
       - name: Verificar cobertura de testes
-        run: python -m coverage report --fail-under=80
+        run: uv run coverage report --fail-under=80
