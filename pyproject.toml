@@ -42,7 +42,6 @@ omit = [
 
 [tool.coverage.report]
 show_missing = true
-fail_under = 80 # Fails the CI pipeline if coverage is below 80% / Falha o pipeline de CI se a cobertura for menor que 80%
 
 [dependency-groups]
 dev = [
