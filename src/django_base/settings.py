@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import databases
+import sqlalchemy
 from decouple import Csv, config
 
 # Path to the project's root directory.
@@ -94,10 +96,12 @@ DATABASES = {
 }
 
 # Ormar Database Configuration
-import databases
-import sqlalchemy
-
-DATABASE_URL = f"postgresql://{config('POSTGRES_USER')}:{config('POSTGRES_PASSWORD')}@{config('POSTGRES_HOST', default='db')}:{config('POSTGRES_PORT', default=5432, cast=int)}/{config('POSTGRES_DB')}"
+DATABASE_URL = (
+    f"postgresql://{config('POSTGRES_USER')}:{config('POSTGRES_PASSWORD')}"
+    f"@{config('POSTGRES_HOST', default='db')}"
+    f":{config('POSTGRES_PORT', default=5432, cast=int)}"
+    f"/{config('POSTGRES_DB')}"
+)
 
 database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
