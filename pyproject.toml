@@ -5,6 +5,7 @@ description = "Base para um projeto Django / Base for a Django project"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "asyncpg>=0.27.0",
     "databases>=0.5.5",
     "django>=5.2.7",
     "django-cors-headers>=4.9.0",

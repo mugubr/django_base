@@ -1,4 +1,5 @@
 asgiref==3.9.2
+asyncpg==0.27.0
 cfgv==3.4.0
 coverage==7.10.7
 databases==0.5.5
