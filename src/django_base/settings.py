@@ -90,7 +90,33 @@ DATABASES = {
         "PASSWORD": config("POSTGRES_PASSWORD"),
         "HOST": config("POSTGRES_HOST", default="db"),
         "PORT": config("POSTGRES_PORT", default=5432, cast=int),
+        "CONN_MAX_AGE": 600,  # Keep connections for 10 minutes
+        "CONN_HEALTH_CHECKS": True,  # Django 4.1+ health checks
+        "OPTIONS": {
+            "connect_timeout": 10,
+            "options": "-c statement_timeout=60000",  # 60s query timeout
+        },
     }
+}
+
+# SQLAlchemy 2.0 Configuration
+# Configuration for custom business logic with async support
+SQLALCHEMY_DATABASE_URL = (
+    f"postgresql+psycopg2://{config('POSTGRES_USER')}:{config('POSTGRES_PASSWORD')}"
+    f"@{config('POSTGRES_HOST', default='db')}"
+    f":{config('POSTGRES_PORT', default=5432, cast=int)}"
+    f"/{config('POSTGRES_DB')}"
+)
+
+SQLALCHEMY_ENGINE_OPTIONS = {
+    "pool_size": 10,  # Base connection pool size
+    "max_overflow": 10,  # Additional connections under load
+    "pool_timeout": 30,  # Wait up to 30s for connection
+    "pool_recycle": 3600,  # Recycle connections after 1 hour
+    "pool_pre_ping": True,  # Verify connection health before checkout
+    "pool_use_lifo": True,  # Reuse recent connections (better caching)
+    "echo": config("SQL_ECHO", default=False, cast=bool),  # SQL logging
+    "echo_pool": False,  # Disable pool logging in production
 }
 
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
