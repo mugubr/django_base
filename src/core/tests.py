@@ -33,10 +33,7 @@ class HelloAPITestCase(TestCase):
         # Garante que os dados da resposta são o JSON esperado.
         self.assertEqual(
             response.data,
-            {
-                "message": "Olá, API do Projeto \
-                                        Base Django!"
-            },
+            {"message": "Olá, API do Projeto Base Django!"},
         )
 
 
