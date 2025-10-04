@@ -13,6 +13,10 @@ jobs:
     # The pipeline will run on a Linux (Ubuntu) virtual machine
     # O pipeline rodará em uma máquina virtual Linux (Ubuntu)
     runs-on: ubuntu-latest
+    env:
+      # Provide a dummy secret key for the Django application to initialize during tests.
+      # Fornece uma chave secreta falsa para a aplicação Django inicializar durante os testes.
+      SECRET_KEY: 'a-dummy-secret-key-for-ci-tests'
 
     steps:
       # Step 1: Clones your repository into the virtual machine
