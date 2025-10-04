@@ -18,6 +18,15 @@ jobs:
       # Fornece uma chave secreta falsa para a aplicação Django inicializar durante os testes.
       SECRET_KEY: 'a-dummy-secret-key-for-ci-tests'
 
+      DEBUG: "False"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+      POSTGRES_DB: "test_db"
+      POSTGRES_USER: "test_user"
+      POSTGRES_PASSWORD: "test_password"
+      POSTGRES_HOST: "localhost"
+      POSTGRES_PORT: "5432"
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000"
+
     steps:
       # Step 1: Clones your repository into the virtual machine
       # Passo 1: Clona seu repositório para dentro da máquina virtual
@@ -59,11 +68,11 @@ jobs:
       # Para CI, os testes rodam contra um banco de dados SQLite em memória, que é
       # rápido e não requer um serviço de banco de dados externo. O Django faz isso por padrão.
       - name: Rodar testes e gerar cobertura
-        run: uv run coverage run manage.py test
+        run: uv run coverage run manage.py test src
 
       # Step 7: Check if test coverage meets the target
       # The pipeline will fail if the total coverage is below 80%
       # Passo 7: Verificar se a cobertura de testes atingiu a meta
       # O pipeline falhará se a cobertura total for menor que 80%
       - name: Verificar cobertura de testes
-        run: uv run coverage report
+        run: uv run coverage report --fail-under=80
