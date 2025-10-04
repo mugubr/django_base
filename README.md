@@ -251,7 +251,7 @@ The `pyproject.toml` file is the source of truth for dependencies. Use the CLI c
 
 -   **Run tests and generate coverage data:**
     ```bash
-    docker-compose exec web python -m coverage run manage.py test
+    docker-compose exec web python -m coverage run manage.py test src
     ```
 
 -   **View the coverage report in the terminal:**
@@ -550,7 +550,7 @@ O arquivo `pyproject.toml` é a fonte da verdade para as dependências. Use os c
 
 -   **Rodar os testes e gerar dados de cobertura:**
     ```bash
-    docker-compose exec web python -m coverage run manage.py test
+    docker-compose exec web python -m coverage run manage.py test src
     ```
 
 -   **Ver o relatório de cobertura no terminal:**

@@ -122,8 +122,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images) / Arquivos estáticos (CSS, JavaScript, Imagens)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = "staticfiles/"
-if not DEBUG:
-    STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "mediafiles/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
@@ -134,7 +133,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Configuração do Django Q (Tarefas em Background)
 # https://django-q2.readthedocs.io/en/latest/
 Q_CLUSTER = {
-    "name": "meu_projeto_django",
+    "name": "django_base",
     "workers": 4,
     "recycle": 500,
     "timeout": 60,

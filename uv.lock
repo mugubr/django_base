@@ -145,16 +145,6 @@ dependencies = [
     { name = "python-decouple" },
 ]
 
-[package.optional-dependencies]
-dev = [
-    { name = "coverage" },
-    { name = "django-extensions" },
-    { name = "pre-commit" },
-    { name = "ruff" },
-    { name = "watchdog" },
-    { name = "werkzeug" },
-]
-
 [package.dev-dependencies]
 dev = [
     { name = "coverage" },
@@ -167,22 +157,15 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "coverage", marker = "extra == 'dev'", specifier = ">=7.5.0" },
     { name = "django", specifier = ">=5.2.7" },
     { name = "django-cors-headers", specifier = ">=4.9.0" },
-    { name = "django-extensions", marker = "extra == 'dev'", specifier = ">=3.2.0" },
     { name = "django-prometheus", specifier = ">=2.4.1" },
     { name = "django-q2", specifier = ">=1.8.0" },
     { name = "djangorestframework", specifier = ">=3.16.1" },
     { name = "gunicorn", specifier = ">=23.0.0" },
-    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.7.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "python-decouple", specifier = ">=3.8" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4.0" },
-    { name = "watchdog", marker = "extra == 'dev'", specifier = ">=4.0.0" },
-    { name = "werkzeug", marker = "extra == 'dev'", specifier = ">=3.0.0" },
 ]
-provides-extras = ["dev"]
 
 [package.metadata.requires-dev]
 dev = [

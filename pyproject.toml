@@ -31,13 +31,13 @@ ignore = []
 # Coverage.py Configuration
 # Configuração do Coverage.py
 [tool.coverage.run]
-source = ["core"]
+source = ["src/core"]
 omit = [
-    "*/migrations/*",
-    "*/tests/*",
-    "*/admin.py",
+    "src/*/migrations/*",
+    "src/*/tests/*",
+    "src/*/admin.py",
+    "src/django_base/*",
     "manage.py",
-    "django_base/*",
 ]
 
 [tool.coverage.report]
@@ -53,12 +53,3 @@ dev = [
     "werkzeug>=3.1.3",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "coverage>=7.5.0",
-    "django-extensions>=3.2.0",
-    "pre-commit>=3.7.0",
-    "ruff>=0.4.0",
-    "watchdog>=4.0.0",
-    "werkzeug>=3.0.0",
-]

@@ -10,7 +10,8 @@ WORKDIR /app
 # Set the PATH environment variable to include the venv's binary directory.
 # This ensures that commands installed in the venv (like 'ruff', 'django-admin')
 # are found by the shell
-ENV PATH="/app/.venv/bin:$PATH"
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1
 
 # Instala o 'uv'
 # Install 'uv'
@@ -24,13 +25,13 @@ RUN pip install uv
 # Docker won't reinstall dependencies on future builds
 COPY ./pyproject.toml ./uv.lock* .
 
-# Copia todo o código-fonte do projeto para o diretório de trabalho
-# Copy all the project's source code into the working directory
-COPY . .
-
 # Cria o ambiente virtual e instala TODAS as dependências (produção e dev)
 # Create the virtual environment and install ALL dependencies (production and dev)
 RUN uv venv && uv sync --dev
+
+# Copia todo o código-fonte do projeto para o diretório de trabalho
+# Copy all the project's source code into the working directory
+COPY . .
 
 # Expõe a porta 8000 do contêiner para que possamos nos conectar a ela
 # a partir da nossa máquina ou de outros contêineres
