@@ -61,16 +61,16 @@ jobs:
       # Passo 4: Instala as dependências de desenvolvimento
       # O uv usará o cache automaticamente para acelerar builds futuros
       - name: Instalar dependências
-        run: uv pip install -e .[dev]
+        run: uv venv && source .venv/bin/activate && uv pip install -e .[dev]
 
       # Step 5: Run Ruff to check formatting and linting
       # The --check flag does not modify files, it just fails if they are not formatted
       # Passo 5: Rodar o Ruff para verificar a formatação e o linting
       # A flag --check não altera os arquivos, apenas falha se não estiverem formatados
       - name: Verificar formatação com Ruff
-        run: ./.venv/bin/python -m ruff format --check .
+        run: uv run ruff format --check .
       - name: Verificar linting com Ruff
-        run: ./.venv/bin/python -m ruff format --check .
+        run: uv run ruff format --check .
 
       # Step 6: Run tests with coverage
       # For CI, tests run against an in-memory SQLite database, which is fast
@@ -79,10 +79,10 @@ jobs:
       # Para CI, os testes rodam contra um banco de dados SQLite em memória, que é
       # rápido e não requer um serviço de banco de dados externo. O Django faz isso por padrão.
       - name: Rodar testes e gerar cobertura
-        run: ./.venv/bin/python -m coverage run manage.py test src
+        run: uv run coverage run manage.py test src
       # Step 7: Check if test coverage meets the target
       # The pipeline will fail if the total coverage is below 80%
       # Passo 7: Verificar se a cobertura de testes atingiu a meta
       # O pipeline falhará se a cobertura total for menor que 80%
       - name: Verificar cobertura de testes
-        run: ./.venv/bin/python -m coverage report -m
+        run: uv run coverage report -m
