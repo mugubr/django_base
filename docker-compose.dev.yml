@@ -1,29 +1,75 @@
+# Docker Compose Override for Development Environment
+# Sobreposição Docker Compose para Ambiente de Desenvolvimento
+
+# This file overrides settings from docker-compose.yml for development.
+# It enables hot-reloading, debug mode, and development-specific tools.
+#
+# Este arquivo sobrescreve configurações do docker-compose.yml para desenvolvimento.
+# Habilita hot-reloading, modo debug e ferramentas específicas de desenvolvimento.
+#
+# Usage / Uso:
+# docker-compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up
+
 services:
+  # Django Web Application (Development)
+  # Aplicação Web Django (Desenvolvimento)
   web:
-    build: .
+    build:
+      context: .
+      # Use development stage from multi-stage Dockerfile
+      # This includes dev dependencies like django-extensions, werkzeug
+      # Usa o stage de desenvolvimento do Dockerfile multi-stage
+      # Isso inclui dependências dev como django-extensions, werkzeug
+      target: development
     container_name: django_web_dev
     command: /app/.venv/bin/python manage.py runserver_plus 0.0.0.0:8000
     volumes:
-      - .:/app
+      # Mount source code for hot-reloading
+      # Any changes to files will be immediately reflected
+      # Monta código-fonte para hot-reloading
+      # Qualquer mudança nos arquivos será refletida imediatamente
+      - ./src:/app/src:delegated
+      # Mount templates for live editing
+      # Monta templates para edição ao vivo
+      - ./templates:/app/templates:delegated
+      # Mount manage.py for live editing
+      # Monta manage.py para edição ao vivo
+      - ./manage.py:/app/manage.py:delegated
+      # Share venv with host for IDE integration (optional)
+      # Compartilha venv com host para integração com IDE (opcional)
+      # - ./.venv:/app/.venv
     ports:
+      # Direct port mapping (no Nginx in dev)
+      # Map container port 8000 to host port 8000
+      # Mapeamento direto de porta (sem Nginx em dev)
+      # Mapeia porta 8000 do container para porta 8000 do host
       - "8000:8000"
     environment:
+      # Override production environment variables for development
+      # Sobrescreve variáveis de ambiente de produção para desenvolvimento
       - PYTHONPATH=/app/src
+      - PATH=/app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
+      # Force DEBUG mode in development (security: OK for dev only!)
+      # Força modo DEBUG em desenvolvimento (segurança: OK apenas para dev!)
       - DEBUG=True
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - ALLOWED_HOSTS=* # Allow all hosts in dev for convenience
+      # Disable Werkzeug debugger PIN for easier development
+      # Desabilita PIN do debugger Werkzeug para desenvolvimento mais fácil
+      - WERKZEUG_DEBUG_PIN=off
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    # Enable interactive terminal and stdin for debugging with pdb/ipdb
+    # Habilita terminal interativo e stdin para debugging com pdb/ipdb
+    stdin_open: true
+    tty: true
     profiles: ["dev"]
-
-  nginx:
-    ports: []
-
-volumes:
-  postgres_data:
-  venv_data:
-  prometheus_data:
+    # No restart policy in dev - fail fast to catch errors
+    # Sem política de restart em dev - falha rápida para capturar erros
+    restart: "no"

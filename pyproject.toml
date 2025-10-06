@@ -2,8 +2,18 @@
 name = "django-base"
 version = "0.1.0"
 description = "Base para um projeto Django / Base for a Django project"
+authors = [
+    {name = "Miguel de Freitas Muniz", email = "miguimuniz@gmail.com"}
+]
+license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.11"
+keywords = ["django", "boilerplate", "docker", "rest-api"]
+classifiers = [
+    "Framework :: Django :: 5.2",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+]
 dependencies = [
     "django>=5.2.7",
     "django-cors-headers>=4.9.0",
@@ -13,7 +23,31 @@ dependencies = [
     "gunicorn>=23.0.0",
     "psycopg2-binary>=2.9.10",
     "python-decouple>=3.8",
+    "celery>=5.5.3",
+    "django-environ>=0.12.0",
+    "django-filter>=25.2",
+    "redis>=6.4.0",
+    "sentry-sdk>=2.39.0",
+    "whitenoise>=6.11.0",
+    "drf-spectacular>=0.28.0",
+    "django-extensions>=4.1",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "coverage>=7.10.7",
+    "django-extensions>=4.1",
+    "pre-commit>=4.3.0",
+    "ruff>=0.13.2",
+    "watchdog>=6.0.0",
+    "werkzeug>=3.1.3",
+]
+
+[project.urls]
+Homepage = "https://github.com/mugubr/django-base"
+Repository = "https://github.com/mugubr/django-base"
+Documentation = "https://github.com/mugubr/django-base#readme"
+
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }
@@ -25,23 +59,60 @@ line-length = 88
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I", "UP", "B", "C4"]
-ignore = []
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "DJ",  # flake8-django (IMPORTANTE para Django!)
+    "S",   # flake8-bandit (segurança)
+    "PTH", # flake8-use-pathlib
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "S101",  # assert detectado (necessário em testes) / assert detected (necessary in tests)
+]
+[tool.ruff.lint.per-file-ignores]
+"*/tests.py" = ["S101"]  # permite assert em testes
+"*/migrations/*.py" = ["E501"]  # ignora linha longa em migrations
 
 # Coverage.py Configuration
 # Configuração do Coverage.py
 [tool.coverage.run]
-source = ["core"]
+source = ["src/core"]
 omit = [
-    "*/migrations/*",
-    "*/tests/*",
-    "*/admin.py",
+    "src/*/migrations/*",
+    "src/*/tests/*",
+    "src/*/admin.py",
+    "src/django_base/*",
     "manage.py",
-    "django_base/*",
 ]
 
 [tool.coverage.report]
 show_missing = true
+
+# Bandit Security Linter Configuration
+# Configuração do Linter de Segurança Bandit
+[tool.bandit]
+exclude_dirs = [
+    "tests",
+    "migrations",
+    ".venv",
+    "venv",
+    "env",
+    "node_modules",
+]
+skips = [
+    "B101",  # assert_used - ok in tests / assert_used - ok em testes
+]
+
+# Detect Secrets Configuration
+# Configuração do Detect Secrets
+[tool.detect-secrets]
+exclude_files = "uv.lock|.*\\.svg$|package-lock\\.json|yarn\\.lock"
 
 [dependency-groups]
 dev = [
@@ -51,14 +122,4 @@ dev = [
     "ruff>=0.13.2",
     "watchdog>=6.0.0",
     "werkzeug>=3.1.3",
-]
-
-[project.optional-dependencies]
-dev = [
-    "coverage>=7.5.0",
-    "django-extensions>=3.2.0",
-    "pre-commit>=3.7.0",
-    "ruff>=0.4.0",
-    "watchdog>=4.0.0",
-    "werkzeug>=3.0.0",
 ]

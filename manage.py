@@ -7,6 +7,8 @@ import sys
 
 def main():
     """Run administrative tasks."""
+    # Use modular settings - defaults to auto-detection in __init__.py
+    # Usa settings modulares - padrão é auto-detecção no __init__.py
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_base.settings")
     try:
         from django.core.management import execute_from_command_line
