@@ -68,17 +68,6 @@ jobs:
       - name: Configurar uv
         uses: astral-sh/setup-uv@v1
 
-      - name: Esperar o setup do Banco de Dados
-        run: |
-          # This step is an extra safety measure to wait for the DB port to be open.
-          # We use a simple netcat (nc) command to check the port.
-          sudo apt-get update && sudo apt-get install -y netcat
-          while ! nc -z postgres 5432; do
-            echo "Waiting for PostgreSQL..."
-            sleep 1
-          done
-          echo "PostgreSQL is up and running!"
-
       # Step 4: Install development dependencies
       # uv will use caching automatically to speed up future builds
       # Passo 4: Instala as dependências de desenvolvimento
