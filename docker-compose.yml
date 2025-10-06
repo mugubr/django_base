@@ -1,102 +1,307 @@
+# Docker Compose Configuration for Django Base Project
+# Configuração Docker Compose para Projeto Django Base
+
+# This file defines the core services required for the application.
+# Use profiles to control which services run in different environments:
+# - dev: Development environment
+# - prod: Production environment
+#
+# Este arquivo define os serviços principais necessários para a aplicação.
+# Use profiles para controlar quais serviços rodam em diferentes ambientes:
+# - dev: Ambiente de desenvolvimento
+# - prod: Ambiente de produção
+
 services:
+  # PostgreSQL Database Service
+  # Serviço de Banco de Dados PostgreSQL
+
+  # Primary database for storing application data
+  # Banco de dados principal para armazenar dados da aplicação
   db:
-    image: postgres:15
+    image: postgres:15-alpine  # Alpine variant for smaller image size
     container_name: postgres_db
     volumes:
+      # Persist database data across container restarts
+      # Persiste dados do banco através de reinicializações do container
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      # Load environment variables from .env file for cleaner configuration
+      # Carrega variáveis de ambiente do arquivo .env para configuração mais limpa
+      - .env
     ports:
+      # WARNING: Exposing database port publicly is a security risk in production
+      # Comment this out in production or bind to localhost only (127.0.0.1:5432:5432)
+      # ATENÇÃO: Expor a porta do banco publicamente é um risco de segurança em produção
+      # Comente isso em produção ou faça bind apenas no localhost (127.0.0.1:5432:5432)
       - "5432:5432"
     healthcheck:
+      # Health check ensures database is ready before dependent services start
+      # Health check garante que o banco está pronto antes de serviços dependentes iniciarem
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        # Resource limits prevent database from consuming all system resources
+        # Limites de recursos previnem que o banco consuma todos os recursos do sistema
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
     profiles: ["prod", "dev"]
 
+  # Redis Cache Service
+  # Serviço de Cache Redis
+
+  # Used for caching, session storage, and Django Q task queue
+  # Usado para cache, armazenamento de sessão e fila de tarefas Django Q
+  redis:
+    image: redis:7-alpine  # Alpine for smaller image size
+    container_name: redis
+    profiles: ["prod", "dev"]
+    ports:
+      # Port exposed for direct access (optional in production)
+      # Porta exposta para acesso direto (opcional em produção)
+      - "6379:6379"
+    volumes:
+      # Persist Redis data for durability
+      # Persiste dados Redis para durabilidade
+      - redis_data:/data
+    healthcheck:
+      # Verify Redis is responding to commands
+      # Verifica se Redis está respondendo a comandos
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  # Django Web Application (Production)
+  # Aplicação Web Django (Produção)
+
+  # Production container running Django with Gunicorn WSGI server
+  # Container de produção rodando Django com servidor WSGI Gunicorn
   web:
-    build: .
+    build:
+      context: .
+      target: production  # Use production stage from multi-stage Dockerfile
     container_name: django_web_prod
-    command: /app/.venv/bin/gunicorn django_base.wsgi:application --bind 0.0.0.0:8000
     profiles: ["prod"]
     volumes:
-      - ./src:/app/src
-      - venv_data:/app/.venv
+      # Volume for static files served by Nginx
+      # Volume para arquivos estáticos servidos pelo Nginx
       - static_volume:/app/staticfiles
+      # Volume for user-uploaded media files
+      # Volume para arquivos de mídia enviados por usuários
       - media_volume:/app/mediafiles
+      # Volume for application logs
+      # Volume para logs da aplicação
+      - ./logs:/app/logs
+    env_file:
+      - .env
     environment:
+      # Python path configuration for module imports
+      # Configuração do Python path para importação de módulos
       - PYTHONPATH=/app/src
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      # Verify Django app is responding to HTTP requests
+      # Verifica se aplicação Django está respondendo a requisições HTTP
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/', timeout=2)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
 
+  # Django Q Cluster (Background Task Worker)
+  # Django Q Cluster (Worker de Tarefas em Background)
+
+  # Processes asynchronous tasks (emails, data processing, scheduled jobs)
+  # Processa tarefas assíncronas (emails, processamento de dados, jobs agendados)
   qcluster:
-    build: .
+    build:
+      context: .
+      target: production
     container_name: django_qcluster
     command: /app/.venv/bin/python manage.py qcluster
     profiles: ["prod", "dev"]
     volumes:
       - ./src:/app/src
-      - venv_data:/app/.venv
+      - ./logs:/app/logs
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/app/src
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
-      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
     depends_on:
       web:
-        condition: service_started
+        condition: service_healthy
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
 
+  # Nginx Reverse Proxy
+  # Proxy Reverso Nginx
+
+  # Handles static files, SSL termination, and proxies requests to Django
+  # Lida com arquivos estáticos, terminação SSL e faz proxy de requisições para Django
   nginx:
     build: ./nginx
     container_name: nginx
     profiles: ["prod"]
     volumes:
+      # Mount static and media volumes to serve files directly
+      # Monta volumes estáticos e de mídia para servir arquivos diretamente
       - static_volume:/app/staticfiles
       - media_volume:/app/mediafiles
     ports:
+      # HTTP port (use 80:80 in production with proper domain)
+      # Porta HTTP (use 80:80 em produção com domínio próprio)
       - "8000:80"
+      # HTTPS port (uncomment when SSL is configured)
+      # Porta HTTPS (descomente quando SSL estiver configurado)
+      # - "443:443"
     depends_on:
-      - web
+      web:
+        condition: service_healthy
+    healthcheck:
+      # Verify Nginx is responding
+      # Verifica se Nginx está respondendo
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
+  # Prometheus Metrics Collection
+  # Coleta de Métricas Prometheus
+
+  # Collects and stores time-series metrics from Django and other services
+  # Coleta e armazena métricas de séries temporais do Django e outros serviços
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     profiles: ["prod", "dev"]
     volumes:
+      # Prometheus configuration file
+      # Arquivo de configuração do Prometheus
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      # Persist metrics data
+      # Persiste dados de métricas
       - prometheus_data:/prometheus
     ports:
       - "9090:9090"
+    command:
+      # Configuration options for Prometheus
+      # Opções de configuração para Prometheus
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      # Data retention period
+      # Período de retenção de dados
+      - '--storage.tsdb.retention.time=30d'
     depends_on:
       - web
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
+  # Grafana Monitoring Dashboard
+  # Dashboard de Monitoramento Grafana
+
+  # Provides visualization dashboards for Prometheus metrics
+  # Fornece dashboards de visualização para métricas do Prometheus
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     profiles: ["prod", "dev"]
+    volumes:
+      # Persist Grafana configurations and dashboards
+      # Persiste configurações e dashboards do Grafana
+      - grafana_data:/var/lib/grafana
+    environment:
+      # Admin credentials (change in production!)
+      # Credenciais de admin (mude em produção!)
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      # Allow embedding Grafana in iframes
+      # Permite embutir Grafana em iframes
+      - GF_SECURITY_ALLOW_EMBEDDING=true
     ports:
       - "3000:3000"
     depends_on:
       - prometheus
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
+# Volumes for Data Persistence
+# Volumes para Persistência de Dados
+
+# Named volumes persist data across container restarts and removals
+# Volumes nomeados persistem dados através de reinicializações e remoções de containers
 volumes:
   postgres_data:
-  venv_data:
+    # PostgreSQL database files
+    # Arquivos do banco de dados PostgreSQL
+  redis_data:
+    # Redis persistence files
+    # Arquivos de persistência Redis
   prometheus_data:
+    # Prometheus metrics storage
+    # Armazenamento de métricas Prometheus
+  grafana_data:
+    # Grafana configurations and dashboards
+    # Configurações e dashboards Grafana
   static_volume:
+    # Django static files (CSS, JS, images)
+    # Arquivos estáticos Django (CSS, JS, imagens)
   media_volume:
+    # User-uploaded files
+    # Arquivos enviados por usuários
