@@ -61,16 +61,16 @@ jobs:
       # Passo 4: Instala as dependências de desenvolvimento
       # O uv usará o cache automaticamente para acelerar builds futuros
       - name: Instalar dependências
-        run: uv venv && uv pip install -e .[dev]
+        run: uv venv && uv sync --dev
 
       # Step 5: Run Ruff to check formatting and linting
       # The --check flag does not modify files, it just fails if they are not formatted
       # Passo 5: Rodar o Ruff para verificar a formatação e o linting
       # A flag --check não altera os arquivos, apenas falha se não estiverem formatados
       - name: Verificar formatação com Ruff
-        run: ./.venv/bin/python -m ruff format --check ..
+        run: ./.venv/bin/python -m ruff format --check .
       - name: Verificar linting com Ruff
-        run: ./.venv/bin/python -m ruff check .
+        run: ./.venv/bin/python -m ruff format --check .
 
       # Step 6: Run tests with coverage
       # For CI, tests run against an in-memory SQLite database, which is fast
@@ -85,4 +85,4 @@ jobs:
       # Passo 7: Verificar se a cobertura de testes atingiu a meta
       # O pipeline falhará se a cobertura total for menor que 80%
       - name: Verificar cobertura de testes
-        run: ./.venv/bin/python -m coverage report
+        run: ./.venv/bin/python -m coverage report -m
