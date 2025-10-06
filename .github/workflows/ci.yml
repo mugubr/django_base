@@ -68,9 +68,9 @@ jobs:
       # Passo 5: Rodar o Ruff para verificar a formatação e o linting
       # A flag --check não altera os arquivos, apenas falha se não estiverem formatados
       - name: Verificar formatação com Ruff
-        run: uv run ruff format --check .
+        run: uv venv && uv run ruff format --check .
       - name: Verificar linting com Ruff
-        run: uv run ruff check .
+        run: uv venv && uv run ruff check .
 
       # Step 6: Run tests with coverage
       # For CI, tests run against an in-memory SQLite database, which is fast
@@ -78,12 +78,12 @@ jobs:
       # Passo 6: Rodar os testes com coverage
       # Para CI, os testes rodam contra um banco de dados SQLite em memória, que é
       # rápido e não requer um serviço de banco de dados externo. O Django faz isso por padrão.
-      # - name: Rodar testes e gerar cobertura
-      #   run: uv run coverage run manage.py test src
+      - name: Rodar testes e gerar cobertura
+        run: uv venv && uv run coverage run manage.py test src
 
       # Step 7: Check if test coverage meets the target
       # The pipeline will fail if the total coverage is below 80%
       # Passo 7: Verificar se a cobertura de testes atingiu a meta
       # O pipeline falhará se a cobertura total for menor que 80%
-      # - name: Verificar cobertura de testes
-      #   run: uv run coverage report --fail-under=80
+      - name: Verificar cobertura de testes
+        run: uv venv && uv run coverage report

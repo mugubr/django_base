@@ -52,3 +52,5 @@ Thumbs.db
 ehthumbs.db
 
 .claude/
+generate_project_summary.py
+project_summary.txt
