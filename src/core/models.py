@@ -1,24 +1,29 @@
-# Product Model - Core Application
-# Modelo de Produto - Aplicação Core
+# Core Models - Django Base Project
+# Modelos Core - Projeto Django Base
 
-# This module defines the Product model with enhanced features including:
-# - Database indexing for performance
-# - Custom validation logic
-# - Useful property methods
-# - Soft delete capability
+# This module defines all data models for the core application with:
+# - Product model with validation and business logic
+# - UserProfile with extended user information
+# - Category and Tag models with many-to-many relationships
+# - Timestamp tracking and soft delete functionality
 #
-# Este módulo define o modelo Product com recursos aprimorados incluindo:
-# - Indexação de banco de dados para performance
-# - Lógica de validação customizada
-# - Métodos de propriedade úteis
-# - Capacidade de soft delete
+# Este módulo define todos os modelos de dados para a aplicação core com:
+# - Modelo Product com validação e lógica de negócio
+# - UserProfile com informações estendidas do usuário
+# - Modelos Category e Tag com relacionamentos muitos-para-muitos
+# - Rastreamento de timestamps e funcionalidade de soft delete
 
 from datetime import timedelta
 from decimal import Decimal
 
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
+from django.utils.translation import gettext_lazy as _
+
+User = get_user_model()
 
 
 class Product(models.Model):
@@ -84,6 +89,36 @@ class Product(models.Model):
         verbose_name="Is Active",
         help_text="Indicates if the product is active (soft delete) / "
         "Indica se o produto está ativo (soft delete)",
+    )
+
+    # Relationships / Relacionamentos
+
+    category = models.ForeignKey(
+        "Category",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="products",
+        verbose_name=_("Category"),
+        help_text=_("Product category / Categoria do produto"),
+    )
+
+    tags = models.ManyToManyField(
+        "Tag",
+        blank=True,
+        related_name="products",
+        verbose_name=_("Tags"),
+        help_text=_("Product tags / Tags do produto"),
+    )
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="created_products",
+        verbose_name=_("Created by"),
+        help_text=_("User who created this product / Usuário que criou este produto"),
     )
 
     # Meta Options / Opções Meta
@@ -213,7 +248,7 @@ class Product(models.Model):
         Representação amigável para desenvolvedores para debugging.
         """
         return (
-            f"<Product id={self.id} name='{self.name}' "
+            f"<Product id={self.id} name='{self.name}' "  # type: ignore
             f"price={self.price} active={self.is_active}>"
         )
 
@@ -376,3 +411,121 @@ class Product(models.Model):
         return cls.objects.filter(
             price__gte=min_price, price__lte=max_price, is_active=True
         )
+
+
+# User Profile Model / Modelo de Perfil de Usuário
+
+
+class UserProfile(models.Model):
+    """
+    Extended user profile with additional information.
+    One-to-one relationship with Django User model.
+
+    Perfil de usuário estendido com informações adicionais.
+    Relacionamento um-para-um com modelo User do Django.
+    """
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="profile",
+        verbose_name=_("User"),
+    )
+    bio = models.TextField(
+        max_length=500,
+        blank=True,
+        verbose_name=_("Biography"),
+    )
+    avatar = models.ImageField(
+        upload_to="avatars/%Y/%m/%d/",
+        blank=True,
+        null=True,
+        verbose_name=_("Avatar"),
+    )
+    phone = models.CharField(max_length=20, blank=True, verbose_name=_("Phone"))
+    birth_date = models.DateField(blank=True, null=True, verbose_name=_("Birth date"))
+    city = models.CharField(max_length=100, blank=True, verbose_name=_("City"))
+    country = models.CharField(max_length=100, blank=True, verbose_name=_("Country"))
+    website = models.URLField(blank=True, verbose_name=_("Website"))
+    is_verified = models.BooleanField(default=False, verbose_name=_("Verified"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("User Profile")
+        verbose_name_plural = _("User Profiles")
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+
+
+# Category Model / Modelo de Categoria
+
+
+class Category(models.Model):
+    """
+    Product category for organization and filtering.
+    Hierarchical structure with parent-child relationships.
+
+    Categoria de produto para organização e filtragem.
+    Estrutura hierárquica com relacionamentos pai-filho.
+    """
+
+    name = models.CharField(max_length=100, unique=True, verbose_name=_("Name"))
+    slug = models.SlugField(max_length=100, unique=True, verbose_name=_("Slug"))
+    description = models.TextField(blank=True, verbose_name=_("Description"))
+    parent = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        related_name="children",
+        verbose_name=_("Parent category"),
+    )
+    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+        ordering = ["name"]  # noqa: RUF012
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
+# Tag Model / Modelo de Tag
+
+
+class Tag(models.Model):
+    """
+    Tag for flexible product labeling and search.
+    Many-to-many relationship with products.
+
+    Tag para rotulagem flexível e busca de produtos.
+    Relacionamento muitos-para-muitos com produtos.
+    """
+
+    name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
+    slug = models.SlugField(max_length=50, unique=True, verbose_name=_("Slug"))
+    color = models.CharField(max_length=7, default="#6c757d", verbose_name=_("Color"))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+        ordering = ["name"]  # noqa: RUF012
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)

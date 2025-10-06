@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.shortcuts import render
 from django.urls import path
 
-from .models import Product
+from .models import Category, Product, Tag, UserProfile
 
 
 @admin.register(Product)
@@ -12,10 +12,18 @@ class ProductAdmin(admin.ModelAdmin):
     Customiza a interface do admin do Django para o modelo Product.
     """
 
-    # list_display: Configures the columns shown in the product list page.
-    # list_display: Configura as colunas exibidas na página de listagem
-    # de produtos.
-    list_display = ("name", "price", "created_at")
+    list_display = (
+        "name",
+        "price",
+        "category",
+        "is_active",
+        "created_at",
+        "created_by",
+    )
+    list_filter = ("is_active", "category", "tags", "created_at")
+    search_fields = ("name",)
+    filter_horizontal = ("tags",)
+    readonly_fields = ("created_at", "updated_at")
 
     def get_urls(self):
         """
@@ -47,3 +55,35 @@ class ProductAdmin(admin.ModelAdmin):
             "title": "Relatório de Produtos Interativo",
         }
         return render(request, "admin/product_datatable.html", context)
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ("user", "city", "country", "is_verified", "created_at")
+    list_filter = ("is_verified", "country", "created_at")
+    search_fields = ("user__username", "user__email", "bio", "city")
+    readonly_fields = ("created_at", "updated_at")
+    fieldsets = (
+        ("User Info", {"fields": ("user", "bio", "avatar")}),
+        ("Contact", {"fields": ("phone", "website")}),
+        ("Location", {"fields": ("city", "country")}),
+        ("Status", {"fields": ("is_verified", "birth_date")}),
+        ("Timestamps", {"fields": ("created_at", "updated_at")}),
+    )
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "parent", "is_active", "created_at")
+    list_filter = ("is_active", "created_at")
+    search_fields = ("name", "description")
+    prepopulated_fields = {"slug": ("name",)}  # noqa: RUF012
+    readonly_fields = ("created_at", "updated_at")
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "color", "created_at")
+    search_fields = ("name",)
+    prepopulated_fields = {"slug": ("name",)}  # noqa: RUF012
+    readonly_fields = ("created_at",)

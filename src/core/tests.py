@@ -83,9 +83,18 @@ class ProductAPITestCase(TestCase):
         # Testa o endpoint GET /api/v1/products/.
         response = self.client.get("/api/v1/products/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Response is paginated, so we need to access 'results'
+        # Resposta é paginada, então precisamos acessar 'results'
+        self.assertIn("results", response.data)
+        products = response.data["results"]
         # Asserts that the response contains at least 2 products.
         # Garante que a resposta contém pelo menos 2 produtos.
-        self.assertGreaterEqual(len(response.data), 2)
+        self.assertGreaterEqual(len(products), 2)
+        # Check that our test products exist in the response
+        # Verifica que nossos produtos de teste existem na resposta
+        product_names = [product["name"] for product in products]
+        self.assertIn("Product A", product_names)
+        self.assertIn("Product B", product_names)
 
     def test_create_product(self):
         # Tests the POST /api/v1/products/ endpoint.

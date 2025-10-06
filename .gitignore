@@ -52,5 +52,6 @@ Thumbs.db
 ehthumbs.db
 
 .claude/
+.claude_context.md
 generate_project_summary.py
 project_summary.txt

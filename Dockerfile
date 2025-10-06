@@ -73,6 +73,7 @@ RUN uv venv && \
     whitenoise>=6.11.0 \
     drf-spectacular>=0.28.0 \
     django-extensions>=4.1 \
+    Pillow>=11.0.0 \
     coverage>=7.10.7 \
     pre-commit>=4.3.0 \
     ruff>=0.13.2 \
@@ -110,6 +111,7 @@ RUN uv venv && \
     sentry-sdk>=2.39.0 \
     whitenoise>=6.11.0 \
     drf-spectacular>=0.28.0 \
+    Pillow>=11.0.0 \
     django-extensions>=4.1
 
 # Stage 4: Development Image
