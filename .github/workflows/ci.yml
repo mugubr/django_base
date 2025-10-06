@@ -13,6 +13,18 @@ jobs:
     # The pipeline will run on a Linux (Ubuntu) virtual machine
     # O pipeline rodará em uma máquina virtual Linux (Ubuntu)
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       # Django Settings Module - Use development settings for CI
       # Módulo de Settings Django - Usa settings de desenvolvimento para CI
@@ -27,7 +39,7 @@ jobs:
       POSTGRES_DB: "test_db"
       POSTGRES_USER: "test_user"
       POSTGRES_PASSWORD: "test_password"
-      POSTGRES_HOST: "localhost"
+      POSTGRES_HOST: "postgres"
       POSTGRES_PORT: "5432"
       CORS_ALLOWED_ORIGINS: "http://localhost:3000"
       CSRF_TRUSTED_ORIGINS: "http://localhost:3000,http://localhost:8000"
@@ -55,6 +67,17 @@ jobs:
       # Passo 3: Configura o uv
       - name: Configurar uv
         uses: astral-sh/setup-uv@v1
+
+      - name: Esperar o setup do Banco de Dados
+        run: |
+          # This step is an extra safety measure to wait for the DB port to be open.
+          # We use a simple netcat (nc) command to check the port.
+          sudo apt-get update && sudo apt-get install -y netcat
+          while ! nc -z postgres 5432; do
+            echo "Waiting for PostgreSQL..."
+            sleep 1
+          done
+          echo "PostgreSQL is up and running!"
 
       # Step 4: Install development dependencies
       # uv will use caching automatically to speed up future builds
