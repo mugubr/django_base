@@ -10,7 +10,6 @@
 # Usage / Uso:
 # docker-compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up
 
-
 services:
   # Django Web Application (Development)
   # Aplicação Web Django (Desenvolvimento)
@@ -29,10 +28,13 @@ services:
       # Any changes to files will be immediately reflected
       # Monta código-fonte para hot-reloading
       # Qualquer mudança nos arquivos será refletida imediatamente
-      - ./src:/app/src
+      - ./src:/app/src:delegated
       # Mount templates for live editing
       # Monta templates para edição ao vivo
-      - ./templates:/app/templates
+      - ./templates:/app/templates:delegated
+      # Mount manage.py for live editing
+      # Monta manage.py para edição ao vivo
+      - ./manage.py:/app/manage.py:delegated
       # Share venv with host for IDE integration (optional)
       # Compartilha venv com host para integração com IDE (opcional)
       # - ./.venv:/app/.venv
@@ -46,6 +48,7 @@ services:
       # Override production environment variables for development
       # Sobrescreve variáveis de ambiente de produção para desenvolvimento
       - PYTHONPATH=/app/src
+      - PATH=/app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -53,7 +56,7 @@ services:
       # Force DEBUG mode in development (security: OK for dev only!)
       # Força modo DEBUG em desenvolvimento (segurança: OK apenas para dev!)
       - DEBUG=True
-      - ALLOWED_HOSTS=*  # Allow all hosts in dev for convenience
+      - ALLOWED_HOSTS=* # Allow all hosts in dev for convenience
       # Disable Werkzeug debugger PIN for easier development
       # Desabilita PIN do debugger Werkzeug para desenvolvimento mais fácil
       - WERKZEUG_DEBUG_PIN=off

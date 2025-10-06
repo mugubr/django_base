@@ -84,6 +84,26 @@ omit = [
 [tool.coverage.report]
 show_missing = true
 
+# Bandit Security Linter Configuration
+# Configuração do Linter de Segurança Bandit
+[tool.bandit]
+exclude_dirs = [
+    "tests",
+    "migrations",
+    ".venv",
+    "venv",
+    "env",
+    "node_modules",
+]
+skips = [
+    "B101",  # assert_used - ok in tests / assert_used - ok em testes
+]
+
+# Detect Secrets Configuration
+# Configuração do Detect Secrets
+[tool.detect-secrets]
+exclude_files = "uv.lock|.*\\.svg$|package-lock\\.json|yarn\\.lock"
+
 [dependency-groups]
 dev = [
     "coverage>=7.10.7",

@@ -4,9 +4,9 @@ name: Pipeline de CI do Django
 # Gatilhos: Roda este pipeline em todo push ou pull request para as branches master e develop
 on:
   push:
-    branches: [ "master", "develop" ]
+    branches: ["master", "develop"]
   pull_request:
-    branches: [ "master", "develop" ]
+    branches: ["master", "develop"]
 
 jobs:
   build:
@@ -14,9 +14,13 @@ jobs:
     # O pipeline rodará em uma máquina virtual Linux (Ubuntu)
     runs-on: ubuntu-latest
     env:
-      # Provide a dummy secret key for the Django application to initialize during tests.
-      # Fornece uma chave secreta falsa para a aplicação Django inicializar durante os testes.
-      SECRET_KEY: 'a-dummy-secret-key-for-ci-tests'
+      # Django Settings Module - Use development settings for CI
+      # Módulo de Settings Django - Usa settings de desenvolvimento para CI
+      DJANGO_SETTINGS_MODULE: "django_base.settings.dev"
+
+      # Provide a dummy secret key for the Django application to initialize during tests
+      # Fornece uma chave secreta falsa para a aplicação Django inicializar durante os testes
+      SECRET_KEY: "a-dummy-secret-key-for-ci-tests-must-be-at-least-50-chars-long-for-security"
 
       DEBUG: "False"
       ALLOWED_HOSTS: "localhost,127.0.0.1"
@@ -26,6 +30,13 @@ jobs:
       POSTGRES_HOST: "localhost"
       POSTGRES_PORT: "5432"
       CORS_ALLOWED_ORIGINS: "http://localhost:3000"
+      CSRF_TRUSTED_ORIGINS: "http://localhost:3000,http://localhost:8000"
+
+      # Redis configuration for CI (use localhost since service will be added)
+      # Configuração Redis para CI (usa localhost pois serviço será adicionado)
+      REDIS_URL: "redis://localhost:6379/0"
+      REDIS_HOST: "localhost"
+      REDIS_PORT: "6379"
 
     steps:
       # Step 1: Clones your repository into the virtual machine

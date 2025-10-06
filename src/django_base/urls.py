@@ -6,6 +6,7 @@
 # - Admin interface
 # - Health check endpoints
 # - Metrics endpoints for monitoring
+# - API documentation (Swagger/ReDoc)
 # - Custom error handlers
 # - Static/media file serving (development only)
 #
@@ -15,16 +16,22 @@
 # - Interface administrativa
 # - Endpoints de health check
 # - Endpoints de métricas para monitoramento
+# - Documentação da API (Swagger/ReDoc)
 # - Handlers de erro customizados
 # - Servir arquivos estáticos/mídia (apenas desenvolvimento)
 
 # Import custom error handlers from core app
 # Importa handlers de erro customizados da app core
-from core import views
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
+from core import views
 from django_base import settings
 
 # URL Patterns
@@ -57,15 +64,25 @@ urlpatterns = [
     # API information endpoint
     # Endpoint de informações da API
     path("api/info/", views.api_info, name="api_info"),
-    # API Documentation (if using drf-spectacular)
-    # Documentação da API (se usar drf-spectacular)
-    # Uncomment if you have drf-spectacular installed
-    # Descomente se tiver drf-spectacular instalado
-    # from drf_spectacular.views import SpectacularAPIView,
-    # SpectacularSwaggerView
-    # path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
-    # path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"),
-    # name="api-docs"),
+    # API Documentation (drf-spectacular)
+    # Documentação da API (drf-spectacular)
+    # OpenAPI 3 schema generation
+    # Geração de schema OpenAPI 3
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    # Swagger UI - Interactive API documentation
+    # Swagger UI - Documentação interativa da API
+    path(
+        "api/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    # ReDoc - Alternative API documentation interface
+    # ReDoc - Interface alternativa de documentação da API
+    path(
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
+    ),
 ]
 
 # Development-Only URLs

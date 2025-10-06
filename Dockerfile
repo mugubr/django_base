@@ -52,8 +52,32 @@ FROM base AS dependencies-dev
 COPY ./pyproject.toml ./uv.lock* ./
 
 # Create virtual environment and install ALL dependencies (production + dev)
+# Install dependencies from pyproject.toml without the local package
 # Cria ambiente virtual e instala TODAS as dependências (produção + dev)
-RUN uv venv && uv sync --dev
+# Instala dependências do pyproject.toml sem o pacote local
+RUN uv venv && \
+    uv pip install --python /app/.venv/bin/python \
+    django>=5.2.7 \
+    django-cors-headers>=4.9.0 \
+    django-prometheus>=2.4.1 \
+    django-q2>=1.8.0 \
+    djangorestframework>=3.16.1 \
+    gunicorn>=23.0.0 \
+    psycopg2-binary>=2.9.10 \
+    python-decouple>=3.8 \
+    celery>=5.5.3 \
+    django-environ>=0.12.0 \
+    django-filter>=25.2 \
+    redis>=6.4.0 \
+    sentry-sdk>=2.39.0 \
+    whitenoise>=6.11.0 \
+    drf-spectacular>=0.28.0 \
+    django-extensions>=4.1 \
+    coverage>=7.10.7 \
+    pre-commit>=4.3.0 \
+    ruff>=0.13.2 \
+    watchdog>=6.0.0 \
+    werkzeug>=3.1.3
 
 # Stage 3: Production Dependencies
 
@@ -69,7 +93,24 @@ COPY ./pyproject.toml ./uv.lock* ./
 # This significantly reduces the final image size and attack surface
 # Cria ambiente virtual e instala APENAS dependências de produção
 # Isso reduz significativamente o tamanho final da imagem e a superfície de ataque
-RUN uv venv && uv sync --no-dev
+RUN uv venv && \
+    uv pip install --python /app/.venv/bin/python \
+    django>=5.2.7 \
+    django-cors-headers>=4.9.0 \
+    django-prometheus>=2.4.1 \
+    django-q2>=1.8.0 \
+    djangorestframework>=3.16.1 \
+    gunicorn>=23.0.0 \
+    psycopg2-binary>=2.9.10 \
+    python-decouple>=3.8 \
+    celery>=5.5.3 \
+    django-environ>=0.12.0 \
+    django-filter>=25.2 \
+    redis>=6.4.0 \
+    sentry-sdk>=2.39.0 \
+    whitenoise>=6.11.0 \
+    drf-spectacular>=0.28.0 \
+    django-extensions>=4.1
 
 # Stage 4: Development Image
 
