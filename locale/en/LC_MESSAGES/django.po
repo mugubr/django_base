@@ -1,0 +1,310 @@
+# Django Base - English Translation
+# Copyright (C) 2025
+# This file is distributed under the MIT License.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Django Base 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-07 12:00+0000\n"
+"PO-Revision-Date: 2025-10-07 12:00+0000\n"
+"Last-Translator: Miguel de Freitas Muniz <miguimuniz@gmail.com>\n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Forms - Login/Register/Profile
+msgid "Username"
+msgstr "Username"
+
+msgid "Password"
+msgstr "Password"
+
+msgid "Remember me"
+msgstr "Remember me"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "First Name"
+msgstr "First Name"
+
+msgid "Last Name"
+msgstr "Last Name"
+
+msgid "Biography"
+msgstr "Biography"
+
+msgid "Phone"
+msgstr "Phone"
+
+msgid "Birth date"
+msgstr "Birth date"
+
+msgid "City"
+msgstr "City"
+
+msgid "Country"
+msgstr "Country"
+
+msgid "Website"
+msgstr "Website"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "Verified"
+msgstr "Verified"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Created at"
+msgstr "Created at"
+
+msgid "Updated at"
+msgstr "Updated at"
+
+# Models
+msgid "User"
+msgstr "User"
+
+msgid "User Profile"
+msgstr "User Profile"
+
+msgid "User Profiles"
+msgstr "User Profiles"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Categories"
+msgstr "Categories"
+
+msgid "Parent category"
+msgstr "Parent category"
+
+msgid "Tag"
+msgstr "Tag"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Name"
+msgstr "Name"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Color"
+msgstr "Color"
+
+msgid "Product"
+msgstr "Product"
+
+msgid "Products"
+msgstr "Products"
+
+msgid "Price"
+msgstr "Price"
+
+msgid "Created by"
+msgstr "Created by"
+
+# Messages
+msgid "Welcome back, {username}!"
+msgstr "Welcome back, {username}!"
+
+msgid "Invalid username or password."
+msgstr "Invalid username or password."
+
+msgid "Please correct the errors below."
+msgstr "Please correct the errors below."
+
+msgid "Account created successfully! Welcome, {username}!"
+msgstr "Account created successfully! Welcome, {username}!"
+
+msgid "Goodbye, {username}!"
+msgstr "Goodbye, {username}!"
+
+msgid "Profile updated successfully!"
+msgstr "Profile updated successfully!"
+
+msgid "This email is already in use."
+msgstr "This email is already in use."
+
+# Validation
+msgid "Tell us about yourself..."
+msgstr "Tell us about yourself..."
+
+msgid "+1 234 567 8900"
+msgstr "+1 234 567 8900"
+
+msgid "https://example.com"
+msgstr "https://example.com"
+
+# Admin
+msgid "User Info"
+msgstr "User Info"
+
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Location"
+msgstr "Location"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Timestamps"
+msgstr "Timestamps"
+
+# Common
+msgid "Home"
+msgstr "Home"
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Register"
+msgstr "Register"
+
+msgid "Logout"
+msgstr "Logout"
+
+msgid "Profile"
+msgstr "Profile"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Welcome to Django Base"
+msgstr "Welcome to Django Base"
+
+msgid "My Profile"
+msgstr "My Profile"
+
+# Home Page
+msgid "Get Started"
+msgstr "Get Started"
+
+msgid "Latest Django 5.2 with Django REST Framework for building robust APIs"
+msgstr "Latest Django 5.2 with Django REST Framework for building robust APIs"
+
+msgid "Fully containerized with Docker Compose for easy development and deployment"
+msgstr "Fully containerized with Docker Compose for easy development and deployment"
+
+msgid "Production-grade database with optimized configurations"
+msgstr "Production-grade database with optimized configurations"
+
+msgid "High-performance caching and session storage"
+msgstr "High-performance caching and session storage"
+
+msgid "Bootstrap 5.3 + HTMX for responsive, dynamic interfaces"
+msgstr "Bootstrap 5.3 + HTMX for responsive, dynamic interfaces"
+
+msgid "Complete user authentication system with profiles"
+msgstr "Complete user authentication system with profiles"
+
+# About Page
+msgid "About"
+msgstr "About"
+
+msgid "About Django Base"
+msgstr "About Django Base"
+
+msgid "A production-ready Django template with best practices"
+msgstr "A production-ready Django template with best practices"
+
+msgid "Project Information"
+msgstr "Project Information"
+
+msgid "Technology Stack"
+msgstr "Technology Stack"
+
+msgid "Features"
+msgstr "Features"
+
+msgid "REST API with DRF"
+msgstr "REST API with DRF"
+
+msgid "Authentication System"
+msgstr "Authentication System"
+
+msgid "Monitoring & Observability"
+msgstr "Monitoring & Observability"
+
+msgid "Pre-commit Hooks"
+msgstr "Pre-commit Hooks"
+
+msgid "Internationalization (i18n)"
+msgstr "Internationalization (i18n)"
+
+msgid "Developer"
+msgstr "Developer"
+
+msgid "Full Stack Developer"
+msgstr "Full Stack Developer"
+
+msgid "View GitHub Profile"
+msgstr "View GitHub Profile"
+
+msgid "This project was created as a production-ready Django template with best practices, modern tooling, and comprehensive documentation. Feel free to use it as a starting point for your own projects!"
+msgstr "This project was created as a production-ready Django template with best practices, modern tooling, and comprehensive documentation. Feel free to use it as a starting point for your own projects!"
+
+msgid "Repository"
+msgstr "Repository"
+
+msgid "Source Code"
+msgstr "Source Code"
+
+msgid "License"
+msgstr "License"
+
+msgid "Free to use and modify"
+msgstr "Free to use and modify"
+
+msgid "Report Issues"
+msgstr "Report Issues"
+
+msgid "Fork Repository"
+msgstr "Fork Repository"
+
+msgid "Star on GitHub"
+msgstr "Star on GitHub"
+
+msgid "Contributing"
+msgstr "Contributing"
+
+msgid "Contributions are welcome! If you'd like to improve this project, please:"
+msgstr "Contributions are welcome! If you'd like to improve this project, please:"
+
+msgid "Fork the repository"
+msgstr "Fork the repository"
+
+msgid "Create a feature branch"
+msgstr "Create a feature branch"
+
+msgid "Commit your changes"
+msgstr "Commit your changes"
+
+msgid "Push to the branch"
+msgstr "Push to the branch"
+
+msgid "Open a Pull Request"
+msgstr "Open a Pull Request"
+
+msgid "Questions or suggestions?"
+msgstr "Questions or suggestions?"
+
+msgid "Feel free to open an issue on GitHub!"
+msgstr "Feel free to open an issue on GitHub!"
+
+msgid "Back to Home"
+msgstr "Back to Home"

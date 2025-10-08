@@ -1,0 +1,262 @@
+{# Home page template with hero section, features, and dashboard / Template da página inicial com seção hero, recursos e dashboard #}
+{% extends "base/base.html" %}
+{% load static core_tags i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+{# Hero section with project introduction / Seção hero com introdução do projeto #}
+<!-- Hero Section / Seção Hero -->
+<div class="bg-success text-white" style="background-color: #198754 !important;">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="bi bi-rocket-takeoff"></i> Django Base Project
+                </h1>
+                <p class="lead mb-4">
+                    {% trans "A modern, production-ready Django starter template with Docker, PostgreSQL, Redis, and all the best practices built-in." %}
+                </p>
+                {% if not user.is_authenticated %}
+                <div class="d-grid gap-2 d-md-flex">
+                    <a href="{% url 'register' %}" class="btn btn-light btn-lg px-4 me-md-2">
+                        <i class="bi bi-person-plus"></i> {% trans "Get Started" %}
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-box-arrow-in-right"></i> {% trans "Login" %}
+                    </a>
+                </div>
+                {% else %}
+                <div class="alert alert-light" role="alert">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    {% blocktrans with username=user.username %}Welcome back, <strong>{{ username }}</strong>!{% endblocktrans %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 text-center d-none d-lg-block">
+                <i class="bi bi-code-slash" style="font-size: 12rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Features section showcasing technologies / Seção de recursos mostrando tecnologias #}
+<!-- Features Section / Seção de Recursos -->
+<div class="container my-5">
+    <div class="row text-center mb-4">
+        <div class="col-lg-12">
+            <h2 class="fw-bold">{% trans "Features & Technologies" %}</h2>
+            <p class="text-muted">{% trans "Everything you need for a modern Django application" %}</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Django & DRF -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-gear-fill text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Django & DRF</h5>
+                    <p class="card-text text-muted">
+                        {% trans "Latest Django 5.2 with Django REST Framework for building robust APIs" %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Docker -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-box-seam" style="font-size: 3rem; color: #198754;"></i>
+                    </div>
+                    <h5 class="card-title">Docker Ready</h5>
+                    <p class="card-text text-muted">
+                        {% trans "Fully containerized with Docker Compose for easy development and deployment" %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PostgreSQL -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-database text-info" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">PostgreSQL</h5>
+                    <p class="card-text text-muted">
+                        {% trans "Production-grade database with optimized configurations" %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Redis -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-lightning-charge text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Redis Cache</h5>
+                    <p class="card-text text-muted">
+                        {% trans "High-performance caching and session storage" %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bootstrap & HTMX -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-brush text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Modern Frontend</h5>
+                    <p class="card-text text-muted">
+                        {% trans "Bootstrap 5.3 + HTMX for responsive, dynamic interfaces" %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authentication -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="bi bi-shield-check text-secondary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Authentication</h5>
+                    <p class="card-text text-muted">
+                        {% trans "Complete user authentication system with profiles" %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# User dashboard section (authenticated users only) / Seção de dashboard do usuário (apenas usuários autenticados) #}
+<!-- User Dashboard Section / Seção de Dashboard do Usuário -->
+{% if user.is_authenticated %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header text-white" style="background-color: #198754 !important;">
+                    <h5 class="mb-0">
+                        <i class="bi bi-speedometer2"></i> {% trans "Your Dashboard" %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                {% if user.profile.avatar %}
+                                <img src="{{ user.profile.avatar.url }}"
+                                     alt="{{ user.username }}"
+                                     class="rounded-circle me-3"
+                                     style="width: 64px; height: 64px; object-fit: cover;">
+                                {% else %}
+                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3"
+                                     style="width: 64px; height: 64px;">
+                                    <i class="bi bi-person-fill" style="font-size: 2rem;"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h6 class="mb-0">{{ user.get_full_name|default:user.username }}</h6>
+                                    <small class="text-muted">@{{ user.username }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row g-3">
+                                {# Profile edit button / Botão de editar perfil #}
+                                <div class="col-sm-4">
+                                    <a href="{% url 'profile' %}" class="btn w-100" style="color: #198754; border-color: #198754;">
+                                        <i class="bi bi-person-circle"></i> {% trans "Edit Profile" %}
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="{% url 'products' %}" class="btn btn-success w-100">
+                                        <i class="bi bi-bag"></i> {% trans "Products" %}
+                                    </a>
+                                </div>
+                                <div class="col-sm-4">
+                                    <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary w-100">
+                                        <i class="bi bi-gear"></i> {% trans "Admin Panel" %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if user.profile.bio %}
+                    <hr>
+                    <div class="mt-3">
+                        <h6>About</h6>
+                        <p class="text-muted">{{ user.profile.bio }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{# Quick links section for API docs and health check / Seção de links rápidos para docs da API e verificação de saúde #}
+<!-- Quick Links Section / Seção de Links Rápidos -->
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-12 mb-4">
+                <h2 class="fw-bold">{% trans "Quick Links" %}</h2>
+                <p class="text-muted">{% trans "Explore the API and documentation" %}</p>
+            </div>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <a href="/api/docs/" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-book mb-2" style="font-size: 2rem; color: #198754;"></i>
+                            <h5>{% trans "API Documentation" %}</h5>
+                            <p class="text-muted small mb-0">Swagger UI</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/api/redoc/" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-file-text text-success mb-2" style="font-size: 2rem;"></i>
+                            <h5>ReDoc</h5>
+                            <p class="text-muted small mb-0">{% trans "Alternative API docs" %}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="/health-status/" class="text-decoration-none">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-heart-pulse text-danger mb-2" style="font-size: 2rem;"></i>
+                            <h5>Health Check</h5>
+                            <p class="text-muted small mb-0">{% trans "System status" %}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

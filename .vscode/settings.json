@@ -12,7 +12,5 @@
         }
     },
     "ruff.importStrategy": "fromEnvironment",
-    "ruff.path": [
-        "python"
-    ],
+    "ruff.path": ["python"]
 }

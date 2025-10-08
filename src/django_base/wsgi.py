@@ -1,27 +1,45 @@
 """
-WSGI config for django_base project.
+WSGI Configuration for Django Base Project
+Configuracao WSGI para o Projeto Django Base
 
-It exposes the WSGI callable as a module-level variable named ``application``.
+This module configures WSGI (Web Server Gateway Interface) for the Django application.
+WSGI is a specification that describes how a web server communicates with web applications.
 
-For more information on this file, see
+Este modulo configura o WSGI (Web Server Gateway Interface) para a aplicacao Django.
+WSGI e uma especificacao que descreve como um servidor web se comunica com aplicacoes web.
+
+Key Components / Componentes Principais:
+-----------------------------------------
+- Exposes the WSGI callable as a module-level variable named 'application'
+- Used by WSGI servers like Gunicorn, uWSGI, or mod_wsgi to serve the application
+- Handles synchronous HTTP requests (for async, see asgi.py)
+
+- Expoe o callable WSGI como uma variavel de nivel de modulo chamada 'application'
+- Usado por servidores WSGI como Gunicorn, uWSGI, ou mod_wsgi para servir a aplicacao
+- Lida com requisicoes HTTP sincronas (para async, veja asgi.py)
+
+Usage / Uso:
+------------
+Production deployment with Gunicorn:
+Implantacao em producao com Gunicorn:
+    gunicorn django_base.wsgi:application --bind 0.0.0.0:8000
+
+For more information / Para mais informacoes:
 https://docs.djangoproject.com/en/5.2/howto/deployment/wsgi/
-
----
-Configuração WSGI para o projeto django_base.
-Ele expõe o 'callable' WSGI como
-uma variável de nível de módulo chamada ``application``.
-O Gunicorn usa este arquivo para servir a aplicação.
-Para mais informações sobre este arquivo, veja a documentação do Django.
 """
 
 import os
 
 from django.core.wsgi import get_wsgi_application
 
-# Points to the settings file for the application
-# Aponta para o arquivo de configurações da aplicação
+# Set default Django settings module
+# Define o modulo de configuracoes padrao do Django
+# This environment variable tells Django which settings file to use
+# Esta variavel de ambiente diz ao Django qual arquivo de configuracoes usar
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "django_base.settings")
 
-# get_wsgi_application() returns the WSGI callable
-# get_wsgi_application() retorna o 'callable' WSGI
+# Create and expose the WSGI application callable
+# Cria e expoe o callable da aplicacao WSGI
+# This is the entry point for WSGI servers to interface with Django
+# Este e o ponto de entrada para servidores WSGI interfacearem com Django
 application = get_wsgi_application()

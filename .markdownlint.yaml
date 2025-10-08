@@ -1,0 +1,27 @@
+# Markdownlint Configuration
+# Configuração do Markdownlint
+
+# MD013 - Line length
+# Allow long lines in code blocks, tables, and headings
+MD013:
+  line_length: 80
+  code_blocks: false
+  tables: false
+  headings: false
+
+# MD024 - No duplicate headings
+# Allow duplicate headings in different sections
+MD024:
+  siblings_only: true
+
+# MD033 - Inline HTML
+# Allow HTML in markdown (needed for Django templates)
+MD033: false
+
+# MD036 - Emphasis as heading
+# Allow emphasis for special formatting
+MD036: false
+
+# MD040 - Fenced code language
+# Require language for fenced code blocks
+MD040: true

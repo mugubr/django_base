@@ -1,11 +1,34 @@
-# Base Settings - Django Base Project
-# Configurações Base - Projeto Django Base
+"""
+Base Settings - Django Base Project
 
-# This module contains settings shared across all environments.
-# Environment-specific settings are in dev.py and prod.py
-#
-# Este módulo contém configurações compartilhadas entre todos os ambientes.
-# Configurações específicas de ambiente estão em dev.py e prod.py
+This module contains settings shared across all environments (dev, prod, staging).
+Environment-specific settings should be defined in their respective modules (dev.py, prod.py).
+
+Key features:
+- Core Django configuration (apps, middleware, templates)
+- Database setup with PostgreSQL
+- REST Framework with pagination and throttling
+- CORS and CSRF security configuration
+- Background task processing with Django Q
+- API documentation with DRF Spectacular
+- Prometheus metrics integration
+
+---
+
+Configurações Base - Projeto Django Base
+
+Este módulo contém configurações compartilhadas entre todos os ambientes (dev, prod, staging).
+Configurações específicas de ambiente devem ser definidas em seus respectivos módulos (dev.py, prod.py).
+
+Recursos principais:
+- Configuração core do Django (apps, middleware, templates)
+- Setup de banco de dados com PostgreSQL
+- REST Framework com paginação e limitação de taxa
+- Configuração de segurança CORS e CSRF
+- Processamento de tarefas em background com Django Q
+- Documentação de API com DRF Spectacular
+- Integração de métricas Prometheus
+"""
 
 from pathlib import Path
 
@@ -30,6 +53,8 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv(), default="localhost,127.0.0.1")
 
 # Application Definition / Definição de Aplicação
+# Django apps installed in this project, order matters for some apps
+# Apps Django instaladas neste projeto, ordem importa para algumas apps
 
 INSTALLED_APPS = [
     # Django Prometheus must be first for accurate metrics
@@ -56,24 +81,31 @@ INSTALLED_APPS = [
     "core",
 ]
 
+# Middleware Stack / Pilha de Middleware
+# Order is critical: each middleware processes requests top-to-bottom and responses bottom-to-top
+# Ordem é crítica: cada middleware processa requests de cima para baixo e responses de baixo para cima
+
 MIDDLEWARE = [
-    # CORS middleware must be as high as possible
-    # Middleware CORS deve estar o mais alto possível
+    # CORS middleware must be as high as possible to handle preflight requests
+    # Middleware CORS deve estar o mais alto possível para tratar requisições preflight
     "corsheaders.middleware.CorsMiddleware",
-    # Prometheus middleware wraps all requests
-    # Middleware Prometheus envolve todas as requisições
+    # Prometheus middleware wraps all requests for metrics collection
+    # Middleware Prometheus envolve todas as requisições para coletar métricas
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
-    # Django security middleware
-    # Middleware de segurança do Django
+    # Django security middleware (HTTPS redirect, HSTS, etc.)
+    # Middleware de segurança do Django (redirect HTTPS, HSTS, etc.)
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # Locale middleware for i18n (must be after SessionMiddleware)
+    # Middleware de locale para i18n (deve estar após SessionMiddleware)
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # Prometheus after middleware
-    # Prometheus após middleware
+    # Prometheus after middleware for response timing
+    # Prometheus após middleware para timing de resposta
     "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
@@ -125,7 +157,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",  # noqa: E501
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -142,11 +174,29 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization / Internacionalização
+# Language code for this installation. Options: 'en', 'pt-br', etc.
+# Código de idioma para esta instalação. Opções: 'en', 'pt-br', etc.
+LANGUAGE_CODE = config("LANGUAGE_CODE", default="pt-br")
 
-LANGUAGE_CODE = config("LANGUAGE_CODE", default="en-us")
-TIME_ZONE = config("TIME_ZONE", default="UTC")
+# Time zone for this installation / Fuso horário para esta instalação
+TIME_ZONE = config("TIME_ZONE", default="America/Sao_Paulo")
+
+# Enable Django translation system / Habilitar sistema de tradução do Django
 USE_I18N = True
+
+# Enable timezone-aware datetimes / Habilitar datetimes com timezone
 USE_TZ = True
+
+# Languages supported by this application / Idiomas suportados por esta aplicação
+LANGUAGES = [
+    ("en", "English"),
+    ("pt-br", "Português (Brasil)"),
+]
+
+# Path to locale files for translations / Caminho para arquivos de locale para traduções
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
 
 # Static Files (CSS, JavaScript, Images)
 # Arquivos Estáticos (CSS, JavaScript, Imagens)
@@ -207,6 +257,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 # CORS Configuration / Configuração CORS
+# Cross-Origin Resource Sharing allows frontend apps to make requests to this API
+# Cross-Origin Resource Sharing permite apps frontend fazerem requisições para esta API
 
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
@@ -214,11 +266,15 @@ CORS_ALLOWED_ORIGINS = config(
     default="http://localhost:3000,http://127.0.0.1:3000",
 )
 
+# Allow cookies to be sent in cross-origin requests (needed for session auth)
+# Permite cookies em requisições cross-origin (necessário para autenticação de sessão)
 CORS_ALLOW_CREDENTIALS = True
 
 # CSRF Trusted Origins / Origens Confiáveis CSRF
-# Required for cross-origin POST requests
-# Necessário para requisições POST cross-origin
+# Required for cross-origin POST requests with CSRF protection
+# Django checks if the origin matches these trusted origins
+# Necessário para requisições POST cross-origin com proteção CSRF
+# Django verifica se a origem corresponde a estas origens confiáveis
 CSRF_TRUSTED_ORIGINS = config(
     "CSRF_TRUSTED_ORIGINS",
     cast=Csv(),
@@ -227,20 +283,36 @@ CSRF_TRUSTED_ORIGINS = config(
 
 # Django Q (Background Tasks) Configuration
 # Configuração do Django Q (Tarefas em Background)
+# Used for async task processing (emails, reports, data processing, etc.)
+# Usado para processamento assíncrono de tarefas (emails, relatórios, processamento de dados, etc.)
 
 Q_CLUSTER = {
     "name": "django_base",
+    # Number of worker processes for task execution
+    # Número de processos worker para execução de tarefas
     "workers": config("DJANGO_Q_WORKERS", default=4, cast=int),
+    # Recycle workers after N tasks to prevent memory leaks
+    # Recicla workers após N tarefas para prevenir vazamento de memória
     "recycle": 500,
+    # Task timeout in seconds
+    # Timeout de tarefa em segundos
     "timeout": 60,
+    # Compress task data in Redis
+    # Comprime dados de tarefa no Redis
     "compress": True,
+    # Maximum number of successful tasks to keep
+    # Número máximo de tarefas bem-sucedidas para manter
     "save_limit": 250,
+    # Maximum number of tasks in queue
+    # Número máximo de tarefas na fila
     "queue_limit": 500,
     "cpu_affinity": 1,
     "label": "Django Q",
+    # Use Django ORM for task storage
+    # Usa Django ORM para armazenamento de tarefas
     "orm": "default",
-    # Redis configuration for Django Q
-    # Configuração Redis para Django Q
+    # Redis configuration for task broker
+    # Configuração Redis para broker de tarefas
     "redis": {
         "host": config("REDIS_HOST", default="redis"),
         "port": config("REDIS_PORT", default=6379, cast=int),

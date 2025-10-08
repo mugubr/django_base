@@ -18,7 +18,7 @@ services:
   # Primary database for storing application data
   # Banco de dados principal para armazenar dados da aplicação
   db:
-    image: postgres:15-alpine  # Alpine variant for smaller image size
+    image: postgres:15-alpine # Alpine variant for smaller image size
     container_name: postgres_db
     volumes:
       # Persist database data across container restarts
@@ -48,10 +48,10 @@ services:
         # Resource limits prevent database from consuming all system resources
         # Limites de recursos previnem que o banco consuma todos os recursos do sistema
         limits:
-          cpus: '2'
+          cpus: "2"
           memory: 2G
         reservations:
-          cpus: '1'
+          cpus: "1"
           memory: 1G
     profiles: ["prod", "dev"]
 
@@ -61,7 +61,7 @@ services:
   # Used for caching, session storage, and Django Q task queue
   # Usado para cache, armazenamento de sessão e fila de tarefas Django Q
   redis:
-    image: redis:7-alpine  # Alpine for smaller image size
+    image: redis:7-alpine # Alpine for smaller image size
     container_name: redis
     profiles: ["prod", "dev"]
     ports:
@@ -84,12 +84,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 512M
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 256M
-    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    command:
+      redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy
+      allkeys-lru
 
   # Django Web Application (Production)
   # Aplicação Web Django (Produção)
@@ -99,7 +101,7 @@ services:
   web:
     build:
       context: .
-      target: production  # Use production stage from multi-stage Dockerfile
+      target: production # Use production stage from multi-stage Dockerfile
     container_name: django_web_prod
     profiles: ["prod"]
     volumes:
@@ -126,7 +128,14 @@ services:
     healthcheck:
       # Verify Django app is responding to HTTP requests
       # Verifica se aplicação Django está respondendo a requisições HTTP
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/', timeout=2)"]
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request;
+          urllib.request.urlopen('http://localhost:8000/health/', timeout=2)",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -135,10 +144,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 1G
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
 
   # Django Q Cluster (Background Task Worker)
@@ -171,10 +180,10 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 512M
         reservations:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 256M
 
   # Nginx Reverse Proxy
@@ -204,7 +213,15 @@ services:
     healthcheck:
       # Verify Nginx is responding
       # Verifica se Nginx está respondendo
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health/"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost/health/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -212,7 +229,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 256M
 
   # Prometheus Metrics Collection
@@ -236,18 +253,18 @@ services:
     command:
       # Configuration options for Prometheus
       # Opções de configuração para Prometheus
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
       # Data retention period
       # Período de retenção de dados
-      - '--storage.tsdb.retention.time=30d'
+      - "--storage.tsdb.retention.time=30d"
     depends_on:
       - web
     restart: unless-stopped
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
 
   # Grafana Monitoring Dashboard
@@ -278,7 +295,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'
+          cpus: "0.5"
           memory: 512M
 
 # Volumes for Data Persistence

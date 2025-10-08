@@ -1,29 +1,131 @@
-# Django Signals - Core Application
-# Sinais Django - Aplicação Core
+"""
+Core Application Signal Handlers.
 
-# This module defines signal handlers for Product model with:
-# - Robust error handling to prevent signal failures from breaking saves
-# - Logging for debugging and monitoring
-# - Asynchronous task scheduling
-# - Graceful degradation when services are unavailable
-#
-# Este módulo define handlers de sinal para o modelo Product com:
-# - Tratamento robusto de erros para prevenir falhas de sinal quebrarem saves
-# - Logging para debugging e monitoramento
-# - Agendamento de tarefas assíncronas
-# - Degradação graciosa quando serviços estão indisponíveis
+This module defines Django signal handlers for models in the core application.
+Provides automatic profile creation, change tracking, logging, and async task
+scheduling with robust error handling.
+
+Handlers de Sinal da Aplicação Core.
+
+Este módulo define handlers de sinal Django para modelos da aplicação core.
+Provê criação automática de perfil, rastreamento de mudanças, logging e
+agendamento de tarefas assíncronas com tratamento robusto de erros.
+
+Signal Handlers / Handlers de Sinal:
+    create_user_profile: Auto-creates UserProfile on User creation
+    save_user_profile: Saves profile when User is saved
+    product_pre_save_handler: Tracks changes before Product save
+    schedule_product_notification: Schedules async notifications
+    update_search_index: Updates search index (placeholder)
+    product_post_delete_handler: Cleanup after Product deletion
+
+Features / Recursos:
+    - Automatic profile creation / Criação automática de perfil
+    - Change tracking / Rastreamento de mudanças
+    - Async task scheduling / Agendamento de tarefas assíncronas
+    - Robust error handling / Tratamento robusto de erros
+    - Comprehensive logging / Logging abrangente
+    - Graceful degradation / Degradação graciosa
+
+Important Notes / Notas Importantes:
+    - Signal handlers NEVER raise exceptions that could break saves
+    - All errors are logged but operations continue
+    - Handlers nunca lançam exceções que possam quebrar saves
+    - Todos os erros são logados mas operações continuam
+
+Examples / Exemplos:
+    # User creation automatically creates profile
+    # Criação de usuário cria automaticamente perfil
+    user = User.objects.create_user('john', 'john@example.com')
+    # user.profile now exists / user.profile agora existe
+
+    # Product price changes are tracked
+    # Mudanças de preço de produto são rastreadas
+    product.price = Decimal('99.99')
+    product.save()  # Logs price change / Loga mudança de preço
+"""
 
 import logging
 
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_delete, post_save, pre_save
 from django.dispatch import receiver
 from django_q.tasks import async_task
 
-from .models import Product
+from .models import Product, UserProfile
+
+User = get_user_model()
 
 # Configure logger for this module
 # Configura logger para este módulo
 logger = logging.getLogger(__name__)
+
+
+# User Profile Auto-Creation Signal
+# Sinal de Auto-Criação de Perfil de Usuário
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Automatically creates a UserProfile when a new User is created.
+    This ensures every user has an associated profile.
+
+    Cria automaticamente um UserProfile quando um novo User é criado.
+    Isso garante que todo usuário tenha um perfil associado.
+
+    Args:
+        sender: The User model class
+        instance: The User instance that was saved
+        created (bool): True if a new User was created
+        **kwargs: Additional signal parameters
+    """
+    try:
+        if created:
+            UserProfile.objects.create(user=instance)
+            logger.info(
+                f"UserProfile created for user {instance.username} (ID: {instance.id})"
+            )
+    except Exception as e:
+        # Don't let profile creation errors prevent user creation
+        # Não deixe erros de criação de perfil prevenir criação de usuário
+        logger.error(
+            f"Failed to create UserProfile for user {instance.username} (ID: {instance.id}): {e}",
+            exc_info=True,
+        )
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """
+    Saves the UserProfile whenever the User is saved.
+    Creates profile if it doesn't exist (fallback for edge cases).
+
+    Salva o UserProfile sempre que o User é salvo.
+    Cria perfil se não existir (fallback para casos extremos).
+
+    Args:
+        sender: The User model class
+        instance: The User instance that was saved
+        **kwargs: Additional signal parameters
+    """
+    try:
+        # Try to save existing profile, create if doesn't exist
+        # Tenta salvar perfil existente, cria se não existir
+        if hasattr(instance, "profile"):
+            instance.profile.save()
+        else:
+            # Edge case: profile doesn't exist, create it
+            # Caso extremo: perfil não existe, cria
+            UserProfile.objects.create(user=instance)
+            logger.warning(
+                f"UserProfile was missing for user {instance.username} (ID: {instance.id}), created now"
+            )
+    except Exception as e:
+        logger.error(
+            f"Error saving UserProfile for user {instance.username} (ID: {instance.id}): {e}",
+            exc_info=True,
+        )
 
 
 # Pre-Save Signal Handlers
@@ -162,7 +264,7 @@ def schedule_product_notification(sender, instance, created, **kwargs):
                 )
 
                 logger.info(
-                    f"Notification task scheduled successfully for product {instance.id}. "  # noqa: E501
+                    f"Notification task scheduled successfully for product {instance.id}. "
                     f"Task ID: {task_id}"
                 )
 
@@ -181,7 +283,7 @@ def schedule_product_notification(sender, instance, created, **kwargs):
                 # Qualquer outro erro no agendamento de tarefa
                 # (conexão BD, etc.)
                 logger.error(
-                    f"Failed to schedule notification task for product {instance.id}: {e}",  # noqa: E501
+                    f"Failed to schedule notification task for product {instance.id}: {e}",
                     exc_info=True,
                 )
                 # Don't re-raise - allow the product save to
@@ -321,9 +423,11 @@ def product_post_delete_handler(sender, instance, **kwargs):
 # Signal Connection Status Logging
 # Logging de Status de Conexão de Sinais
 
-logger.info("Product model signal handlers registered successfully")
+logger.info("Signal handlers registered successfully")
 logger.debug(
     "Active signal handlers: "
+    "create_user_profile, "
+    "save_user_profile, "
     "product_pre_save_handler, "
     "schedule_product_notification, "
     "update_search_index, "

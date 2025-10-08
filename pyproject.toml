@@ -1,47 +1,85 @@
+# Django Base Project Configuration
+# Configuração do Projeto Django Base
+#
+# Production-ready Django boilerplate with Docker, DRF, authentication system,
+# and complete portfolio features. Includes 4 models, API endpoints, utilities,
+# and bilingual documentation (EN/PT).
+#
+# Boilerplate Django pronto para produção com Docker, DRF, sistema de autenticação
+# e features completas de portfólio. Inclui 4 models, endpoints API, utilitários
+# e documentação bilíngue (EN/PT).
+
 [project]
 name = "django-base"
 version = "0.1.0"
-description = "Base para um projeto Django / Base for a Django project"
+description = "Production-ready Django boilerplate with Docker, DRF, auth system, and portfolio features | Base Django pronta para produção com Docker, DRF, autenticação e features de portfólio"
 authors = [
     {name = "Miguel de Freitas Muniz", email = "miguimuniz@gmail.com"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.11"
-keywords = ["django", "boilerplate", "docker", "rest-api"]
+keywords = [
+    "django", "boilerplate", "docker", "rest-api", "drf",
+    "authentication", "postgresql", "redis", "bootstrap",
+    "portfolio", "bilingual"
+]
 classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
     "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
     "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
 ]
+# Core dependencies / Dependências principais
 dependencies = [
-    "django>=5.2.7",
-    "django-cors-headers>=4.9.0",
-    "django-prometheus>=2.4.1",
-    "django-q2>=1.8.0",
-    "djangorestframework>=3.16.1",
-    "gunicorn>=23.0.0",
-    "psycopg2-binary>=2.9.10",
-    "python-decouple>=3.8",
-    "celery>=5.5.3",
-    "django-environ>=0.12.0",
-    "django-filter>=25.2",
-    "redis>=6.4.0",
-    "sentry-sdk>=2.39.0",
-    "whitenoise>=6.11.0",
-    "drf-spectacular>=0.28.0",
-    "django-extensions>=4.1",
-    "pillow>=11.3.0",
+    # Django Framework
+    "django>=5.2.7",                      # Core framework / Framework principal
+
+    # Django Extensions & Tools / Extensões e Ferramentas Django
+    "django-cors-headers>=4.9.0",         # CORS support / Suporte CORS
+    "django-extensions>=4.1",             # Extra management commands / Comandos extras
+    "django-filter>=25.2",                # Advanced filtering / Filtragem avançada
+    "django-environ>=0.12.0",             # Environment variables / Variáveis de ambiente
+    "python-decouple>=3.8",               # Settings from .env / Settings do .env
+
+    # REST API / API REST
+    "djangorestframework>=3.16.1",        # REST framework / Framework REST
+    "drf-spectacular>=0.28.0",            # OpenAPI/Swagger docs / Docs OpenAPI/Swagger
+
+    # Background Tasks / Tarefas em Background
+    "django-q2>=1.8.0",                   # Task queue / Fila de tarefas
+    "celery>=5.5.3",                      # Distributed task queue / Fila distribuída
+
+    # Database & Cache / Banco de Dados & Cache
+    "psycopg2-binary>=2.9.10",            # PostgreSQL adapter / Adaptador PostgreSQL
+    "redis>=6.4.0",                       # Redis client / Cliente Redis
+
+    # Production Server / Servidor de Produção
+    "gunicorn>=23.0.0",                   # WSGI HTTP server / Servidor HTTP WSGI
+    "whitenoise>=6.11.0",                 # Static files serving / Servir arquivos estáticos
+
+    # Monitoring & Security / Monitoramento & Segurança
+    "django-prometheus>=2.4.1",           # Prometheus metrics / Métricas Prometheus
+    "sentry-sdk>=2.39.0",                 # Error tracking / Rastreamento de erros
+
+    # Media & Files / Mídia & Arquivos
+    "pillow>=11.3.0",                     # Image processing / Processamento de imagens
 ]
 
+# Development dependencies / Dependências de desenvolvimento
 [project.optional-dependencies]
 dev = [
-    "coverage>=7.10.7",
-    "django-extensions>=4.1",
-    "pre-commit>=4.3.0",
-    "ruff>=0.13.2",
-    "watchdog>=6.0.0",
-    "werkzeug>=3.1.3",
+    "coverage>=7.10.7",          # Code coverage / Cobertura de código
+    "django-extensions>=4.1",    # Enhanced shell, runserver_plus / Shell melhorado
+    "pre-commit>=4.3.0",         # Git hooks automation / Automação de hooks Git
+    "ruff>=0.13.2",              # Fast linter & formatter / Linter e formatador rápido
+    "watchdog>=6.0.0",           # File system monitoring / Monitoramento de arquivos
+    "werkzeug>=3.1.3",           # WSGI utilities for dev / Utilitários WSGI para dev
 ]
 
 [project.urls]
@@ -75,6 +113,7 @@ select = [
 ]
 ignore = [
     "S101",  # assert detectado (necessário em testes) / assert detected (necessary in tests)
+    "E501", # Ignora "line too long" / Ignores "line too long"
 ]
 [tool.ruff.lint.per-file-ignores]
 "*/tests.py" = ["S101"]  # permite assert em testes
@@ -89,6 +128,13 @@ omit = [
     "src/*/tests/*",
     "src/*/admin.py",
     "src/django_base/*",
+    "src/*/apps.py",
+    "src/*/settings.py",
+    "src/*/wsgi.py",
+    "src/*/asgi.py",
+    "src/*/management/*",
+    "src/*/templatetags/*",
+    "src/*/__init__.py",
     "manage.py",
 ]
 
@@ -99,15 +145,22 @@ show_missing = true
 # Configuração do Linter de Segurança Bandit
 [tool.bandit]
 exclude_dirs = [
-    "tests",
-    "migrations",
-    ".venv",
-    "venv",
-    "env",
-    "node_modules",
+    "src/*/migrations/*",
+    "src/*/tests/*",
+    "src/*/admin.py",
+    "src/django_base/*",
+    "src/*/apps.py",
+    "src/*/settings.py",
+    "src/*/wsgi.py",
+    "src/*/asgi.py",
+    "src/*/management/*",
+    "src/*/templatetags/*",
+    "src/*/__init__.py",
+    "manage.py",
 ]
 skips = [
     "B101",  # assert_used - ok in tests / assert_used - ok em testes
+    "B106",  # hardcoded_password - ok in tests / hardcoded_password - ok em testes
 ]
 
 # Detect Secrets Configuration
@@ -115,12 +168,14 @@ skips = [
 [tool.detect-secrets]
 exclude_files = "uv.lock|.*\\.svg$|package-lock\\.json|yarn\\.lock"
 
+# UV dependency groups (same as optional-dependencies.dev)
+# Grupos de dependências UV (mesmo que optional-dependencies.dev)
 [dependency-groups]
 dev = [
-    "coverage>=7.10.7",
-    "django-extensions>=4.1",
-    "pre-commit>=4.3.0",
-    "ruff>=0.13.2",
-    "watchdog>=6.0.0",
-    "werkzeug>=3.1.3",
+    "coverage>=7.10.7",          # Code coverage / Cobertura de código
+    "django-extensions>=4.1",    # Enhanced shell, runserver_plus / Shell melhorado
+    "pre-commit>=4.3.0",         # Git hooks automation / Automação de hooks Git
+    "ruff>=0.13.2",              # Fast linter & formatter / Linter e formatador rápido
+    "watchdog>=6.0.0",           # File system monitoring / Monitoramento de arquivos
+    "werkzeug>=3.1.3",           # WSGI utilities for dev / Utilitários WSGI para dev
 ]

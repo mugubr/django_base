@@ -1,0 +1,18 @@
+{# Reusable Bootstrap card component / Componente de card Bootstrap reutilizável #}
+<!-- Bootstrap Card Component -->
+<!-- Componente Card Bootstrap -->
+
+{# Card container with shadow and full height / Container de card com sombra e altura total #}
+<div class="card border-0 shadow-sm h-100">
+    {# Card header with dynamic color and optional icon / Cabeçalho do card com cor dinâmica e ícone opcional #}
+    <div class="card-header bg-{{ color }} text-white">
+        {% if icon %}
+        <i class="bi bi-{{ icon }}"></i>
+        {% endif %}
+        {{ title }}
+    </div>
+    {# Card body with safe content rendering / Corpo do card com renderização segura de conteúdo #}
+    <div class="card-body">
+        {{ content|safe }}
+    </div>
+</div>

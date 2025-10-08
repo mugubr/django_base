@@ -30,6 +30,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # PostgreSQL client library required by psycopg2
     # Biblioteca cliente do PostgreSQL necessária para psycopg2
     libpq5 \
+    # GNU gettext for i18n compilemessages
+    # GNU gettext para compilemessages i18n
+    gettext \
     # Cleanup APT cache to reduce image size
     # Limpa cache do APT para reduzir tamanho da imagem
     && apt-get clean \

@@ -55,7 +55,7 @@ class Product(models.Model):
 
     name = models.CharField(
         max_length=100,
-        db_index=True,  # Index for faster queries by name / Índice para consultas mais rápidas pelo nome  # noqa: E501
+        db_index=True,  # Index for faster queries by name / Índice para consultas mais rápidas pelo nome
         verbose_name="Product Name",
         help_text="The name of the product (max 100 characters) / "
         "O nome do produto (máximo 100 caracteres)",
@@ -70,7 +70,7 @@ class Product(models.Model):
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True,  # Automatically set when object is first created / Automaticamente definido quando o objeto é criado pela primeira vez  # noqa: E501
+        auto_now_add=True,  # Automatically set when object is first created / Automaticamente definido quando o objeto é criado pela primeira vez
         verbose_name="Created At",
         help_text="Timestamp when the product was created / "
         "Timestamp de quando o produto foi criado",
@@ -327,7 +327,7 @@ class Product(models.Model):
             )
 
         discount_amount = self.price * (Decimal(str(percentage)) / Decimal("100"))
-        self.price -= discount_amount
+        self.price = (self.price - discount_amount).quantize(Decimal("0.01"))
         self.save()
 
     def deactivate(self):
@@ -418,45 +418,204 @@ class Product(models.Model):
 
 class UserProfile(models.Model):
     """
-    Extended user profile with additional information.
-    One-to-one relationship with Django User model.
+    Extended user profile with additional information beyond default Django User.
+    One-to-one relationship with Django User model - automatically created via signals.
 
-    Perfil de usuário estendido com informações adicionais.
-    Relacionamento um-para-um com modelo User do Django.
+    Fields:
+        user: OneToOne link to Django User (CASCADE delete)
+        bio: Text biography (max 500 chars, optional)
+        avatar: Profile image uploaded to avatars/%Y/%m/%d/ (optional)
+        phone: Phone number with international format support (optional)
+        birth_date: User's birth date (optional)
+        city: City name (max 100 chars, optional)
+        country: Country name (max 100 chars, optional)
+        website: Personal website URL (optional)
+        is_verified: Verification status flag (default False)
+        created_at: Profile creation timestamp (auto-generated)
+        updated_at: Last update timestamp (auto-updated)
+
+    Perfil de usuário estendido com informações adicionais além do User padrão do Django.
+    Relacionamento um-para-um com modelo User do Django - criado automaticamente via signals.
+
+    Campos:
+        user: Link OneToOne para Django User (delete CASCADE)
+        bio: Biografia de texto (máx 500 chars, opcional)
+        avatar: Imagem de perfil enviada para avatars/%Y/%m/%d/ (opcional)
+        phone: Número de telefone com suporte a formato internacional (opcional)
+        birth_date: Data de nascimento do usuário (opcional)
+        city: Nome da cidade (máx 100 chars, opcional)
+        country: Nome do país (máx 100 chars, opcional)
+        website: URL do website pessoal (opcional)
+        is_verified: Flag de status de verificação (padrão False)
+        created_at: Timestamp de criação do perfil (auto-gerado)
+        updated_at: Timestamp da última atualização (auto-atualizado)
+
+    Examples / Exemplos:
+        # Access user's profile / Acessar perfil do usuário
+        profile = user.profile
+
+        # Update profile / Atualizar perfil
+        profile.bio = "Software developer"
+        profile.city = "São Paulo"
+        profile.save()
+
+        # Check if user is verified / Verificar se usuário é verificado
+        if user.profile.is_verified:
+            # Grant access / Conceder acesso
+            pass
     """
 
+    # User relationship / Relacionamento com usuário
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.CASCADE,  # Delete profile when user is deleted / Deletar perfil quando usuário for deletado
         related_name="profile",
         verbose_name=_("User"),
+        help_text=_("Related Django user / Usuário Django relacionado"),
     )
+
+    # Personal information / Informações pessoais
     bio = models.TextField(
         max_length=500,
         blank=True,
         verbose_name=_("Biography"),
+        help_text=_(
+            "User biography (max 500 chars) / Biografia do usuário (máx 500 chars)"
+        ),
     )
+
     avatar = models.ImageField(
-        upload_to="avatars/%Y/%m/%d/",
+        upload_to="avatars/%Y/%m/%d/",  # Organized by date / Organizado por data
         blank=True,
         null=True,
         verbose_name=_("Avatar"),
+        help_text=_("Profile picture / Foto de perfil"),
     )
-    phone = models.CharField(max_length=20, blank=True, verbose_name=_("Phone"))
-    birth_date = models.DateField(blank=True, null=True, verbose_name=_("Birth date"))
-    city = models.CharField(max_length=100, blank=True, verbose_name=_("City"))
-    country = models.CharField(max_length=100, blank=True, verbose_name=_("Country"))
-    website = models.URLField(blank=True, verbose_name=_("Website"))
-    is_verified = models.BooleanField(default=False, verbose_name=_("Verified"))
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    phone = models.CharField(
+        max_length=20,
+        blank=True,
+        verbose_name=_("Phone"),
+        help_text=_(
+            "Phone number with country code / Número de telefone com código do país"
+        ),
+    )
+
+    birth_date = models.DateField(
+        blank=True,
+        null=True,
+        verbose_name=_("Birth date"),
+        help_text=_("User's birth date / Data de nascimento do usuário"),
+    )
+
+    # Location information / Informações de localização
+    city = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name=_("City"),
+        help_text=_("User's city / Cidade do usuário"),
+    )
+
+    country = models.CharField(
+        max_length=100,
+        blank=True,
+        verbose_name=_("Country"),
+        help_text=_("User's country / País do usuário"),
+    )
+
+    # Online presence / Presença online
+    website = models.URLField(
+        blank=True,
+        verbose_name=_("Website"),
+        help_text=_("Personal website or portfolio / Website pessoal ou portfólio"),
+    )
+
+    # Verification status / Status de verificação
+    is_verified = models.BooleanField(
+        default=False,
+        verbose_name=_("Verified"),
+        help_text=_("Indicates if user is verified / Indica se usuário é verificado"),
+    )
+
+    # Timestamps / Timestamps
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created at"),
+        help_text=_("Profile creation date / Data de criação do perfil"),
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Updated at"),
+        help_text=_("Last update date / Data da última atualização"),
+    )
 
     class Meta:
         verbose_name = _("User Profile")
         verbose_name_plural = _("User Profiles")
+        # Order by most recently created / Ordenar por mais recentemente criado
+        ordering = ["-created_at"]  # noqa: RUF012
 
     def __str__(self):
-        return f"{self.user.username}'s profile"
+        """String representation showing username and verification status."""
+        """Representação em string mostrando username e status de verificação."""
+        verified = "✓" if self.is_verified else "✗"
+        return f"{self.user.username}'s profile ({verified})"
+
+    def __repr__(self):
+        """Developer-friendly representation for debugging."""
+        """Representação amigável para desenvolvedores para debugging."""
+        return (
+            f"<UserProfile user='{self.user.username}' "
+            f"verified={self.is_verified} id={self.id}>"  # type: ignore
+        )
+
+    @property
+    def full_name(self):
+        """
+        Get user's full name from related User model.
+        Obtém nome completo do usuário do modelo User relacionado.
+
+        Returns / Retorna:
+            str: Full name or username if name not set
+        """
+        if self.user.first_name and self.user.last_name:
+            return f"{self.user.first_name} {self.user.last_name}"
+        return self.user.username
+
+    @property
+    def age(self):
+        """
+        Calculate user's age from birth_date.
+        Calcula idade do usuário a partir da birth_date.
+
+        Returns / Retorna:
+            int | None: Age in years or None if birth_date not set
+        """
+        if not self.birth_date:
+            return None
+        today = timezone.now().date()
+        return (
+            today.year
+            - self.birth_date.year
+            - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
+        )
+
+    def verify(self):
+        """
+        Mark user profile as verified.
+        Marca perfil de usuário como verificado.
+        """
+        self.is_verified = True
+        self.save(update_fields=["is_verified", "updated_at"])
+
+    def unverify(self):
+        """
+        Remove verification status from user profile.
+        Remove status de verificação do perfil de usuário.
+        """
+        self.is_verified = False
+        self.save(update_fields=["is_verified", "updated_at"])
 
 
 # Category Model / Modelo de Categoria
@@ -464,40 +623,179 @@ class UserProfile(models.Model):
 
 class Category(models.Model):
     """
-    Product category for organization and filtering.
-    Hierarchical structure with parent-child relationships.
+    Product category for organization and filtering with hierarchical structure.
+    Self-referencing foreign key allows parent-child relationships (tree structure).
 
-    Categoria de produto para organização e filtragem.
-    Estrutura hierárquica com relacionamentos pai-filho.
+    Fields:
+        name: Category name (max 100 chars, unique, required)
+        slug: URL-friendly slug (auto-generated from name, unique)
+        description: Optional description text
+        parent: Self-referencing FK for parent category (CASCADE delete, optional)
+        is_active: Active status flag (default True)
+        created_at: Creation timestamp (auto-generated)
+        updated_at: Last update timestamp (auto-updated)
+
+    Categoria de produto para organização e filtragem com estrutura hierárquica.
+    Chave estrangeira auto-referenciada permite relacionamentos pai-filho (estrutura de árvore).
+
+    Campos:
+        name: Nome da categoria (máx 100 chars, único, obrigatório)
+        slug: Slug amigável para URL (auto-gerado do nome, único)
+        description: Texto de descrição opcional
+        parent: FK auto-referenciada para categoria pai (delete CASCADE, opcional)
+        is_active: Flag de status ativo (padrão True)
+        created_at: Timestamp de criação (auto-gerado)
+        updated_at: Timestamp da última atualização (auto-atualizado)
+
+    Examples / Exemplos:
+        # Create root category / Criar categoria raiz
+        electronics = Category.objects.create(name="Electronics")
+
+        # Create subcategory / Criar subcategoria
+        laptops = Category.objects.create(
+            name="Laptops",
+            parent=electronics,
+            description="Laptop computers"
+        )
+
+        # Get all children / Obter todos os filhos
+        children = electronics.children.all()
+
+        # Get parent / Obter pai
+        parent = laptops.parent
     """
 
-    name = models.CharField(max_length=100, unique=True, verbose_name=_("Name"))
-    slug = models.SlugField(max_length=100, unique=True, verbose_name=_("Slug"))
-    description = models.TextField(blank=True, verbose_name=_("Description"))
+    # Basic fields / Campos básicos
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name=_("Name"),
+        help_text=_("Category name (unique) / Nome da categoria (único)"),
+    )
+
+    slug = models.SlugField(
+        max_length=100,
+        unique=True,
+        verbose_name=_("Slug"),
+        help_text=_(
+            "URL-friendly identifier (auto-generated) / Identificador amigável para URL (auto-gerado)"
+        ),
+    )
+
+    description = models.TextField(
+        blank=True,
+        verbose_name=_("Description"),
+        help_text=_("Category description / Descrição da categoria"),
+    )
+
+    # Hierarchical relationship / Relacionamento hierárquico
     parent = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
+        "self",  # Self-referencing FK / FK auto-referenciada
+        on_delete=models.CASCADE,  # Delete children when parent deleted / Deletar filhos quando pai deletado
         blank=True,
         null=True,
-        related_name="children",
+        related_name="children",  # Access children via parent.children.all()
         verbose_name=_("Parent category"),
+        help_text=_(
+            "Parent category for hierarchical structure / Categoria pai para estrutura hierárquica"
+        ),
     )
-    is_active = models.BooleanField(default=True, verbose_name=_("Active"))
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    # Status fields / Campos de status
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name=_("Active"),
+        help_text=_("Active status / Status ativo"),
+    )
+
+    # Timestamps / Timestamps
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created at"),
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Updated at"),
+    )
 
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
+        # Order alphabetically / Ordenar alfabeticamente
         ordering = ["name"]  # noqa: RUF012
 
     def __str__(self):
+        """String representation showing category hierarchy."""
+        """Representação em string mostrando hierarquia de categoria."""
+        if self.parent:
+            return f"{self.parent.name} > {self.name}"
         return self.name
 
+    def __repr__(self):
+        """Developer-friendly representation for debugging."""
+        """Representação amigável para desenvolvedores para debugging."""
+        return f"<Category id={self.id} name='{self.name}' parent={self.parent_id}>"  # type: ignore
+
     def save(self, *args, **kwargs):
+        """
+        Auto-generate slug from name if not provided.
+        Gera automaticamente slug a partir do nome se não fornecido.
+        """
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    @property
+    def product_count(self):
+        """
+        Get count of products in this category.
+        Obtém contagem de produtos nesta categoria.
+
+        Returns / Retorna:
+            int: Number of products
+        """
+        return self.products.filter(is_active=True).count()
+
+    @property
+    def is_root(self):
+        """
+        Check if this is a root category (no parent).
+        Verifica se esta é uma categoria raiz (sem pai).
+
+        Returns / Retorna:
+            bool: True if root category
+        """
+        return self.parent is None
+
+    def get_ancestors(self):
+        """
+        Get all ancestor categories up to root.
+        Obtém todas as categorias ancestrais até a raiz.
+
+        Returns / Retorna:
+            list[Category]: List of ancestor categories
+        """
+        ancestors = []
+        current = self.parent
+        while current:
+            ancestors.append(current)
+            current = current.parent
+        return ancestors
+
+    def get_descendants(self):
+        """
+        Get all descendant categories recursively.
+        Obtém todas as categorias descendentes recursivamente.
+
+        Returns / Retorna:
+            list[Category]: List of descendant categories
+        """
+        descendants = []
+        for child in self.children.all():
+            descendants.append(child)
+            descendants.extend(child.get_descendants())
+        return descendants
 
 
 # Tag Model / Modelo de Tag
@@ -505,27 +803,126 @@ class Category(models.Model):
 
 class Tag(models.Model):
     """
-    Tag for flexible product labeling and search.
-    Many-to-many relationship with products.
+    Tag for flexible product labeling, filtering and search.
+    Many-to-many relationship with products for flexible categorization.
 
-    Tag para rotulagem flexível e busca de produtos.
-    Relacionamento muitos-para-muitos com produtos.
+    Fields:
+        name: Tag name (max 50 chars, unique, required)
+        slug: URL-friendly slug (auto-generated from name, unique)
+        color: Hex color code for UI display (default #6c757d - Bootstrap secondary)
+        created_at: Creation timestamp (auto-generated)
+
+    Tag para rotulagem flexível, filtragem e busca de produtos.
+    Relacionamento muitos-para-muitos com produtos para categorização flexível.
+
+    Campos:
+        name: Nome da tag (máx 50 chars, único, obrigatório)
+        slug: Slug amigável para URL (auto-gerado do nome, único)
+        color: Código de cor hex para exibição na UI (padrão #6c757d - Bootstrap secondary)
+        created_at: Timestamp de criação (auto-gerado)
+
+    Examples / Exemplos:
+        # Create tag / Criar tag
+        tag = Tag.objects.create(
+            name="Featured",
+            color="#ff5722"  # Custom color / Cor customizada
+        )
+
+        # Add to product / Adicionar a produto
+        product.tags.add(tag)
+
+        # Get all products with tag / Obter todos os produtos com tag
+        products = tag.products.all()
+
+        # Get tag usage count / Obter contagem de uso da tag
+        count = tag.product_count
     """
 
-    name = models.CharField(max_length=50, unique=True, verbose_name=_("Name"))
-    slug = models.SlugField(max_length=50, unique=True, verbose_name=_("Slug"))
-    color = models.CharField(max_length=7, default="#6c757d", verbose_name=_("Color"))
-    created_at = models.DateTimeField(auto_now_add=True)
+    # Basic fields / Campos básicos
+    name = models.CharField(
+        max_length=50,
+        unique=True,
+        verbose_name=_("Name"),
+        help_text=_("Tag name (unique) / Nome da tag (único)"),
+    )
+
+    slug = models.SlugField(
+        max_length=50,
+        unique=True,
+        verbose_name=_("Slug"),
+        help_text=_(
+            "URL-friendly identifier (auto-generated) / Identificador amigável para URL (auto-gerado)"
+        ),
+    )
+
+    color = models.CharField(
+        max_length=7,  # Hex color format: #RRGGBB
+        default="#6c757d",  # Bootstrap secondary color / Cor secundária do Bootstrap
+        verbose_name=_("Color"),
+        help_text=_(
+            "Hex color code for badge display / Código de cor hex para exibição do badge"
+        ),
+    )
+
+    # Timestamp / Timestamp
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created at"),
+        help_text=_("Tag creation date / Data de criação da tag"),
+    )
 
     class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
+        # Order alphabetically / Ordenar alfabeticamente
         ordering = ["name"]  # noqa: RUF012
 
     def __str__(self):
+        """String representation showing tag name."""
+        """Representação em string mostrando nome da tag."""
         return self.name
 
+    def __repr__(self):
+        """Developer-friendly representation for debugging."""
+        """Representação amigável para desenvolvedores para debugging."""
+        return f"<Tag id={self.id} name='{self.name}' color='{self.color}'>"  # type: ignore
+
     def save(self, *args, **kwargs):
+        """
+        Auto-generate slug from name if not provided.
+        Gera automaticamente slug a partir do nome se não fornecido.
+        """
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    @property
+    def product_count(self):
+        """
+        Get count of products using this tag.
+        Obtém contagem de produtos usando esta tag.
+
+        Returns / Retorna:
+            int: Number of products with this tag
+        """
+        return self.products.filter(is_active=True).count()
+
+    @classmethod
+    def get_popular(cls, limit=10):
+        """
+        Get most popular tags by product count.
+        Obtém tags mais populares por contagem de produtos.
+
+        Args / Argumentos:
+            limit (int): Maximum number of tags to return / Número máximo de tags para retornar
+
+        Returns / Retorna:
+            QuerySet: Popular tags ordered by usage
+        """
+        from django.db.models import Count
+
+        return (
+            cls.objects.annotate(num_products=Count("products"))
+            .filter(num_products__gt=0)
+            .order_by("-num_products")[:limit]
+        )

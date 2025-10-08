@@ -1,0 +1,158 @@
+{% extends "base/base.html" %}
+{% load static i18n %}
+
+{% block title %}Health Check - Django Base{% endblock %}
+
+{% block extrastyle %}
+<style>
+    .status-healthy {
+        color: #198754;
+    }
+    .status-unhealthy {
+        color: #dc3545;
+    }
+    .metric-card {
+        transition: all 0.3s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.15) !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <i class="bi bi-heart-pulse display-1 text-danger mb-3"></i>
+            <h1 class="fw-bold">System Health Check</h1>
+            <p class="text-muted">{% trans "Real-time system status and diagnostics" %}</p>
+        </div>
+    </div>
+
+    <!-- Overall Status -->
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body text-center py-5" id="overallStatus">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Checks -->
+    <div class="row g-4" id="detailsContainer">
+        <!-- Will be populated by JavaScript -->
+    </div>
+
+    <!-- System Info -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header text-white" style="background-color: #198754;">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle"></i> {% trans "System Information" %}
+                    </h5>
+                </div>
+                <div class="card-body" id="systemInfo">
+                    <div class="text-center">
+                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto Refresh -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <small class="text-muted">
+                <i class="bi bi-arrow-clockwise"></i> {% trans "Auto-refresh every 30 seconds" %}
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+async function checkHealth() {
+    try {
+        const response = await fetch('/health/');
+        const data = await response.json();
+
+        // Update overall status
+        const statusDiv = document.getElementById('overallStatus');
+        const isHealthy = data.status === 'healthy';
+
+        statusDiv.innerHTML = `
+            <i class="bi bi-${isHealthy ? 'check-circle-fill' : 'x-circle-fill'} display-1 status-${isHealthy ? 'healthy' : 'unhealthy'} mb-3"></i>
+            <h2 class="fw-bold text-${isHealthy ? 'success' : 'danger'} mb-2">
+                ${isHealthy ? 'System Healthy' : 'System Issues Detected'}
+            </h2>
+            <p class="text-muted mb-0">
+                <i class="bi bi-clock"></i> ${new Date(data.timestamp).toLocaleString()}
+            </p>
+        `;
+
+        // Update detailed checks
+        if (data.checks) {
+            const container = document.getElementById('detailsContainer');
+            container.innerHTML = Object.entries(data.checks).map(([key, value]) => {
+                const status = value === 'ok' || value === true;
+                return `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-0 shadow-sm h-100 metric-card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-${status ? 'check-circle-fill text-success' : 'x-circle-fill text-danger'} fs-4 me-2"></i>
+                                    <h6 class="mb-0 text-capitalize">${key.replace('_', ' ')}</h6>
+                                </div>
+                                <p class="mb-0 text-${status ? 'success' : 'danger'} fw-bold">
+                                    ${typeof value === 'string' ? value.toUpperCase() : (status ? 'OK' : 'ERROR')}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update system info
+        const infoDiv = document.getElementById('systemInfo');
+        infoDiv.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2"><strong>{% trans "Version" %}:</strong> ${data.version || 'N/A'}</p>
+                    <p class="mb-2"><strong>{% trans "Environment" %}:</strong> ${data.environment || 'N/A'}</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-2"><strong>{% trans "Status" %}:</strong>
+                        <span class="badge bg-${isHealthy ? 'success' : 'danger'}">${data.status.toUpperCase()}</span>
+                    </p>
+                    <p class="mb-2"><strong>{% trans "Last Check" %}:</strong> ${new Date().toLocaleTimeString()}</p>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Health check failed:', error);
+        document.getElementById('overallStatus').innerHTML = `
+            <i class="bi bi-exclamation-triangle-fill display-1 text-warning mb-3"></i>
+            <h2 class="fw-bold text-warning mb-2">Unable to Fetch Status</h2>
+            <p class="text-muted">${error.message}</p>
+        `;
+    }
+}
+
+// Initial check
+checkHealth();
+
+// Auto-refresh every 30 seconds
+setInterval(checkHealth, 30000);
+</script>
+{% endblock %}

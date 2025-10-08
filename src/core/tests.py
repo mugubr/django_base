@@ -1,3 +1,20 @@
+"""
+Test Suite - Core Application
+Suite de Testes - Aplicação Core
+
+Comprehensive tests for:
+- API endpoints (CRUD operations)
+- Model methods and behaviors
+- Signal integration with async tasks
+- Authentication and permissions
+
+Testes abrangentes para:
+- Endpoints da API (operações CRUD)
+- Métodos e comportamentos de modelos
+- Integração de sinais com tarefas assíncronas
+- Autenticação e permissões
+"""
+
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
@@ -17,27 +34,15 @@ class HelloAPITestCase(TestCase):
     """
 
     def setUp(self):
+        """
+        Set up test fixtures before each test method.
+        Configura fixtures de teste antes de cada método de teste.
+        """
         # setUp runs before each test method. We create a client
         # to make API requests.
-        # setUp runs before each test method. We create a client t
-        # o make API requests.
+        # setUp executa antes de cada método de teste. Criamos um cliente
+        # para fazer requisições à API.
         self.client = APIClient()
-
-    def test_hello_api_returns_correct_message(self):
-        # Makes a GET request to the /api/v1/hello/ endpoint.
-        # Faz uma requisição GET para o endpoint /api/v1/hello/.
-        response = self.client.get("/api/v1/hello/")
-
-        # Asserts that the HTTP status code is 200 OK.
-        # Garante que o código de status HTTP é 200 OK.
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        # Asserts that the response data is the expected JSON.
-        # Garante que os dados da resposta são o JSON esperado.
-        self.assertEqual(
-            response.data,
-            {"message": "Olá, API do Projeto Base Django!"},
-        )
 
 
 class ProductModelTestCase(TestCase):
@@ -47,6 +52,10 @@ class ProductModelTestCase(TestCase):
     """
 
     def test_product_str_representation(self):
+        """
+        Test that Product.__str__() returns the product name.
+        Testa que Product.__str__() retorna o nome do produto.
+        """
         # Creates a Product instance.
         # Cria uma instância de Product.
         product = Product.objects.create(name="Test Product", price="99.99")
@@ -65,6 +74,10 @@ class ProductAPITestCase(TestCase):
     """
 
     def setUp(self):
+        """
+        Set up test data: authenticated user and sample products.
+        Configura dados de teste: usuário autenticado e produtos de exemplo.
+        """
         self.client = APIClient()
         # Create a test user for authentication
         # Cria um usuário de teste para autenticação
@@ -79,6 +92,10 @@ class ProductAPITestCase(TestCase):
         Product.objects.create(name="Product B", price="20.00")
 
     def test_list_products(self):
+        """
+        Test GET /api/v1/products/ returns paginated product list.
+        Testa que GET /api/v1/products/ retorna lista paginada de produtos.
+        """
         # Tests the GET /api/v1/products/ endpoint.
         # Testa o endpoint GET /api/v1/products/.
         response = self.client.get("/api/v1/products/")
@@ -97,6 +114,10 @@ class ProductAPITestCase(TestCase):
         self.assertIn("Product B", product_names)
 
     def test_create_product(self):
+        """
+        Test POST /api/v1/products/ creates a new product (requires auth).
+        Testa que POST /api/v1/products/ cria um novo produto (requer autenticação).
+        """
         # Tests the POST /api/v1/products/ endpoint.
         # Testa o endpoint POST /api/v1/products/.
         # Authenticate the client
@@ -110,6 +131,10 @@ class ProductAPITestCase(TestCase):
         self.assertTrue(Product.objects.filter(name="Product C").exists())
 
     def test_retrieve_product(self):
+        """
+        Test GET /api/v1/products/{id}/ retrieves specific product.
+        Testa que GET /api/v1/products/{id}/ recupera produto específico.
+        """
         # Tests the GET /api/v1/products/{id}/ endpoint.
         # Testa o endpoint GET /api/v1/products/{id}/.
         product = Product.objects.get(name="Product A")
@@ -133,6 +158,13 @@ class ProductSignalTaskTestCase(TestCase):
     # chamada corretamente.
     @patch("core.signals.async_task")
     def test_creating_product_triggers_async_task(self, mock_async_task):
+        """
+        Test that creating a product triggers the notification async task.
+        Testa que criar um produto dispara a tarefa assíncrona de notificação.
+
+        Args/Argumentos:
+            mock_async_task: Mocked async_task function / Função async_task mockada
+        """
         # 'mock_async_task' is the mock object injected by @patch.
         # 'mock_async_task' é o objeto mock injetado pelo @patch.
 
@@ -158,6 +190,13 @@ class ProductSignalTaskTestCase(TestCase):
 
     @patch("core.signals.async_task")
     def test_updating_product_does_not_trigger_task(self, mock_async_task):
+        """
+        Test that updating a product does NOT trigger the notification task.
+        Testa que atualizar um produto NÃO dispara a tarefa de notificação.
+
+        Args/Argumentos:
+            mock_async_task: Mocked async_task function / Função async_task mockada
+        """
         # Creates a product initially. The task will be called here.
         # Cria um produto inicialmente. A tarefa será chamada aqui.
         product = Product.objects.create(name="Initial Product", price="10.00")
@@ -174,3 +213,119 @@ class ProductSignalTaskTestCase(TestCase):
         # Asserts that the async task was not called a second time.
         # Garante que a tarefa assíncrona não foi chamada uma segunda vez.
         mock_async_task.assert_not_called()
+
+
+class AuthenticationTestCase(TestCase):
+    """
+    Tests for authentication views (login, register, logout).
+    Testes para views de autenticação (login, registro, logout).
+    """
+
+    def setUp(self):
+        """Set up test fixtures / Configura fixtures de teste"""
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username="authuser",
+            email="auth@example.com",
+            password="testpass123",  # noqa: S106
+        )
+
+    def test_login_view_post_success(self):
+        """Test POST /login/ with valid credentials / Testa POST /login/ com credenciais válidas"""
+        response = self.client.post(
+            "/login/",
+            {"username": "authuser", "password": "testpass123"},
+            follow=True,
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_logout_view(self):
+        """Test GET /logout/ logs out user / Testa GET /logout/ desloga usuário"""
+        self.client.force_login(self.user)
+        response = self.client.get("/logout/", follow=True)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class ViewTestCase(TestCase):
+    """
+    Tests for additional views (home, profile, products).
+    Testes para views adicionais (home, perfil, produtos).
+    """
+
+    def setUp(self):
+        """Set up test fixtures / Configura fixtures de teste"""
+        self.client = APIClient()
+        self.user = User.objects.create_user(
+            username="viewuser",
+            email="view@example.com",
+            password="testpass123",  # noqa: S106
+        )
+
+    def test_home_view(self):
+        """Test GET / renders homepage / Testa GET / renderiza homepage"""
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_profile_view_authenticated(self):
+        """Test GET /profile/ for authenticated user / Testa GET /profile/ para usuário autenticado"""
+        self.client.force_login(self.user)
+        response = self.client.get("/profile/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_products_view(self):
+        """Test GET /products/ renders products page / Testa GET /products/ renderiza página de produtos"""
+        response = self.client.get("/products/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_health_check_page(self):
+        """Test GET /health-status/ renders health page / Testa GET /health-status/ renderiza página de saúde"""
+        response = self.client.get("/health-status/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class ModelMethodsTestCase(TestCase):
+    """
+    Tests for model methods and properties.
+    Testes para métodos e propriedades dos modelos.
+    """
+
+    def setUp(self):
+        """Set up test fixtures / Configura fixtures de teste"""
+        self.user = User.objects.create_user(
+            username="modeluser",
+            email="model@example.com",
+            password="testpass123",  # noqa: S106
+        )
+        self.product = Product.objects.create(
+            name="Test Product", price="100.00", created_by=self.user
+        )
+
+    def test_product_is_new_property(self):
+        """Test Product.is_new property / Testa propriedade Product.is_new"""
+        self.assertTrue(self.product.is_new)
+
+    def test_product_formatted_price(self):
+        """Test Product.formatted_price property / Testa propriedade Product.formatted_price"""
+        self.assertIn("100", self.product.formatted_price)
+
+    def test_product_apply_discount(self):
+        """Test Product.apply_discount() method / Testa método Product.apply_discount()"""
+        from decimal import Decimal
+
+        self.product.apply_discount(10)
+        self.product.refresh_from_db()
+        self.assertEqual(self.product.price, Decimal("90.00"))
+
+    def test_product_deactivate(self):
+        """Test Product.deactivate() method / Testa método Product.deactivate()"""
+        self.product.deactivate()
+        self.product.refresh_from_db()
+        self.assertFalse(self.product.is_active)
+
+    def test_product_activate(self):
+        """Test Product.activate() method / Testa método Product.activate()"""
+        self.product.is_active = False
+        self.product.save()
+        self.product.activate()
+        self.product.refresh_from_db()
+        self.assertTrue(self.product.is_active)

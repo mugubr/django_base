@@ -43,27 +43,21 @@ urlpatterns = [
     # Django's built-in admin panel for content management
     # Painel administrativo integrado do Django para gerenciamento de conteúdo
     path("admin/", admin.site.urls),
-    # Health Check Endpoint
-    # Endpoint de Health Check
+    # Health Check Endpoints
+    # Endpoints de Health Check
     # Used by Docker, Kubernetes, load balancers to monitor application health
     # Usado por Docker, Kubernetes, load balancers para monitorar saúde
     # da aplicação
     path("health/", views.health_check, name="health_check"),
+    path("health-status/", views.health_check_page, name="health_status_page"),
     # Monitoring & Metrics
     # Monitoramento & Métricas
     # Prometheus metrics endpoint for application monitoring
     # Endpoint de métricas Prometheus para monitoramento da aplicação
-    path("django-metrics/", include("django_prometheus.urls")),
-    # API Endpoints
-    # Endpoints da API
-    # Versioned API endpoints (v1)
-    # Endpoints da API versionados (v1)
-    # Includes: /api/v1/products/, /api/v1/hello/, etc.
-    # Inclui: /api/v1/products/, /api/v1/hello/, etc.
-    path("api/v1/", include("core.urls")),
-    # API information endpoint
-    # Endpoint de informações da API
-    path("api/info/", views.api_info, name="api_info"),
+    path("metrics/", include("django_prometheus.urls")),
+    # Core Application URLs (includes auth pages and API)
+    # URLs da Aplicação Core (inclui páginas de autenticação e API)
+    path("", include("core.urls")),
     # API Documentation (drf-spectacular)
     # Documentação da API (drf-spectacular)
     # OpenAPI 3 schema generation
@@ -72,14 +66,14 @@ urlpatterns = [
     # Swagger UI - Interactive API documentation
     # Swagger UI - Documentação interativa da API
     path(
-        "api/schema/swagger-ui/",
+        "api/docs/",
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
     # ReDoc - Alternative API documentation interface
     # ReDoc - Interface alternativa de documentação da API
     path(
-        "api/schema/redoc/",
+        "api/redoc/",
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
