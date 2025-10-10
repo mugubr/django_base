@@ -1,0 +1,100 @@
+name: Pipeline de CI do Django
+
+# Triggers: Runs this pipeline on every push or pull request to the master and develop branches
+# Gatilhos: Roda este pipeline em todo push ou pull request para as branches master e develop
+on:
+  push:
+    branches: ["master", "develop"]
+  pull_request:
+    branches: ["master", "develop"]
+
+jobs:
+  build:
+    # The pipeline will run on a Linux (Ubuntu) virtual machine
+    # O pipeline rodará em uma máquina virtual Linux (Ubuntu)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      # Django Settings Module - Use development settings for CI
+      # Módulo de Settings Django - Usa settings de desenvolvimento para CI
+      DJANGO_SETTINGS_MODULE: "django_base.settings.dev"
+
+      # Provide a dummy secret key for the Django application to initialize during tests
+      # Fornece uma chave secreta falsa para a aplicação Django inicializar durante os testes
+      SECRET_KEY: "a-dummy-secret-key-for-ci-tests-must-be-at-least-50-chars-long-for-security"
+
+      DEBUG: "False"
+      ALLOWED_HOSTS: "localhost,127.0.0.1"
+      POSTGRES_DB: "test_db"
+      POSTGRES_USER: "test_user"
+      POSTGRES_PASSWORD: "test_password"
+      POSTGRES_HOST: 127.0.0.1
+      POSTGRES_PORT: 5432
+      CORS_ALLOWED_ORIGINS: "http://localhost:3000"
+      CSRF_TRUSTED_ORIGINS: "http://localhost:3000,http://localhost:8000"
+
+      # Redis configuration for CI (use localhost since service will be added)
+      # Configuração Redis para CI (usa localhost pois serviço será adicionado)
+      REDIS_URL: "redis://localhost:6379/0"
+      REDIS_HOST: "localhost"
+      REDIS_PORT: "6379"
+
+    steps:
+      # Step 1: Clones your repository into the virtual machine
+      # Passo 1: Clona seu repositório para dentro da máquina virtual
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Step 2: Sets up the Python environment
+      # Passo 2: Configura o ambiente Python
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Step 3: Sets up uv
+      # Passo 3: Configura o uv
+      - name: Configurar uv
+        uses: astral-sh/setup-uv@v1
+
+      # Step 4: Install development dependencies
+      # uv will use caching automatically to speed up future builds
+      # Passo 4: Instala as dependências de desenvolvimento
+      # O uv usará o cache automaticamente para acelerar builds futuros
+      - name: Instalar dependências
+        run: uv venv && source .venv/bin/activate && uv pip install -e .[dev]
+
+      # Step 5: Run Ruff to check formatting and linting
+      # The --check flag does not modify files, it just fails if they are not formatted
+      # Passo 5: Rodar o Ruff para verificar a formatação e o linting
+      # A flag --check não altera os arquivos, apenas falha se não estiverem formatados
+      - name: Verificar formatação com Ruff
+        run: uv run ruff format --check .
+      - name: Verificar linting com Ruff
+        run: uv run ruff format --check .
+
+      # Step 6: Run tests with coverage
+      # For CI, tests run against an in-memory SQLite database, which is fast
+      # and requires no external database service. Django does this by default.
+      # Passo 6: Rodar os testes com coverage
+      # Para CI, os testes rodam contra um banco de dados SQLite em memória, que é
+      # rápido e não requer um serviço de banco de dados externo. O Django faz isso por padrão.
+      - name: Rodar testes e gerar cobertura
+        run: uv run coverage run manage.py test src
+      # Step 7: Check if test coverage meets the target
+      # The pipeline will fail if the total coverage is below 80%
+      # Passo 7: Verificar se a cobertura de testes atingiu a meta
+      # O pipeline falhará se a cobertura total for menor que 80%
+      - name: Verificar cobertura de testes
+        run: uv run coverage report -m

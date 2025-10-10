@@ -1,0 +1,593 @@
+# Django Base - Portuguese (Brazil) Translation
+# Tradução Português (Brasil) - Django Base
+# Copyright (C) 2025
+# This file is distributed under the MIT License.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Django Base 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-07 12:00+0000\n"
+"PO-Revision-Date: 2025-10-07 12:00+0000\n"
+"Last-Translator: Miguel de Freitas Muniz <miguimuniz@gmail.com>\n"
+"Language-Team: Portuguese (Brazil)\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+# Forms - Login/Register/Profile
+msgid "Username"
+msgstr "Nome de usuário"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "Remember me"
+msgstr "Lembre-se de mim"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "First Name"
+msgstr "Primeiro Nome"
+
+msgid "Last Name"
+msgstr "Sobrenome"
+
+msgid "Biography"
+msgstr "Biografia"
+
+msgid "Phone"
+msgstr "Celular"
+
+msgid "Birth date"
+msgstr "Data de nascimento"
+
+msgid "City"
+msgstr "Cidade"
+
+msgid "Country"
+msgstr "País"
+
+msgid "Website"
+msgstr "Site"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "Verified"
+msgstr "Verificado"
+
+msgid "Active"
+msgstr "Ativo"
+
+msgid "Created at"
+msgstr "Criado em"
+
+msgid "Updated at"
+msgstr "Atualizado em"
+
+# Models
+msgid "User"
+msgstr "Usuário"
+
+msgid "User Profile"
+msgstr "Perfil do Usuário"
+
+msgid "User Profiles"
+msgstr "Perfis de Usuário"
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "Categories"
+msgstr "Categorias"
+
+msgid "Parent category"
+msgstr "Categoria pai"
+
+msgid "Tag"
+msgstr "Tag"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Color"
+msgstr "Cor"
+
+msgid "Product"
+msgstr "Produto"
+
+msgid "Products"
+msgstr "Produtos"
+
+msgid "Price"
+msgstr "Preço"
+
+msgid "Created by"
+msgstr "Criado por"
+
+# Messages
+msgid "Welcome back, {username}!"
+msgstr "Bem-vindo de volta, {username}!"
+
+msgid "Invalid username or password."
+msgstr "Nome de usuário ou senha inválidos."
+
+msgid "Please correct the errors below."
+msgstr "Por favor, corrija os erros abaixo."
+
+msgid "Account created successfully! Welcome, {username}!"
+msgstr "Conta criada com sucesso! Bem-vindo, {username}!"
+
+msgid "Goodbye, {username}!"
+msgstr "Até logo, {username}!"
+
+msgid "Profile updated successfully!"
+msgstr "Perfil atualizado com sucesso!"
+
+msgid "This email is already in use."
+msgstr "Este e-mail já está sendo utilizado."
+
+# Validation
+msgid "Tell us about yourself..."
+msgstr "Conte-nos sobre você..."
+
+msgid "+1 234 567 8900"
+msgstr "+55 61 98765-4321"
+
+msgid "https://example.com"
+msgstr "https://exemplo.com.br"
+
+# Admin
+msgid "User Info"
+msgstr "Informações do Usuário"
+
+msgid "Contact"
+msgstr "Contato"
+
+msgid "Location"
+msgstr "Local"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Timestamps"
+msgstr "Datas"
+
+# Common
+msgid "Home"
+msgstr "Início"
+
+msgid "Login"
+msgstr "Entrar"
+
+msgid "Register"
+msgstr "Registre-se"
+
+msgid "Logout"
+msgstr "Sair"
+
+msgid "Profile"
+msgstr "Perfil"
+
+msgid "Admin"
+msgstr "Admin"
+
+msgid "Welcome to Django Base"
+msgstr "Bem-vindo ao Django Base"
+
+msgid "Create Account"
+msgstr "Criar Conta"
+
+msgid "Join us today!"
+msgstr "Junte-se a nós!"
+
+msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr "Obrigatório. 150 caracteres ou menos. Apenas letras, dígitos e @/./+/-/_."
+
+msgid "Email Address"
+msgstr "Endereço de E-mail"
+
+msgid "We'll never share your email with anyone else."
+msgstr "Nunca compartilharemos seu e-mail com terceiros."
+
+msgid "Your password can't be too similar to your other personal information."
+msgstr "Sua senha não pode ser muito similar às suas outras informações pessoais."
+
+msgid "Your password must contain at least 8 characters."
+msgstr "Sua senha deve conter pelo menos 8 caracteres."
+
+msgid "Your password can't be a commonly used password."
+msgstr "Sua senha não pode ser uma senha comumente usada."
+
+msgid "Your password can't be entirely numeric."
+msgstr "Sua senha não pode ser inteiramente numérica."
+
+msgid "Confirm Password"
+msgstr "Confirmar Senha"
+
+msgid "Enter the same password as before, for verification."
+msgstr "Digite a mesma senha de antes, para verificação."
+
+msgid "I agree to the"
+msgstr "Eu concordo com os"
+
+msgid "Terms and Conditions"
+msgstr "Termos e Condições"
+
+msgid "Already have an account?"
+msgstr "Já tem uma conta?"
+
+msgid "Login here"
+msgstr "Faça login"
+
+msgid "My Profile"
+msgstr "Meu Perfil"
+
+msgid "Access your account"
+msgstr "Acesse sua conta"
+
+msgid "Username or Email"
+msgstr "Usuário ou E-mail"
+
+msgid "Enter your username or email address"
+msgstr "Digite seu nome de usuário ou endereço de e-mail"
+
+msgid "Remember me for 2 weeks"
+msgstr "Lembre-se de mim por 2 semanas"
+
+msgid "Forgot your password?"
+msgstr "Esqueceu sua senha?"
+
+msgid "Don't have an account?"
+msgstr "Não tem uma conta?"
+
+msgid "Register here"
+msgstr "Cadastre-se aqui"
+
+msgid "Your connection is secure. We never store your password in plain text."
+msgstr "Sua conexão é segura. Nunca armazenamos sua senha diretament."
+
+# Profile page - additional strings
+msgid "Basic Information"
+msgstr "Informações Básicas"
+
+msgid "Profile Details"
+msgstr "Detalhes do Perfil"
+
+msgid "Tell us about yourself"
+msgstr "Conte-nos sobre você"
+
+msgid "Profile Picture"
+msgstr "Foto de Perfil"
+
+msgid "Current"
+msgstr "Atual"
+
+msgid "View current avatar"
+msgstr "Ver avatar atual"
+
+msgid "Phone Number"
+msgstr "Número de Telefone"
+
+msgid "Birth Date"
+msgstr "Data de Nascimento"
+
+msgid "Save Changes"
+msgstr "Salvar Alterações"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+# Footer
+msgid "All rights reserved"
+msgstr "Todos os direitos reservados"
+
+# Home page - Features section
+msgid "Get Started"
+msgstr "Registre-se"
+
+msgid "Latest Django 5.2 with Django REST Framework for building robust APIs"
+msgstr "Django 5.2 com Django REST Framework para construir APIs robustas"
+
+msgid "Fully containerized with Docker Compose for easy development and deployment"
+msgstr "Totalmente containerizado com Docker Compose para desenvolvimento e deploy fáceis"
+
+msgid "Production-grade database with optimized configurations"
+msgstr "Banco de dados de nível de produção com configurações otimizadas"
+
+msgid "High-performance caching and session storage"
+msgstr "Cache de alta performance e armazenamento de sessão"
+
+msgid "Bootstrap 5.3 + HTMX for responsive, dynamic interfaces"
+msgstr "Bootstrap 5.3 + HTMX para interfaces responsivas e dinâmicas"
+
+msgid "Complete user authentication system with profiles"
+msgstr "Sistema completo de autenticação de usuário com perfis"
+
+# Home page - Dashboard section
+msgid "Your Dashboard"
+msgstr "Seu Dashboard"
+
+# Home page - Quick Links section
+msgid "Quick Links"
+msgstr "Links Úteis"
+
+msgid "Explore the API and documentation"
+msgstr "Explore a API e a documentação"
+
+msgid "API Documentation"
+msgstr "Documentação da API"
+
+msgid "Alternative API docs"
+msgstr "Documentação alternativa da API"
+
+msgid "System status"
+msgstr "Status do sistema"
+
+msgid "Edit Profile"
+msgstr "Editar Perfil"
+
+msgid "Admin Panel"
+msgstr "Painel Admin"
+
+msgid "About"
+msgstr "Sobre"
+
+msgid "A modern, production-ready Django starter template with Docker, PostgreSQL, Redis, and all the best practices built-in."
+msgstr "Um template Django moderno e pronto para produção com Docker, PostgreSQL, Redis e todas as melhores práticas integradas."
+
+msgid "Features & Technologies"
+msgstr "Recursos & Tecnologias"
+
+msgid "Everything you need for a modern Django application"
+msgstr "Tudo que você precisa para uma aplicação Django moderna"
+
+msgid "Showing %(start)s to %(end)s of %(total)s items"
+msgstr "Mostrando %(start)s a %(end)s de %(total)s itens"
+
+msgid "Browse our product catalog"
+msgstr "Navegue pelo nosso catálogo de produtos"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid "All Categories"
+msgstr "Todas as Categorias"
+
+msgid "Min"
+msgstr "Mín"
+
+msgid "Max"
+msgstr "Máx"
+
+msgid "Apply Filters"
+msgstr "Aplicar Filtros"
+
+msgid "Clear"
+msgstr "Limpar"
+
+msgid "Inactive"
+msgstr "Inativo"
+
+msgid "No products found"
+msgstr "Nenhum produto encontrado"
+
+msgid "Real-time system status and diagnostics"
+msgstr "Status do sistema e diagnósticos em tempo real"
+
+msgid "System Information"
+msgstr "Informações do Sistema"
+
+msgid "Auto-refresh every 30 seconds"
+msgstr "Atualização automática a cada 30 segundos"
+
+msgid "Version"
+msgstr "Versão"
+
+msgid "Environment"
+msgstr "Ambiente"
+
+msgid "Last Check"
+msgstr "Última Verificação"
+
+msgid "About Django Base"
+msgstr "Sobre o Django Base"
+
+msgid "A production-ready Django template"
+msgstr "Um template Django pronto para produção"
+
+msgid "Project Information"
+msgstr "Informações do Projeto"
+
+msgid "Technology Stack"
+msgstr "Tecnologias"
+
+msgid "Features"
+msgstr "Recursos"
+
+msgid "REST API with DRF"
+msgstr "API REST com DRF"
+
+msgid "Authentication System"
+msgstr "Sistema de Autenticação"
+
+msgid "Monitoring & Observability"
+msgstr "Monitoramento & Observabilidade"
+
+msgid "Pre-commit Hooks"
+msgstr "Hooks de Pre-commit"
+
+msgid "Internationalization (i18n)"
+msgstr "Internacionalização (i18n)"
+
+msgid "Developer"
+msgstr "Desenvolvedor"
+
+msgid "Full Stack Developer"
+msgstr "Desenvolvedor Full Stack"
+
+msgid "View GitHub Profile"
+msgstr "Ver Perfil no GitHub"
+
+msgid "This project was created as a production-ready Django template with best practices, modern tooling, and comprehensive documentation. Feel free to use it as a starting point for your own projects!"
+msgstr "Este projeto foi criado como um template Django pronto para produção com melhores práticas, ferramentas modernas e documentação abrangente. Sinta-se à vontade para usá-lo como ponto de partida para seus próprios projetos!"
+
+msgid "Repository"
+msgstr "Repositório"
+
+msgid "Source Code"
+msgstr "Código Fonte"
+
+msgid "License"
+msgstr "Licença"
+
+msgid "Free to use and modify"
+msgstr "Livre para usar e modificar"
+
+msgid "Report Issues"
+msgstr "Reportar Problemas"
+
+msgid "Fork Repository"
+msgstr "Fazer Fork do Repositório"
+
+msgid "Star on GitHub"
+msgstr "Dar Star no GitHub"
+
+msgid "Contributing"
+msgstr "Contribuindo"
+
+msgid "Contributions are welcome! If you'd like to improve this project, please:"
+msgstr "Contribuições são bem-vindas! Se você gostaria de melhorar este projeto, por favor:"
+
+msgid "Fork the repository"
+msgstr "Faça um fork do repositório"
+
+msgid "Create a feature branch"
+msgstr "Crie uma branch de feature"
+
+msgid "Commit your changes"
+msgstr "Faça commit das suas mudanças"
+
+msgid "Push to the branch"
+msgstr "Faça push para a branch"
+
+msgid "Open a Pull Request"
+msgstr "Abra um Pull Request"
+
+msgid "Questions or suggestions?"
+msgstr "Dúvidas ou sugestões?"
+
+msgid "Feel free to open an issue on GitHub!"
+msgstr "Sinta-se à vontade para abrir uma issue no GitHub!"
+
+msgid "Back to Home"
+msgstr "Voltar ao Início"
+
+msgid "1. Acceptance of Terms"
+msgstr "1. Aceite dos Termos"
+
+msgid "By accessing and using this Django Base template, you accept and agree to be bound by the terms and provision of this agreement."
+msgstr "Ao acessar e usar este template Django Base, você aceita e concorda em estar vinculado aos termos e provisões deste acordo."
+
+msgid "2. Use License"
+msgstr "2. Licença de Uso"
+
+msgid "This is an open-source template. Permission is granted to use, copy, modify, and distribute this software and its documentation for any purpose, provided that the above copyright notice and this permission notice appear in all copies."
+msgstr "Este é um template de código aberto. É concedida permissão para usar, copiar, modificar e distribuir este software e sua documentação para qualquer finalidade, desde que o aviso de copyright acima e este aviso de permissão apareçam em todas as cópias."
+
+msgid "3. Disclaimer"
+msgstr "3. Isenção de Responsabilidade"
+
+msgid "This template is provided 'as is' without warranty of any kind, express or implied. In no event shall the authors be liable for any claim, damages or other liability arising from the use of the software."
+msgstr "Este template é fornecido 'como está' sem garantia de qualquer tipo, expressa ou implícita. Em nenhum caso os autores serão responsáveis por qualquer reivindicação, danos ou outra responsabilidade decorrente do uso do software."
+
+msgid "4. Privacy"
+msgstr "4. Privacidade"
+
+msgid "We respect your privacy. Any personal information collected will be handled in accordance with applicable data protection laws."
+msgstr "Respeitamos sua privacidade. Qualquer informação pessoal coletada será tratada de acordo com as leis de proteção de dados aplicáveis."
+
+msgid "5. Modifications"
+msgstr "5. Modificações"
+
+msgid "We reserve the right to modify these terms at any time. Continued use of the template constitutes acceptance of modified terms."
+msgstr "Reservamo-nos o direito de modificar estes termos a qualquer momento. O uso continuado do template constitui aceitação dos termos modificados."
+
+msgid "Close"
+msgstr "Fechar"
+
+msgid "Swagger UI"
+msgstr "Swagger UI"
+
+msgid "ReDoc"
+msgstr "ReDoc"
+
+msgid "Health Check"
+msgstr "Verificação de Saúde do Sistema"
+
+msgid "Django & DRF"
+msgstr "Django & DRF"
+
+msgid "Docker Ready"
+msgstr "Dockerizado"
+
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+msgid "Redis Cache"
+msgstr "Cache Redis"
+
+msgid "Modern Frontend"
+msgstr "Frontend Moderno"
+
+msgid "Member Since"
+msgstr "Membro Desde"
+
+msgid "Price Range"
+msgstr "Faixa de Preço"
+
+msgid "Joined"
+msgstr "Entrou em"
+
+msgid "System Health Check"
+msgstr "Verificação de Saúde do Sistema"
+
+msgid "Loading..."
+msgstr "Carregando..."
+
+msgid "System Healthy"
+msgstr "Sistema Saudável"
+
+msgid "System Issues Detected"
+msgstr "Problemas do Sistema Detectados"
+
+msgid "Unable to Fetch Status"
+msgstr "Não Foi Possível Obter o Status"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "ERROR"
+msgstr "ERRO"
+
+msgid "Create Product"
+msgstr "Criar Produto"
+
+msgid "Product created successfully!"
+msgstr "Produto criado com sucesso!"
+
+msgid "Hold Ctrl/Cmd to select multiple tags"
+msgstr "Segure Ctrl/Cmd para selecionar múltiplas tags"

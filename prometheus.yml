@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s # A cada 15 segundos, o Prometheus buscará as métricas
+
+scrape_configs:
+  - job_name: "django-app"
+    metrics_path: /metrics/metrics
+    static_configs:
+      - targets: ["web:8000"] # 'web' é o nome do nosso serviço Django no docker-compose

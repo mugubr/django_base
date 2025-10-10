@@ -1,0 +1,127 @@
+{# Login page template with authentication form / Template da página de login com formulário de autenticação #}
+{% extends "base/base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            {# Login card with form / Card de login com formulário #}
+            <!-- Login Card / Card de Login -->
+            <div class="card border-0 shadow-lg">
+                <div class="card-header text-white text-center py-4" style="background-color: #198754 !important;">
+                    <i class="bi bi-box-arrow-in-right" style="font-size: 3rem;"></i>
+                    <h3 class="mt-2 mb-0">{% trans "Login" %}</h3>
+                    <p class="mb-0 small">{% trans "Access your account" %}</p>
+                </div>
+                <div class="card-body p-4">
+                    {# Login form with HTMX support / Formulário de login com suporte HTMX #}
+                    <form method="post" href="{% url 'login' %}">
+                        {% csrf_token %}
+
+                        {# Form errors container / Container de erros do formulário #}
+                        <!-- Form Errors / Erros do Formulário -->
+                        <div id="form-errors">
+                            {% if form.non_field_errors %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                {{ form.non_field_errors }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Username Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">
+                                <i class="bi bi-person"></i> {% trans "Username or Email" %}
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.username.errors }}
+                            </div>
+                            {% endif %}
+                            <div class="form-text">
+                                {% trans "Enter your username or email address" %}
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">
+                                <i class="bi bi-lock"></i> {% trans "Password" %}
+                            </label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.password.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Remember Me -->
+                        <div class="mb-3 form-check">
+                            {{ form.remember_me }}
+                            <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">
+                                {% trans "Remember me for 2 weeks" %}
+                            </label>
+                        </div>
+
+                        {# Submit button / Botão de enviar #}
+                        <!-- Submit Button / Botão de Envio -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-lg" style="background-color: #198754; color: white; border-color: #198754;">
+                                <i class="bi bi-box-arrow-in-right"></i> {% trans "Login" %}
+                            </button>
+                        </div>
+
+                        <!-- Forgot Password -->
+                        <div class="text-center mt-3">
+                            <a href="#" class="text-decoration-none small text-muted">
+                                <i class="bi bi-question-circle"></i> {% trans "Forgot your password?" %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3 bg-light">
+                    <p class="mb-0 text-muted small">
+                        {% trans "Don't have an account?" %}
+                        <a href="{% url 'register' %}" class="text-decoration-none fw-bold">
+                            {% trans "Register here" %}
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            {# Security notice / Aviso de segurança #}
+            <!-- Security Notice / Aviso de Segurança -->
+            <div class="alert alert-info mt-3" role="alert">
+                <i class="bi bi-shield-check"></i>
+                <small>{% trans "Your connection is secure. We never store your password in plain text." %}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# CSS animation for form entrance / Animação CSS para entrada do formulário #}
+<!-- Animation for form / Animação para formulário -->
+<style>
+    .card {
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}

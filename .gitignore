@@ -1,0 +1,59 @@
+# Arquivos gerados pelo Python (Byte-compiled / optimized / C)
+# Python-generated files
+__pycache__/
+*.py[oc]
+*.so
+
+# Distribuição / Empacotamento
+# Distribution / Packaging
+build/
+dist/
+wheels/
+*.egg-info/
+sdist/
+*.egg
+
+# Ambientes Virtuais
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Relatórios de Testes e Cobertura
+# Test and coverage reports
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Arquivos específicos do Django
+# Django specific files
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+mediafiles/
+
+# Variáveis de Ambiente e Segredos
+# Environment variables and secrets
+.env
+
+# Arquivos de IDEs / Editores
+# IDE / Editor directories
+.vscode/
+.idea/
+
+# Arquivos gerados por Sistemas Operacionais
+# OS-generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+.claude/
+.claude_context.md
+generate_project_summary.py
+project_summary.txt
+FEATURES.md
+TODOLIST.md

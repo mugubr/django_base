@@ -1,0 +1,288 @@
+{# Profile page template with user information and edit form / Template da página de perfil com informações e formulário de edição #}
+{% extends "base/base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        {# Profile sidebar with user info / Barra lateral do perfil com informações do usuário #}
+        <!-- Profile Sidebar / Barra Lateral do Perfil -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    {# User avatar / Avatar do usuário #}
+                    <!-- Avatar -->
+                    {% if user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}"
+                            alt="{{ user.username }}"
+                            class="rounded-circle mb-3 img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    {% else %}
+                    <div class="rounded-circle text-white d-inline-flex align-items-center justify-content-center mb-3"
+                         style="width: 150px; height: 150px; background-color: #198754;">
+                        <i class="bi bi-person-fill" style="font-size: 4rem;"></i>
+                    </div>
+                    {% endif %}
+
+                    <!-- User Info -->
+                    <h4 class="mb-1">{{ user.get_full_name|default:user.username }}</h4>
+                    <p class="text-muted mb-2">@{{ user.username }}</p>
+
+                    {% if user.profile.is_verified %}
+                    <span class="badge bg-success mb-3">
+                        <i class="bi bi-patch-check-fill"></i> {% trans "Verified" %}
+                    </span>
+                    {% endif %}
+
+                    <hr>
+
+                    {# Profile statistics / Estatísticas do perfil #}
+                    <!-- Profile Stats / Estatísticas do Perfil -->
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h5 class="mb-0">{{ user.created_products.count }}</h5>
+                            <small class="text-muted">{% trans "Products" %}</small>
+                        </div>
+                        <div class="col-6">
+                            <h5 class="mb-0">{{ user.date_joined|date:"Y" }}</h5>
+                            <small class="text-muted">{% trans "Member Since" %}</small>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    {# Contact information / Informações de contato #}
+                    <!-- Contact Info / Informações de Contato -->
+                    {% if user.email %}
+                    <div class="text-start mb-2">
+                        <i class="bi bi-envelope text-muted"></i>
+                        <small class="ms-2">{{ user.email }}</small>
+                    </div>
+                    {% endif %}
+
+                    {% if user.profile.phone %}
+                    <div class="text-start mb-2">
+                        <i class="bi bi-telephone text-muted"></i>
+                        <small class="ms-2">{{ user.profile.phone }}</small>
+                    </div>
+                    {% endif %}
+
+                    {% if user.profile.city or user.profile.country %}
+                    <div class="text-start mb-2">
+                        <i class="bi bi-geo-alt text-muted"></i>
+                        <small class="ms-2">
+                            {% if user.profile.city %}{{ user.profile.city }}{% endif %}
+                            {% if user.profile.city and user.profile.country %}, {% endif %}
+                            {% if user.profile.country %}{{ user.profile.country }}{% endif %}
+                        </small>
+                    </div>
+                    {% endif %}
+
+                    {% if user.profile.website %}
+                    <div class="text-start mb-2">
+                        <i class="bi bi-link-45deg text-muted"></i>
+                        <small class="ms-2">
+                            <a href="{{ user.profile.website }}" target="_blank" class="text-decoration-none">
+                                {% trans "Website" %}
+                            </a>
+                        </small>
+                    </div>
+                    {% endif %}
+
+                    {% if user.profile.birth_date %}
+                    <div class="text-start mb-2">
+                        <i class="bi bi-calendar text-muted"></i>
+                        <small class="ms-2">{{ user.profile.birth_date|date:"F d, Y" }}</small>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {# Profile edit form / Formulário de edição do perfil #}
+        <!-- Profile Edit Form / Formulário de Edição do Perfil -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header text-white" style="background-color: #198754 !important;">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square"></i> {% trans "Edit Profile" %}
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {# User information section / Seção de informações do usuário #}
+                        <!-- User Information Section / Seção de Informações do Usuário -->
+                        <h6 class="mb-3" style="color: #198754;">
+                            <i class="bi bi-person-badge"></i> {% trans "Basic Information" %}
+                        </h6>
+
+                        <div class="row">
+                            <!-- First Name -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.first_name.id_for_label }}" class="form-label">
+                                    {% trans "First Name" %}
+                                </label>
+                                {{ user_form.first_name }}
+                                {% if user_form.first_name.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ user_form.first_name.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Last Name -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ user_form.last_name.id_for_label }}" class="form-label">
+                                    {% trans "Last Name" %}
+                                </label>
+                                {{ user_form.last_name }}
+                                {% if user_form.last_name.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ user_form.last_name.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="{{ user_form.email.id_for_label }}" class="form-label">
+                                {% trans "Email Address" %}
+                            </label>
+                            {{ user_form.email }}
+                            {% if user_form.email.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ user_form.email.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <hr>
+
+                        {# Profile details section / Seção de detalhes do perfil #}
+                        <!-- Profile Information Section / Seção de Informações do Perfil -->
+                        <h6 class="mb-3" style="color: #198754;">
+                            <i class="bi bi-card-text"></i> {% trans "Profile Details" %}
+                        </h6>
+
+                        <!-- Bio -->
+                        <div class="mb-3">
+                            <label for="{{ profile_form.bio.id_for_label }}" class="form-label">
+                                {% trans "Biography" %}
+                            </label>
+                            {{ profile_form.bio }}
+                            {% if profile_form.bio.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ profile_form.bio.errors }}
+                            </div>
+                            {% endif %}
+                            <div class="form-text">{% trans "Tell us about yourself" %}</div>
+                        </div>
+
+                        <!-- Avatar -->
+                        <div class="mb-3">
+                            <label for="{{ profile_form.avatar.id_for_label }}" class="form-label">
+                                {% trans "Profile Picture" %}
+                            </label>
+                            {{ profile_form.avatar }}
+                            {% if profile_form.avatar.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ profile_form.avatar.errors }}
+                            </div>
+                            {% endif %}
+                            {% if user.profile.avatar %}
+                            <div class="form-text">
+                                {% trans "Current" %}: <a href="{{ user.profile.avatar.url }}" target="_blank">{% trans "View current avatar" %}</a>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <!-- Phone -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ profile_form.phone.id_for_label }}" class="form-label">
+                                    {% trans "Phone Number" %}
+                                </label>
+                                {{ profile_form.phone }}
+                                {% if profile_form.phone.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ profile_form.phone.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Birth Date -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ profile_form.birth_date.id_for_label }}" class="form-label">
+                                    {% trans "Birth Date" %}
+                                </label>
+                                {{ profile_form.birth_date }}
+                                {% if profile_form.birth_date.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ profile_form.birth_date.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- City -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ profile_form.city.id_for_label }}" class="form-label">
+                                    {% trans "City" %}
+                                </label>
+                                {{ profile_form.city }}
+                                {% if profile_form.city.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ profile_form.city.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <!-- Country -->
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ profile_form.country.id_for_label }}" class="form-label">
+                                    {% trans "Country" %}
+                                </label>
+                                {{ profile_form.country }}
+                                {% if profile_form.country.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ profile_form.country.errors }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Website -->
+                        <div class="mb-3">
+                            <label for="{{ profile_form.website.id_for_label }}" class="form-label">
+                                {% trans "Website" %}
+                            </label>
+                            {{ profile_form.website }}
+                            {% if profile_form.website.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ profile_form.website.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        {# Form action buttons / Botões de ação do formulário #}
+                        <!-- Submit Buttons / Botões de Envio -->
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn" style="background-color: #198754; color: white; border-color: #198754;">
+                                <i class="bi bi-save"></i> {% trans "Save Changes" %}
+                            </button>
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> {% trans "Cancel" %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

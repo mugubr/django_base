@@ -1,0 +1,59 @@
+{# Reusable pagination component for list views / Componente de paginação reutilizável para visualizações de lista #}
+{% load i18n %}
+<!-- Pagination Component -->
+<!-- Componente de Paginação -->
+
+{# Only show pagination if there are multiple pages / Mostrar paginação apenas se houver múltiplas páginas #}
+{% if page_obj.has_other_pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {# Previous page button / Botão de página anterior #}
+        <!-- Previous Page / Página Anterior -->
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {# Page numbers with active state / Números de página com estado ativo #}
+        <!-- Page Numbers / Números de Página -->
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {# Next page button / Botão de próxima página #}
+        <!-- Next Page / Próxima Página -->
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+{# Page information display / Exibição de informações da página #}
+<!-- Page Info / Informações da Página -->
+<div class="text-center text-muted small">
+    {% blocktrans with start=page_obj.start_index end=page_obj.end_index total=page_obj.paginator.count %}Showing {{ start }} to {{ end }} of {{ total }} items{% endblocktrans %}
+</div>
+{% endif %}
