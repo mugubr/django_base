@@ -1,5 +1,7 @@
 # Django Base (django_base) 🚀
 
+[![CI Pipeline Status](https://github.com/mugubr/django_base/actions/workflows/ci.yml/badge.svg)](https://github.com/mugubr/django_base/actions/workflows/ci.yml)
+
 🇬🇧 / 🇺🇸
 
 ## English
@@ -673,17 +675,14 @@ Access Grafana at `http://localhost:3000` (default: `admin`/`admin`)
 Pre-configured community dashboards you can import:
 
 1. **Django Metrics** (ID: 9528)
-
    - Monitors Django application metrics, request rates, response times
    - Perfect for tracking API performance
 
 2. **PostgreSQL Database** (ID: 9628)
-
    - Database connection pool, query performance, table statistics
    - Essential for database health monitoring
 
 3. **Nginx** (ID: 12708) - _Requires nginx-prometheus-exporter_
-
    - Nginx request rates, connection stats, response codes
 
 4. **Redis Dashboard** (ID: 11835)
@@ -1580,18 +1579,15 @@ Acesse o Grafana em `http://localhost:3000` (padrão: `admin`/`admin`)
 Dashboards da comunidade pré-configurados que você pode importar:
 
 1. **Django Metrics** (ID: 9528)
-
    - Monitora métricas da aplicação Django, taxas de requisição, tempos de
      resposta
    - Perfeito para rastrear performance da API
 
 2. **PostgreSQL Database** (ID: 9628)
-
    - Pool de conexões do banco, performance de queries, estatísticas de tabelas
    - Essencial para monitoramento da saúde do banco de dados
 
 3. **Nginx** (ID: 12708) - _Requer nginx-prometheus-exporter_
-
    - Taxas de requisição Nginx, estatísticas de conexão, códigos de resposta
 
 4. **Redis Dashboard** (ID: 11835)

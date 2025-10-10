@@ -10,7 +10,7 @@
 
 # Base stage with common configuration for all environments
 # Stage base com configuração comum para todos os ambientes
-FROM python:3.11-slim AS base
+FROM python:3.13-slim AS base
 
 # Set working directory inside the container
 # Define o diretório de trabalho dentro do container

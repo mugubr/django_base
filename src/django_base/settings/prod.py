@@ -141,6 +141,7 @@ SESSION_CACHE_ALIAS = "default"
 # Configurações de segurança de sessão
 SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access / Previne acesso JavaScript
 SESSION_COOKIE_SAMESITE = "Lax"  # CSRF protection / Proteção CSRF
+# SESSION_COOKIE_SAMESITE = 'Strict'
 SESSION_COOKIE_AGE = 1209600  # 2 weeks / 2 semanas
 
 # Email Configuration for Production
@@ -360,3 +361,6 @@ CORS_ALLOWED_ORIGINS = config(  # noqa: F405
 # CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 # CSP_IMG_SRC = ("'self'", "data:", "https:")
 # CSP_FONT_SRC = ("'self'",)
+
+
+# ALLOWED_HOSTS=.yourdomain.com,yourdomain.com

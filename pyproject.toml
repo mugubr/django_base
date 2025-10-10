@@ -18,7 +18,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 keywords = [
     "django", "boilerplate", "docker", "rest-api", "drf",
     "authentication", "postgresql", "redis", "bootstrap",
@@ -29,7 +29,7 @@ classifiers = [
     "Environment :: Web Environment",
     "Framework :: Django :: 5.2",
     "Intended Audience :: Developers",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
@@ -95,7 +95,7 @@ packages = { find = { where = ["src"] } }
 # Configuração do Linter e Formatador Ruff
 [tool.ruff]
 line-length = 88
-target-version = "py311"
+target-version = "py313"
 
 [tool.ruff.lint]
 select = [
@@ -114,6 +114,7 @@ select = [
 ignore = [
     "S101",  # assert detectado (necessário em testes) / assert detected (necessary in tests)
     "E501", # Ignora "line too long" / Ignores "line too long"
+    "RUF012", # Ignora "unused-noqa" / Ignores "unused-noqa"
 ]
 [tool.ruff.lint.per-file-ignores]
 "*/tests.py" = ["S101"]  # permite assert em testes
