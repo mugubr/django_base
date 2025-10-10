@@ -121,7 +121,7 @@ class Product(models.Model):
     class Meta:
         # Default ordering when querying products (newest first)
         # Ordenação padrão ao consultar produtos (mais recentes primeiro)
-        ordering = ["-created_at"]  # noqa: RUF012
+        ordering = ["-created_at"]
 
         # Human-readable names for admin interface
         # Nomes legíveis para interface administrativa
@@ -130,7 +130,7 @@ class Product(models.Model):
 
         # Database indexes for query optimization
         # Índices de banco de dados para otimização de queries
-        indexes = [  # noqa: RUF012
+        indexes = [
             # Composite index for common query pattern: active products by
             # creation date
             # Índice composto para padrão comum de consulta: produtos
@@ -148,7 +148,7 @@ class Product(models.Model):
 
         # Permissions for fine-grained access control
         # Permissões para controle de acesso granular
-        permissions = [  # noqa: RUF012
+        permissions = [
             ("can_deactivate_product", "Can deactivate product"),
             ("can_set_special_price", "Can set special pricing"),
         ]
@@ -549,7 +549,13 @@ class UserProfile(models.Model):
         verbose_name = _("User Profile")
         verbose_name_plural = _("User Profiles")
         # Order by most recently created / Ordenar por mais recentemente criado
-        ordering = ["-created_at"]  # noqa: RUF012
+        ordering = ["-created_at"]
+        # Add indexes for frequently queried fields / Adiciona indexes para campos frequentemente filtrados na API
+        indexes = [
+            models.Index(fields=["is_verified"]),
+            models.Index(fields=["city"]),
+            models.Index(fields=["country"]),
+        ]
 
     def __str__(self):
         """String representation showing username and verification status."""
@@ -718,7 +724,12 @@ class Category(models.Model):
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
         # Order alphabetically / Ordenar alfabeticamente
-        ordering = ["name"]  # noqa: RUF012
+        ordering = ["name"]
+        # Add indexes for frequently filtered fields / Adiciona indexes para campos frequentemente filtrados
+        indexes = [
+            models.Index(fields=["is_active"]),
+            models.Index(fields=["parent"]),
+        ]
 
     def __str__(self):
         """String representation showing category hierarchy."""
@@ -870,7 +881,11 @@ class Tag(models.Model):
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
         # Order alphabetically / Ordenar alfabeticamente
-        ordering = ["name"]  # noqa: RUF012
+        ordering = ["name"]
+        # Add index for color field / Adiciona index para o campo 'color'
+        indexes = [
+            models.Index(fields=["color"]),
+        ]
 
     def __str__(self):
         """String representation showing tag name."""

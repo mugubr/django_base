@@ -87,8 +87,8 @@ class ProductListSerializer(serializers.ModelSerializer):
         """
 
         model = Product
-        fields = ["id", "name", "price", "is_active"]  # noqa: RUF012
-        read_only_fields = ["id"]  # noqa: RUF012
+        fields = ["id", "name", "price", "is_active"]
+        read_only_fields = ["id"]
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -144,7 +144,7 @@ class ProductSerializer(serializers.ModelSerializer):
         """
 
         model = Product
-        fields = [  # noqa: RUF012
+        fields = [
             "id",
             "name",
             "price",
@@ -155,7 +155,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "is_new",  # Computed field / Campo computado
             "age_in_days",  # Computed field / Campo computado
         ]
-        read_only_fields = [  # noqa: RUF012
+        read_only_fields = [
             "id",
             "created_at",
             "updated_at",
@@ -440,9 +440,9 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         """
 
         model = Product
-        fields = ["name", "price", "is_active"]  # noqa: RUF012
+        fields = ["name", "price", "is_active"]
         # All fields are required on creation / Todos os campos são obrigatórios na criação
-        extra_kwargs = {  # noqa: RUF012
+        extra_kwargs = {
             "name": {"required": True},
             "price": {"required": True},
             "is_active": {"required": False, "default": True},
@@ -478,9 +478,9 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         """
 
         model = Product
-        fields = ["name", "price", "is_active"]  # noqa: RUF012
+        fields = ["name", "price", "is_active"]
         # All fields optional for partial updates / Todos os campos opcionais para atualizações parciais
-        extra_kwargs = {  # noqa: RUF012
+        extra_kwargs = {
             "name": {"required": False},
             "price": {"required": False},
             "is_active": {"required": False},
@@ -526,7 +526,7 @@ class CategorySerializer(serializers.ModelSerializer):
         """
 
         model = Category
-        fields = [  # noqa: RUF012
+        fields = [
             "id",
             "name",
             "slug",
@@ -539,7 +539,7 @@ class CategorySerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "slug", "created_at", "updated_at"]  # noqa: RUF012
+        read_only_fields = ["id", "slug", "created_at", "updated_at"]
 
     @extend_schema_field(serializers.CharField)
     def get_parent_name(self, obj):
@@ -636,8 +636,8 @@ class CategoryListSerializer(serializers.ModelSerializer):
         """
 
         model = Category
-        fields = ["id", "name", "slug", "is_active", "products_count"]  # noqa: RUF012
-        read_only_fields = ["id", "slug"]  # noqa: RUF012
+        fields = ["id", "name", "slug", "is_active", "products_count"]
+        read_only_fields = ["id", "slug"]
 
     @extend_schema_field(serializers.IntegerField)
     def get_products_count(self, obj):
@@ -678,7 +678,7 @@ class TagSerializer(serializers.ModelSerializer):
         """
 
         model = Tag
-        fields = [  # noqa: RUF012
+        fields = [
             "id",
             "name",
             "slug",
@@ -686,7 +686,7 @@ class TagSerializer(serializers.ModelSerializer):
             "products_count",
             "created_at",
         ]
-        read_only_fields = ["id", "slug", "created_at"]  # noqa: RUF012
+        read_only_fields = ["id", "slug", "created_at"]
 
     @extend_schema_field(serializers.IntegerField)
     def get_products_count(self, obj):
@@ -745,8 +745,8 @@ class TagListSerializer(serializers.ModelSerializer):
         """
 
         model = Tag
-        fields = ["id", "name", "slug", "color"]  # noqa: RUF012
-        read_only_fields = ["id", "slug"]  # noqa: RUF012
+        fields = ["id", "name", "slug", "color"]
+        read_only_fields = ["id", "slug"]
 
 
 # UserProfile Serializers / Serializadores de UserProfile
@@ -789,7 +789,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         """
 
         model = UserProfile
-        fields = [  # noqa: RUF012
+        fields = [
             "id",
             "user",
             "username",
@@ -806,7 +806,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = [  # noqa: RUF012
+        read_only_fields = [
             "id",
             "user",
             "is_verified",
@@ -908,7 +908,7 @@ class UserProfileListSerializer(serializers.ModelSerializer):
         """
 
         model = UserProfile
-        fields = [  # noqa: RUF012
+        fields = [
             "id",
             "user",
             "username",
@@ -918,7 +918,7 @@ class UserProfileListSerializer(serializers.ModelSerializer):
             "country",
             "is_verified",
         ]
-        read_only_fields = ["id", "user", "is_verified"]  # noqa: RUF012
+        read_only_fields = ["id", "user", "is_verified"]
 
     @extend_schema_field(serializers.CharField)
     def get_full_name(self, obj):

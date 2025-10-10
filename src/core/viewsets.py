@@ -214,7 +214,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     # Filter backends define how the queryset can be filtered
     # Backends de filtro definem como o queryset pode ser filtrado
-    filter_backends = [  # noqa: RUF012
+    filter_backends = [
         DjangoFilterBackend,  # Enables field-based filtering
         filters.SearchFilter,  # Enables full-text search
         filters.OrderingFilter,  # Enables result ordering
@@ -222,7 +222,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     # Fields that can be filtered with exact match
     # Campos que podem ser filtrados com correspondência exata
-    filterset_fields = {  # noqa: RUF012
+    filterset_fields = {
         "name": ["exact", "icontains"],  # name=value or name__icontains=value
         "price": ["exact", "gte", "lte"],  # price__gte=10&price__lte=100
         "is_active": ["exact"],  # is_active=true
@@ -231,11 +231,11 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     # Fields that can be searched (partial match, case-insensitive)
     # Campos que podem ser buscados (correspondência parcial, case-insensitive)
-    search_fields = ["name"]  # ?search=produto  # noqa: RUF012
+    search_fields = ["name"]  # ?search=produto
 
     # Fields that can be used for ordering results
     # Campos que podem ser usados para ordenar resultados
-    ordering_fields = [  # noqa: RUF012
+    ordering_fields = [
         "name",
         "price",
         "created_at",
@@ -245,17 +245,17 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     # Default ordering if not specified in query params
     # Ordenação padrão se não especificada nos parâmetros de query
-    ordering = ["-created_at"]  # Newest first / Mais recentes primeiro  # noqa: RUF012
+    ordering = ["-created_at"]  # Newest first / Mais recentes primeiro
 
     # Permissions and Throttling / Permissões e Limitação de Taxa
 
     # Permission classes applied to all actions (can be overridden)
     # Classes de permissão aplicadas a todas as ações (pode ser sobrescrito)
-    permission_classes = [IsAuthenticatedOrReadOnly]  # noqa: RUF012
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     # Throttle classes to prevent API abuse
     # Classes de throttle para prevenir abuso da API
-    throttle_classes = [AnonRateThrottle, BurstRateThrottle]  # noqa: RUF012
+    throttle_classes = [AnonRateThrottle, BurstRateThrottle]
 
     # Dynamic Serializer Selection / Seleção Dinâmica de Serializador
 
@@ -737,23 +737,23 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     queryset = Category.objects.all().order_by("name")
     serializer_class = CategorySerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # noqa: RUF012
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    filter_backends = [  # noqa: RUF012
+    filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
 
-    filterset_fields = {  # noqa: RUF012
+    filterset_fields = {
         "name": ["exact", "icontains"],
         "is_active": ["exact"],
         "parent": ["exact", "isnull"],  # parent__isnull=true for root categories
     }
 
-    search_fields = ["name", "description"]  # noqa: RUF012
-    ordering_fields = ["name", "created_at"]  # noqa: RUF012
-    ordering = ["name"]  # noqa: RUF012
+    search_fields = ["name", "description"]
+    ordering_fields = ["name", "created_at"]
+    ordering = ["name"]
 
     def get_serializer_class(self):
         """
@@ -877,18 +877,18 @@ class TagViewSet(viewsets.ModelViewSet):
 
     queryset = Tag.objects.all().order_by("name")
     serializer_class = TagSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # noqa: RUF012
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    filter_backends = [  # noqa: RUF012
+    filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
 
-    filterset_fields = {"name": ["exact", "icontains"], "color": ["exact"]}  # noqa: RUF012
-    search_fields = ["name"]  # noqa: RUF012
-    ordering_fields = ["name", "created_at"]  # noqa: RUF012
-    ordering = ["name"]  # noqa: RUF012
+    filterset_fields = {"name": ["exact", "icontains"], "color": ["exact"]}
+    search_fields = ["name"]
+    ordering_fields = ["name", "created_at"]
+    ordering = ["name"]
 
     def get_serializer_class(self):
         """
@@ -1008,21 +1008,21 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-    filter_backends = [  # noqa: RUF012
+    filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
 
-    filterset_fields = {  # noqa: RUF012
+    filterset_fields = {
         "is_verified": ["exact"],
         "city": ["exact", "icontains"],
         "country": ["exact", "icontains"],
     }
 
-    search_fields = ["user__username", "user__email", "bio", "city"]  # noqa: RUF012
-    ordering_fields = ["created_at", "updated_at"]  # noqa: RUF012
-    ordering = ["-created_at"]  # noqa: RUF012
+    search_fields = ["user__username", "user__email", "bio", "city"]
+    ordering_fields = ["created_at", "updated_at"]
+    ordering = ["-created_at"]
 
     def get_serializer_class(self):
         """

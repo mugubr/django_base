@@ -51,6 +51,10 @@ mediafiles/
 Thumbs.db
 ehthumbs.db
 
+# Prettier
+node_modules/
+
+# AI Assisted Documentation / Documentação assistida por AI
 .claude/
 .claude_context.md
 generate_project_summary.py

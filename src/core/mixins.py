@@ -95,7 +95,7 @@ class TimeStampedModelMixin(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ["-created_at"]  # noqa: RUF012
+        ordering = ["-created_at"]
 
 
 class SoftDeleteModelMixin(models.Model):

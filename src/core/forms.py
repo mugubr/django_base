@@ -174,7 +174,7 @@ class RegisterForm(UserCreationForm):
         )
         # Widget for username field
         # Widget para campo de username
-        widgets = {  # noqa: RUF012
+        widgets = {
             "username": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": _("Username")}
             ),
@@ -273,7 +273,7 @@ class UserProfileForm(forms.ModelForm):
         # Profile fields for editing / Campos de perfil para edição
         fields = ("bio", "avatar", "phone", "birth_date", "city", "country", "website")
         # Widget customization with Bootstrap styling / Customização de widgets com estilização Bootstrap
-        widgets = {  # noqa: RUF012
+        widgets = {
             # Biography text area (4 rows) / Área de texto de biografia (4 linhas)
             "bio": forms.Textarea(
                 attrs={
@@ -355,7 +355,7 @@ class UserUpdateForm(forms.ModelForm):
         # Basic user fields / Campos básicos do usuário
         fields = ("first_name", "last_name", "email")
         # Widget customization with Bootstrap styling / Customização de widgets com estilização Bootstrap
-        widgets = {  # noqa: RUF012
+        widgets = {
             # First name input / Input de primeiro nome
             "first_name": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": _("First Name")}
@@ -457,8 +457,8 @@ class ProductForm(forms.ModelForm):
         """Meta configuration / Configuração Meta"""
 
         model = Product
-        fields = ["name", "price", "category", "tags", "is_active"]  # noqa: RUF012
-        widgets = {  # noqa: RUF012
+        fields = ["name", "price", "category", "tags", "is_active"]
+        widgets = {
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
@@ -488,14 +488,14 @@ class ProductForm(forms.ModelForm):
             ),
             "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
-        labels = {  # noqa: RUF012
+        labels = {
             "name": _("Name"),
             "price": _("Price"),
             "category": _("Category"),
             "tags": _("Tags"),
             "is_active": _("Active"),
         }
-        help_texts = {  # noqa: RUF012
+        help_texts = {
             "name": _("Enter the product name"),
             "price": _("Enter the product price"),
             "category": _("Select a category (optional)"),

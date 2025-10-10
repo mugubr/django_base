@@ -305,20 +305,26 @@ services:
 # Volumes nomeados persistem dados através de reinicializações e remoções de containers
 volumes:
   postgres_data:
+    name: django_base_postgres_data
     # PostgreSQL database files
     # Arquivos do banco de dados PostgreSQL
   redis_data:
+    name: django_base_redis_data
     # Redis persistence files
     # Arquivos de persistência Redis
   prometheus_data:
+    name: django_base_prometheus_data
     # Prometheus metrics storage
     # Armazenamento de métricas Prometheus
   grafana_data:
+    name: django_base_grafana_data
     # Grafana configurations and dashboards
     # Configurações e dashboards Grafana
   static_volume:
+    name: django_base_static_volume
     # Django static files (CSS, JS, images)
     # Arquivos estáticos Django (CSS, JS, imagens)
   media_volume:
+    name: django_base_media_volume
     # User-uploaded files
     # Arquivos enviados por usuários

@@ -116,7 +116,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name", "slug", "parent", "is_active", "created_at")
     list_filter = ("is_active", "created_at")
     search_fields = ("name", "description")
-    prepopulated_fields = {"slug": ("name",)}  # noqa: RUF012
+    prepopulated_fields = {"slug": ("name",)}
     readonly_fields = ("created_at", "updated_at")
 
 
@@ -133,5 +133,5 @@ class TagAdmin(admin.ModelAdmin):
 
     list_display = ("name", "slug", "color", "created_at")
     search_fields = ("name",)
-    prepopulated_fields = {"slug": ("name",)}  # noqa: RUF012
+    prepopulated_fields = {"slug": ("name",)}
     readonly_fields = ("created_at",)
