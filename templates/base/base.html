@@ -73,7 +73,34 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link {% is_active_url 'home' %}" href="{% url 'home' %}">{% trans "Home" %}</a>
+                        <a class="nav-link {% is_active_url 'home' %}" href="{% url 'home' %}">
+                            <i class="bi bi-house"></i> {% trans "Home" %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% is_active_url 'project_info' %}" href="{% url 'project_info' %}">
+                            <i class="bi bi-info-circle"></i> {% trans "Project" %}
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link {% is_active_url 'products' %}" href="{% url 'products' %}">
+                                <i class="bi bi-box-seam"></i> {% trans "Products" %}
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-speedometer2"></i> {% trans "Monitoring" %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/health-status/" target="_blank"><i class="bi bi-heart-pulse text-danger"></i> {% trans "Health Check" %}</a></li>
+                            <li><a class="dropdown-item" href="http://localhost:9090" target="_blank" rel="noopener noreferrer"><i class="bi bi-graph-up text-danger"></i> Prometheus</a></li>
+                            <li><a class="dropdown-item" href="http://localhost:3000" target="_blank" rel="noopener noreferrer"><i class="bi bi-speedometer2 text-warning"></i> Grafana</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/api/docs/" target="_blank"><i class="bi bi-book text-success"></i> {% trans "API Docs" %} (Swagger)</a></li>
+                            <li><a class="dropdown-item" href="/api/redoc/" target="_blank"><i class="bi bi-file-text text-info"></i> {% trans "API Docs" %} (ReDoc)</a></li>
+                        </ul>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
@@ -123,8 +150,9 @@
         <div class="container">
              <p class="text-center text-muted mb-0">
                 &copy; {% now "Y" %} Django Base. {% trans "All rights reserved" %}.
-                <a href="{% url 'about' %}" class="text-decoration-none ms-2">{% trans "About" %}</a>
-                <a href="#" class="text-decoration-none ms-2" data-bs-toggle="modal" data-bs-target="#termsModal">{% trans "Terms and Conditions" %}</a>
+                <a href="{% url 'project_info' %}" class="text-decoration-none ms-2">{% trans "Project Info" %}</a>
+                <a href="https://github.com/mugubr/django_base" target="_blank" rel="noopener noreferrer" class="text-decoration-none ms-2"><i class="bi bi-github"></i> GitHub</a>
+                <a href="#" class="text-decoration-none ms-2" data-bs-toggle="modal" data-bs-target="#termsModal">{% trans "Terms" %}</a>
              </p>
         </div>
     </footer>

@@ -48,6 +48,7 @@ repos:
       - id: check-yaml
         name: Check YAML
         description: Validate YAML file syntax
+        args: [--allow-multiple-documents]
 
       # Check JSON syntax / Verifica sintaxe JSON
       - id: check-json
@@ -142,6 +143,17 @@ repos:
         name: Django Upgrade
         description: Upgrade Django code to newer versions
         args: ["--target-version", "5.0"]
+
+  # Type Checking with mypy / Verificação de Tipos com mypy
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.8.0
+  #   hooks:
+  #     - id: mypy
+  #       name: MyPy Type Checker
+  #       description: Static type checking for Python
+  #       additional_dependencies:
+  #         [django-stubs, djangorestframework-stubs, types-Pillow]
+  #       args: ["--config-file=pyproject.toml"]
 
   # Markdown Linting / Linting de Markdown
   # Ensures consistent markdown formatting

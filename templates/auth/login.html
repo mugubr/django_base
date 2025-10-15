@@ -2,7 +2,7 @@
 {% extends "base/base.html" %}
 {% load static i18n %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ title }} - Django Base{% endblock %}
 
 {% block content %}
 <div class="container my-5">
@@ -96,11 +96,34 @@
                 </div>
             </div>
 
-            {# Security notice / Aviso de segurança #}
+            {# Security & API Info / Informações de Segurança & API #}
             <!-- Security Notice / Aviso de Segurança -->
             <div class="alert alert-info mt-3" role="alert">
                 <i class="bi bi-shield-check"></i>
                 <small>{% trans "Your connection is secure. We never store your password in plain text." %}</small>
+            </div>
+
+            <!-- API Information / Informações da API -->
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <h6 class="card-title text-muted mb-2">
+                        <i class="bi bi-key"></i> {% trans "API Authentication" %}
+                    </h6>
+                    <p class="card-text small text-muted mb-2">
+                        {% trans "For API access, use JWT tokens. See documentation:" %}
+                    </p>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <a href="/api/docs/" target="_blank" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-book"></i> Swagger
+                        </a>
+                        <a href="/api/redoc/" target="_blank" class="btn btn-sm btn-outline-info">
+                            <i class="bi bi-file-text"></i> ReDoc
+                        </a>
+                        <a href="/api/token/" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-key"></i> JWT
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

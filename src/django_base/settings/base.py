@@ -30,6 +30,7 @@ Recursos principais:
 - Integração de métricas Prometheus
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 from decouple import Csv, config
@@ -124,6 +125,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # Custom context processor for portfolio settings
+                # Processador de contexto customizado para configurações do portfolio
+                "core.context_processors.portfolio_settings",
             ],
         },
     },
@@ -220,6 +224,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.AllowAny",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -326,3 +331,34 @@ Q_CLUSTER = {
 LOGIN_REDIRECT_URL = "/"
 LOGIN_URL = "/admin/login/"
 LOGOUT_REDIRECT_URL = "/"
+
+# Simple JWT Configuration / Configuração do Simple JWT
+# JWT (JSON Web Token) authentication for REST API
+# Autenticação JWT (JSON Web Token) para API REST
+
+SIMPLE_JWT = {
+    # Access token lifetime / Tempo de vida do token de acesso
+    "ACCESS_TOKEN_LIFETIME": timedelta(
+        minutes=config("JWT_ACCESS_TOKEN_MINUTES", default=60, cast=int)
+    ),
+    # Refresh token lifetime / Tempo de vida do token de refresh
+    "REFRESH_TOKEN_LIFETIME": timedelta(
+        days=config("JWT_REFRESH_TOKEN_DAYS", default=7, cast=int)
+    ),
+    # Automatically rotate refresh tokens on use / Rotaciona automaticamente tokens de refresh ao usar
+    "ROTATE_REFRESH_TOKENS": True,
+    # Blacklist refresh tokens after rotation / Adiciona tokens de refresh à blacklist após rotação
+    "BLACKLIST_AFTER_ROTATION": True,
+    # Algorithm for signing tokens / Algoritmo para assinar tokens
+    "ALGORITHM": "HS256",
+    # Signing key (uses SECRET_KEY by default) / Chave de assinatura (usa SECRET_KEY por padrão)
+    "SIGNING_KEY": SECRET_KEY,
+    # Token prefix in Authorization header / Prefixo do token no header Authorization
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    # User ID field / Campo de ID do usuário
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    # Token type / Tipo de token
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+    "TOKEN_TYPE_CLAIM": "token_type",
+}

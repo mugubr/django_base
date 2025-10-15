@@ -269,24 +269,29 @@ services:
 
   # Grafana Monitoring Dashboard
   # Dashboard de Monitoramento Grafana
-
-  # Provides visualization dashboards for Prometheus metrics
-  # Fornece dashboards de visualização para métricas do Prometheus
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     profiles: ["prod", "dev"]
     volumes:
-      # Persist Grafana configurations and dashboards
-      # Persiste configurações e dashboards do Grafana
+      # Persist Grafana data
       - grafana_data:/var/lib/grafana
+      # Mounts for provisioning datasources and dashboard providers
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      # Mounts for the actual dashboard JSON files
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     environment:
       # Admin credentials (change in production!)
       # Credenciais de admin (mude em produção!)
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
       # Allow embedding Grafana in iframes
       # Permite embutir Grafana em iframes
       - GF_SECURITY_ALLOW_EMBEDDING=true
+      # Disable login form (optional for dev)
+      # - GF_AUTH_ANONYMOUS_ENABLED=true
+      # - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     ports:
       - "3000:3000"
     depends_on:
@@ -297,6 +302,65 @@ services:
         limits:
           cpus: "0.5"
           memory: 512M
+
+  # PostgreSQL Exporter for Prometheus
+  # Exportador PostgreSQL para Prometheus
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: postgres_exporter
+    profiles: ["prod", "dev"]
+    environment:
+      DATA_SOURCE_NAME: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?sslmode=disable"
+    ports:
+      - "9187:9187"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
+
+  # Redis Exporter for Prometheus
+  # Exportador Redis para Prometheus
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis_exporter
+    profiles: ["prod", "dev"]
+    environment:
+      REDIS_ADDR: "redis:6379"
+    ports:
+      - "9121:9121"
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
+
+  # Nginx Prometheus Exporter
+  # Exportador Nginx para Prometheus
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx_exporter
+    profiles: ["prod"]
+    command:
+      - "-nginx.scrape-uri=http://nginx:80/nginx_status"
+    ports:
+      - "9113:9113"
+    depends_on:
+      - nginx
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 64M
 
 # Volumes for Data Persistence
 # Volumes para Persistência de Dados

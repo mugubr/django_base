@@ -1,0 +1,132 @@
+name: 🐛 Bug Report / Relatório de Bug
+description:
+  Report a bug to help us improve / Reporte um bug para nos ajudar a melhorar
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+        Obrigado por dedicar tempo para preencher este relatório de bug!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description / Descrição
+      description:
+        A clear and concise description of what the bug is / Uma descrição clara
+        e concisa do bug
+      placeholder: Describe the bug... / Descreva o bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce / Passos para Reproduzir
+      description:
+        Steps to reproduce the behavior / Passos para reproduzir o comportamento
+      placeholder: |
+        1. Go to '...' / Vá para '...'
+        2. Click on '...' / Clique em '...'
+        3. Scroll down to '...' / Role para baixo até '...'
+        4. See error / Veja o erro
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior / Comportamento Esperado
+      description:
+        What you expected to happen / O que você esperava que acontecesse
+      placeholder: I expected... / Eu esperava...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual Behavior / Comportamento Atual
+      description: What actually happened / O que realmente aconteceu
+      placeholder:
+        Instead, what happened was... / Ao invés disso, o que aconteceu foi...
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / Capturas de Tela
+      description:
+        If applicable, add screenshots to help explain your problem / Se
+        aplicável, adicione screenshots para ajudar a explicar seu problema
+      placeholder:
+        Drag and drop images here... / Arraste e solte imagens aqui...
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment / Ambiente
+      description:
+        Where are you running the application? / Onde você está rodando a
+        aplicação?
+      options:
+        - Development (Docker) / Desenvolvimento (Docker)
+        - Production (Docker) / Produção (Docker)
+        - Local (without Docker) / Local (sem Docker)
+        - Other / Outro
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System / Sistema Operacional
+      description: What OS are you using? / Qual SO você está usando?
+      placeholder: e.g., Ubuntu 22.04, Windows 11, macOS 14
+    validations:
+      required: true
+
+  - type: input
+    id: python-version
+    attributes:
+      label: Python Version / Versão do Python
+      description:
+        What Python version are you using? / Qual versão do Python você está
+        usando?
+      placeholder: e.g., 3.13
+    validations:
+      required: true
+
+  - type: input
+    id: django-version
+    attributes:
+      label: Django Version / Versão do Django
+      description:
+        What Django version are you using? / Qual versão do Django você está
+        usando?
+      placeholder: e.g., 5.2.7
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context / Contexto Adicional
+      description:
+        Add any other context about the problem here / Adicione qualquer outro
+        contexto sobre o problema aqui
+      placeholder: Any other details... / Quaisquer outros detalhes...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct / Código de Conduta
+      description:
+        By submitting this issue, you agree to follow our Code of Conduct / Ao
+        submeter esta issue, você concorda em seguir nosso Código de Conduta
+      options:
+        - label:
+            I agree to follow this project's Code of Conduct / Concordo em
+            seguir o Código de Conduta deste projeto
+          required: true

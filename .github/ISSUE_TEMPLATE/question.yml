@@ -1,0 +1,64 @@
+name: ❓ Question / Pergunta
+description:
+  Ask a question about the project / Faça uma pergunta sobre o projeto
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your interest in the project!
+        Obrigado pelo seu interesse no projeto!
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question / Sua Pergunta
+      description: What would you like to know? / O que você gostaria de saber?
+      placeholder: I would like to know... / Eu gostaria de saber...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category / Categoria
+      description: What is your question about? / Sobre o que é sua pergunta?
+      options:
+        - Installation/Setup / Instalação/Configuração
+        - Usage / Uso
+        - API / API
+        - Authentication / Autenticação
+        - Database / Banco de dados
+        - Docker / Docker
+        - Deployment / Deploy
+        - Testing / Testes
+        - Contributing / Contribuindo
+        - Other / Outro
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context / Contexto Adicional
+      description:
+        Any additional context that might help us answer your question /
+        Qualquer contexto adicional que possa nos ajudar a responder sua
+        pergunta
+      placeholder: I'm trying to... / Estou tentando...
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      description:
+        Please confirm you've done the following / Por favor confirme que você
+        fez o seguinte
+      options:
+        - label:
+            I've searched existing issues and discussions / Busquei em issues e
+            discussões existentes
+          required: true
+        - label: I've read the documentation / Li a documentação
+          required: true

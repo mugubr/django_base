@@ -237,3 +237,21 @@ DEBUG_PROPAGATE_EXCEPTIONS = True
 # Print SQL queries (useful for debugging)
 # Imprime queries SQL (útil para debugging)
 # LOGGING["loggers"]["django.db.backends"]["level"] = "DEBUG"
+
+# Environment Variables Validation (Development)
+# Validação de Variáveis de Ambiente (Desenvolvimento)
+
+# Light validation for development (warnings only, no critical errors)
+# Validação leve para desenvolvimento (apenas avisos, sem erros críticos)
+from django_base.settings.env_validator import validate_environment  # noqa: E402
+
+validate_environment(
+    environment="development",
+    debug=DEBUG,
+    secret_key=SECRET_KEY,  # noqa: F405
+    allowed_hosts=ALLOWED_HOSTS,
+    database_config=DATABASES["default"],  # noqa: F405
+    secure_ssl_redirect=SECURE_SSL_REDIRECT,
+    session_cookie_secure=SESSION_COOKIE_SECURE,
+    csrf_cookie_secure=CSRF_COOKIE_SECURE,
+)
