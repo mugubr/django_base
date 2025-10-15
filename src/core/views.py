@@ -15,6 +15,8 @@
 # - Endpoints de API de exemplo
 # - Tratamento de erros e logging apropriado
 
+from __future__ import annotations
+
 import logging
 from datetime import datetime
 
@@ -23,14 +25,20 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView as BaseTokenObtainPairView,
+)
+from rest_framework_simplejwt.views import TokenRefreshView as BaseTokenRefreshView
+from rest_framework_simplejwt.views import TokenVerifyView as BaseTokenVerifyView
 
 from .forms import LoginForm, ProductForm, RegisterForm, UserProfileForm, UserUpdateForm
 from .models import Category, Product, Tag
@@ -43,7 +51,7 @@ logger = logging.getLogger(__name__)
 # Home View / View da Home
 
 
-def home(request):
+def home(request: HttpRequest) -> HttpResponse:
     """
     Homepage view with different content for authenticated vs anonymous users.
     Displays welcome message and navigation options based on authentication status.
@@ -75,7 +83,7 @@ def home(request):
 
 
 @require_http_methods(["GET", "POST"])
-def login_view(request):
+def login_view(request: HttpRequest) -> HttpResponse:
     """
     User login view with form validation and error handling.
     Authenticates users and manages session duration based on "remember me" option.
@@ -160,7 +168,7 @@ def login_view(request):
 
 
 @require_http_methods(["GET", "POST"])
-def register_view(request):
+def register_view(request: HttpRequest) -> HttpResponse:
     """
     User registration view with form validation and automatic login.
     View de registro com validação de formulário e login automático.
@@ -214,7 +222,7 @@ def register_view(request):
 
 
 @require_http_methods(["POST", "GET"])
-def logout_view(request):
+def logout_view(request: HttpRequest) -> HttpResponse:
     """
     User logout view with confirmation message.
     View de logout com mensagem de confirmação.
@@ -237,7 +245,7 @@ def logout_view(request):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def profile_view(request):
+def profile_view(request: HttpRequest) -> HttpResponse:
     """
     User profile view for viewing and editing profile information.
     View de perfil para visualizar e editar informações do perfil.
@@ -284,10 +292,54 @@ def profile_view(request):
 
 
 @require_http_methods(["GET"])
-def products_view(request):
+def health_check_page(request: HttpRequest) -> HttpResponse:
     """
-    Product listing page with filters and pagination.
-    Página de listagem de produtos com filtros e paginação.
+    Beautiful health check page for visual monitoring.
+    Página bonita de health check para monitoramento visual.
+    """
+    return render(request, "health/health_check.html", {"title": "Health Check"})
+
+
+def project_info_view(request: HttpRequest) -> HttpResponse:
+    """
+    Project information page with technical details and architecture.
+    Página de informações do projeto com detalhes técnicos e arquitetura.
+
+    Displays / Exibe:
+        - Project technology stack / Stack de tecnologia do projeto
+        - Architecture & design principles / Arquitetura e princípios de design
+        - Key components / Componentes principais
+        - Repository links / Links do repositório
+        - Contributing guidelines / Diretrizes de contribuição
+
+    Args / Argumentos:
+        request: HttpRequest object / Objeto HttpRequest
+
+    Returns / Retorna:
+        HttpResponse: Rendered project_info.html template / Template project_info.html renderizado
+    """
+    return render(
+        request, "auth/project_info.html", {"title": _("Project Information")}
+    )
+
+
+def products_view(request: HttpRequest) -> HttpResponse:
+    """
+    Products page showcasing product management functionality with CRUD, filters, and pagination.
+    Página de produtos mostrando funcionalidade de gerenciamento de produtos com CRUD, filtros e paginação.
+
+    Features / Recursos:
+        - Product listing with filters / Listagem de produtos com filtros
+        - Search functionality / Funcionalidade de busca
+        - Category filtering / Filtragem por categoria
+        - Price range filtering / Filtragem por faixa de preço
+        - Pagination / Paginação
+
+    Args / Argumentos:
+        request: HttpRequest object / Objeto HttpRequest
+
+    Returns / Retorna:
+        HttpResponse: Rendered products.html template / Template products.html renderizado
     """
     products = (
         Product.objects.filter(is_active=True)
@@ -295,7 +347,7 @@ def products_view(request):
         .prefetch_related("tags")
     )
 
-    # Filters
+    # Filters / Filtros
     category_id = request.GET.get("category")
     tag_slug = request.GET.get("tag")
     min_price = request.GET.get("min_price")
@@ -315,7 +367,7 @@ def products_view(request):
             Q(name__icontains=search_query) | Q(description__icontains=search_query)
         )
 
-    # Pagination
+    # Pagination / Paginação
     from django.core.paginator import Paginator
 
     paginator = Paginator(products, 9)
@@ -328,50 +380,7 @@ def products_view(request):
         "tags": Tag.objects.all()[:10],
         "title": _("Products"),
     }
-    return render(request, "auth/products.html", context)
-
-
-@require_http_methods(["GET"])
-def health_check_page(request):
-    """
-    Beautiful health check page for visual monitoring.
-    Página bonita de health check para monitoramento visual.
-    """
-    return render(request, "health/health_check.html", {"title": "Health Check"})
-
-
-def about_view(request):
-    """
-    About page with project information and developer details.
-    Página sobre com informações do projeto e detalhes do desenvolvedor.
-
-    Displays:
-        - Project technology stack
-        - Main features
-        - Developer information (@mugubr)
-        - Repository links
-        - Contributing guidelines
-
-    Exibe:
-        - Stack de tecnologia do projeto
-        - Principais recursos
-        - Informações do desenvolvedor (@mugubr)
-        - Links do repositório
-        - Diretrizes de contribuição
-
-    Args:
-        request: HttpRequest object
-
-    Returns:
-        HttpResponse: Rendered about.html template
-
-    Args:
-        request: Objeto HttpRequest
-
-    Retorna:
-        HttpResponse: Template about.html renderizado
-    """
-    return render(request, "auth/about.html", {"title": _("About")})
+    return render(request, "core/product/products.html", context)
 
 
 # Health Check Endpoint
@@ -393,7 +402,7 @@ def about_view(request):
     summary="Performs a health check of the application and its services",
 )
 @api_view(["GET"])
-def health_check(request):
+def health_check(request: Request) -> Response:
     """
     Health check endpoint for monitoring services (Docker, Kubernetes, load balancers).
     Returns application status and basic diagnostics.
@@ -493,7 +502,7 @@ def health_check(request):
     summary="Returns a simple hello message",
 )
 @api_view(["GET"])
-def hello_api(request):
+def hello_api(request: Request) -> Response:
     """
     An example endpoint that returns a welcome message.
     Used to quickly test if the API is up and running.
@@ -509,7 +518,9 @@ def hello_api(request):
 # Handlers de Erro Customizados
 
 
-def custom_404(request, exception=None):
+def custom_404(
+    request: HttpRequest, exception: Exception | None = None
+) -> JsonResponse:
     """
     Custom handler for 404 Not Found errors.
     Returns a JSON response for API requests, HTML for browser requests.
@@ -561,7 +572,7 @@ def custom_404(request, exception=None):
     )
 
 
-def custom_500(request):
+def custom_500(request: HttpRequest) -> JsonResponse:
     """
     Custom handler for 500 Internal Server Error.
     Logs the error and returns a user-friendly message.
@@ -591,7 +602,9 @@ def custom_500(request):
     )
 
 
-def custom_403(request, exception=None):
+def custom_403(
+    request: HttpRequest, exception: Exception | None = None
+) -> JsonResponse:
     """
     Custom handler for 403 Forbidden errors.
     Returns information about permission requirements.
@@ -622,7 +635,9 @@ def custom_403(request, exception=None):
     )
 
 
-def custom_400(request, exception=None):
+def custom_400(
+    request: HttpRequest, exception: Exception | None = None
+) -> JsonResponse:
     """
     Custom handler for 400 Bad Request errors.
     Provides details about what went wrong with the request.
@@ -669,7 +684,7 @@ def custom_400(request, exception=None):
     summary="Returns general information about the API",
 )
 @api_view(["GET"])
-def api_info(request):
+def api_info(request: Request) -> Response:
     """
     Returns information about the API endpoints and version.
     Useful for API discovery and documentation.
@@ -697,7 +712,7 @@ def api_info(request):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def product_create_view(request):
+def product_create_view(request: HttpRequest) -> HttpResponse:
     """Product creation view / View de criação de produto"""
     if request.method == "POST":
         form = ProductForm(request.POST)
@@ -707,7 +722,7 @@ def product_create_view(request):
             product.save()
             form.save_m2m()  # Save tags
             messages.success(request, _("Product created successfully!"))
-            return redirect("products")
+            return redirect("products")  # Redirect to products page
         else:
             messages.error(request, _("Please correct the errors below."))
     else:
@@ -715,6 +730,160 @@ def product_create_view(request):
 
     return render(
         request,
-        "auth/product_create.html",
+        "core/product/product_create.html",
         {"title": _("Create Product"), "form": form},
     )
+
+
+# JWT Authentication Views / Views de Autenticação JWT
+# These views provide JWT token management for API authentication
+# Essas views fornecem gerenciamento de tokens JWT para autenticação da API
+
+
+class CustomTokenObtainPairView(BaseTokenObtainPairView):
+    """
+    JWT Token Obtain Pair View - Obtains access and refresh tokens.
+    View de Obtenção de Par de Tokens JWT - Obtém tokens de acesso e refresh.
+
+    This endpoint authenticates a user with username and password, and returns
+    both an access token and a refresh token.
+
+    Este endpoint autentica um usuário com nome de usuário e senha, e retorna
+    tanto um token de acesso quanto um token de refresh.
+
+    **HTTP Method / Método HTTP:**
+        POST
+
+    **Request Body / Corpo da Requisição:**
+        ```json
+        {
+            "username": "string",
+            "password": "string"
+        }
+        ```
+
+    **Success Response (200 OK) / Resposta de Sucesso:**
+        ```json
+        {
+            "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+            "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+        }
+        ```
+
+    **Error Response (401 Unauthorized) / Resposta de Erro:**
+        ```json
+        {
+            "detail": "No active account found with the given credentials"
+        }
+        ```
+
+    **Usage / Uso:**
+        - Use the access token in Authorization header: `Bearer <access_token>`
+        - Access tokens expire after 60 minutes (configurable)
+        - Use refresh token to obtain new access tokens without re-authenticating
+
+        - Use o token de acesso no header Authorization: `Bearer <token_de_acesso>`
+        - Tokens de acesso expiram após 60 minutos (configurável)
+        - Use o token de refresh para obter novos tokens de acesso sem re-autenticar
+    """
+
+    pass
+
+
+class CustomTokenRefreshView(BaseTokenRefreshView):
+    """
+    JWT Token Refresh View - Refreshes an access token using a refresh token.
+    View de Refresh de Token JWT - Atualiza um token de acesso usando um token de refresh.
+
+    This endpoint accepts a refresh token and returns a new access token.
+    Optionally, it can also rotate the refresh token (return a new one).
+
+    Este endpoint aceita um token de refresh e retorna um novo token de acesso.
+    Opcionalmente, pode também rotacionar o token de refresh (retornar um novo).
+
+    **HTTP Method / Método HTTP:**
+        POST
+
+    **Request Body / Corpo da Requisição:**
+        ```json
+        {
+            "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+        }
+        ```
+
+    **Success Response (200 OK) / Resposta de Sucesso:**
+        ```json
+        {
+            "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+            "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc..."  // Only if rotation is enabled
+        }
+        ```
+
+    **Error Response (401 Unauthorized) / Resposta de Erro:**
+        ```json
+        {
+            "detail": "Token is invalid or expired",
+            "code": "token_not_valid"
+        }
+        ```
+
+    **Configuration / Configuração:**
+        - Token rotation is ENABLED by default in this project
+        - Old refresh tokens are blacklisted after rotation
+        - Refresh tokens expire after 7 days (configurable)
+
+        - Rotação de tokens está HABILITADA por padrão neste projeto
+        - Tokens de refresh antigos são colocados na blacklist após rotação
+        - Tokens de refresh expiram após 7 dias (configurável)
+    """
+
+    pass
+
+
+class CustomTokenVerifyView(BaseTokenVerifyView):
+    """
+    JWT Token Verify View - Verifies if a token is valid.
+    View de Verificação de Token JWT - Verifica se um token é válido.
+
+    This endpoint checks if a given token is valid and not expired.
+    Useful for checking token validity before making API calls.
+
+    Este endpoint verifica se um token fornecido é válido e não expirou.
+    Útil para verificar validade do token antes de fazer chamadas à API.
+
+    **HTTP Method / Método HTTP:**
+        POST
+
+    **Request Body / Corpo da Requisição:**
+        ```json
+        {
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+        }
+        ```
+
+    **Success Response (200 OK) / Resposta de Sucesso:**
+        ```json
+        {}
+        ```
+        Empty object indicates the token is valid.
+        Objeto vazio indica que o token é válido.
+
+    **Error Response (401 Unauthorized) / Resposta de Erro:**
+        ```json
+        {
+            "detail": "Token is invalid or expired",
+            "code": "token_not_valid"
+        }
+        ```
+
+    **Use Cases / Casos de Uso:**
+        - Verify token before storing it
+        - Check if token needs to be refreshed
+        - Validate tokens from external sources
+
+        - Verificar token antes de armazená-lo
+        - Checar se token precisa ser atualizado
+        - Validar tokens de fontes externas
+    """
+
+    pass

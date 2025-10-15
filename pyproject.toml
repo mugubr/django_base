@@ -11,7 +11,7 @@
 
 [project]
 name = "django-base"
-version = "1.0.0"
+version = "1.2.0"
 description = "Production-ready Django boilerplate with Docker, DRF, auth system, and portfolio features | Base Django pronta para produção com Docker, DRF, autenticação e features de portfólio"
 authors = [
     {name = "Miguel de Freitas Muniz", email = "miguimuniz@gmail.com"}
@@ -38,37 +38,31 @@ classifiers = [
 # Core dependencies / Dependências principais
 dependencies = [
     # Django Framework
-    "django>=5.2.7",                      # Core framework / Framework principal
-
+    "django>=5.2.7", # Core framework / Framework principal
     # Django Extensions & Tools / Extensões e Ferramentas Django
-    "django-cors-headers>=4.9.0",         # CORS support / Suporte CORS
-    "django-extensions>=4.1",             # Extra management commands / Comandos extras
-    "django-filter>=25.2",                # Advanced filtering / Filtragem avançada
-    "django-environ>=0.12.0",             # Environment variables / Variáveis de ambiente
-    "python-decouple>=3.8",               # Settings from .env / Settings do .env
-
+    "django-cors-headers>=4.9.0", # CORS support / Suporte CORS
+    "django-extensions>=4.1", # Extra management commands / Comandos extras
+    "django-filter>=25.2", # Advanced filtering / Filtragem avançada
+    "django-environ>=0.12.0", # Environment variables / Variáveis de ambiente
+    "python-decouple>=3.8", # Settings from .env / Settings do .env
     # REST API / API REST
-    "djangorestframework>=3.16.1",        # REST framework / Framework REST
-    "drf-spectacular>=0.28.0",            # OpenAPI/Swagger docs / Docs OpenAPI/Swagger
-
+    "djangorestframework>=3.16.1", # REST framework / Framework REST
+    "djangorestframework-simplejwt>=5.4.1", # JWT authentication / Autenticação JWT
+    "drf-spectacular>=0.28.0", # OpenAPI/Swagger docs / Docs OpenAPI/Swagger
     # Background Tasks / Tarefas em Background
-    "django-q2>=1.8.0",                   # Task queue / Fila de tarefas
-    "celery>=5.5.3",                      # Distributed task queue / Fila distribuída
-
+    "django-q2>=1.8.0", # Task queue / Fila de tarefas
+    "celery>=5.5.3", # Distributed task queue / Fila distribuída
     # Database & Cache / Banco de Dados & Cache
-    "psycopg2-binary>=2.9.10",            # PostgreSQL adapter / Adaptador PostgreSQL
-    "redis>=6.4.0",                       # Redis client / Cliente Redis
-
+    "psycopg2-binary>=2.9.10", # PostgreSQL adapter / Adaptador PostgreSQL
+    "redis>=6.4.0", # Redis client / Cliente Redis
     # Production Server / Servidor de Produção
-    "gunicorn>=23.0.0",                   # WSGI HTTP server / Servidor HTTP WSGI
-    "whitenoise>=6.11.0",                 # Static files serving / Servir arquivos estáticos
-
+    "gunicorn>=23.0.0", # WSGI HTTP server / Servidor HTTP WSGI
+    "whitenoise>=6.11.0", # Static files serving / Servir arquivos estáticos
     # Monitoring & Security / Monitoramento & Segurança
-    "django-prometheus>=2.4.1",           # Prometheus metrics / Métricas Prometheus
-    "sentry-sdk>=2.39.0",                 # Error tracking / Rastreamento de erros
-
+    "django-prometheus>=2.4.1", # Prometheus metrics / Métricas Prometheus
+    "sentry-sdk>=2.39.0", # Error tracking / Rastreamento de erros
     # Media & Files / Mídia & Arquivos
-    "pillow>=11.3.0",                     # Image processing / Processamento de imagens
+    "pillow>=11.3.0", # Image processing / Processamento de imagens
 ]
 
 # Development dependencies / Dependências de desenvolvimento
@@ -173,10 +167,25 @@ exclude_files = "uv.lock|.*\\.svg$|package-lock\\.json|yarn\\.lock"
 # Grupos de dependências UV (mesmo que optional-dependencies.dev)
 [dependency-groups]
 dev = [
-    "coverage>=7.10.7",          # Code coverage / Cobertura de código
-    "django-extensions>=4.1",    # Enhanced shell, runserver_plus / Shell melhorado
-    "pre-commit>=4.3.0",         # Git hooks automation / Automação de hooks Git
-    "ruff>=0.13.2",              # Fast linter & formatter / Linter e formatador rápido
-    "watchdog>=6.0.0",           # File system monitoring / Monitoramento de arquivos
-    "werkzeug>=3.1.3",           # WSGI utilities for dev / Utilitários WSGI para dev
+    "coverage>=7.10.7", # Code coverage / Cobertura de código
+    "django-extensions>=4.1", # Enhanced shell, runserver_plus / Shell melhorado
+    "mypy>=1.18.2",
+    "pre-commit>=4.3.0", # Git hooks automation / Automação de hooks Git
+    "ruff>=0.13.2", # Fast linter & formatter / Linter e formatador rápido
+    "watchdog>=6.0.0", # File system monitoring / Monitoramento de arquivos
+    "werkzeug>=3.1.3", # WSGI utilities for dev / Utilitários WSGI para dev
 ]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+warn_redundant_casts = true
+warn_unused_ignores = true
+no_implicit_optional = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = ["django.*", "rest_framework.*", "drf_spectacular.*", "PIL.*"]
+ignore_missing_imports = true

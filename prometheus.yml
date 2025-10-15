@@ -1,8 +1,47 @@
 global:
-  scrape_interval: 15s # A cada 15 segundos, o Prometheus buscará as métricas
+  scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
+  # Django Application Metrics
   - job_name: "django-app"
     metrics_path: /metrics/metrics
     static_configs:
-      - targets: ["web:8000"] # 'web' é o nome do nosso serviço Django no docker-compose
+      - targets: ["web:8000"]
+        labels:
+          service: "django-web"
+          environment: "production"
+
+  # PostgreSQL Exporter
+  - job_name: "postgres"
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+        labels:
+          service: "postgresql"
+    # Descomente após configurar postgres_exporter
+    # scrape_interval: 30s
+
+  # Redis Exporter
+  - job_name: "redis"
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+        labels:
+          service: "redis"
+    # Descomente após configurar redis_exporter
+    # scrape_interval: 30s
+
+  # Nginx Exporter
+  - job_name: "nginx"
+    static_configs:
+      - targets: ["nginx-exporter:9113"]
+        labels:
+          service: "nginx"
+    # Descomente após configurar nginx_exporter
+    # scrape_interval: 30s
+
+  # Prometheus self-monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+        labels:
+          service: "prometheus"

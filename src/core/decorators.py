@@ -48,7 +48,6 @@ Examples:
 import functools
 import logging
 import time
-from collections import defaultdict
 
 from django.conf import settings
 from django.contrib import messages
@@ -181,8 +180,8 @@ def cache_result(timeout=300, key_prefix=""):
     Decorador para cachear resultados de função.
 
     Args:
-        timeout: Cache timeout in seconds (default: 300 = 5 minutes)
-        key_prefix: Prefix for cache key
+        timeout: Cache timeout in seconds (default: 300 = 5 minutes) / Timeout do cache em segundos (padrão: 300 = 5 minutos)
+        key_prefix: Prefix for cache key / Prefixo para a chave de cache
 
     Usage:
         @cache_result(timeout=600, key_prefix='my_func')
@@ -284,55 +283,59 @@ def log_errors(view_func):
 # Rate Limiting Decorators / Decoradores de Limitação de Taxa
 
 
-class SimpleRateLimiter:
+class RedisRateLimiter:
     """
-    Simple in-memory rate limiter.
-    Limitador de taxa simples em memória.
+    Production-ready Redis-based rate limiter.
+    Limitador de taxa baseado em Redis pronto para produção.
 
-    Note: For production, use Redis-based rate limiting.
-    Nota: Para produção, use limitação de taxa baseada em Redis.
+    This limiter uses the Django cache framework (configured for Redis)
+    to ensure that rate limits are shared across all server processes.
+
+    Este limitador usa o framework de cache do Django (configurado para Redis)
+    para garantir que os limites de taxa sejam compartilhados entre todos os
+    processos do servidor.
     """
 
-    def __init__(self):
-        self.requests = defaultdict(list)
-
-    def is_rate_limited(self, identifier, max_requests, period):
+    def is_rate_limited(self, identifier: str, max_requests: int, period: int) -> bool:
         """
-        Check if identifier has exceeded rate limit.
-        Verifica se identificador excedeu limite de taxa.
+        Check if an identifier has exceeded the rate limit using Redis.
+        Verifica se um identificador excedeu o limite de taxa usando Redis.
 
         Args:
-            identifier: Unique identifier (IP, user ID, etc.)
-            max_requests: Maximum requests allowed
-            period: Time period in seconds
+            identifier (str): Unique identifier (e.g., IP address, user ID).
+                              Identificador único (ex: endereço IP, ID de usuário).
+            max_requests (int): Maximum requests allowed in the period.
+                                Número máximo de requisições permitidas no período.
+            period (int): Time period in seconds.
+                          Período de tempo em segundos.
 
         Returns:
-            bool: True if rate limited, False otherwise
+            bool: True if rate-limited, False otherwise.
+                  True se o limite foi excedido, False caso contrário.
         """
-        now = time.time()
+        cache_key = f"rate-limit:{identifier}"
+        request_count = cache.get(cache_key)
 
-        # Remove old requests outside the time window
-        # Remove requisições antigas fora da janela de tempo
-        self.requests[identifier] = [
-            req_time
-            for req_time in self.requests[identifier]
-            if now - req_time < period
-        ]
+        if request_count is None:
+            # If the key does not exist, set it to 1 and allow the request.
+            # Se a chave não existe, define como 1 e permite a requisição.
+            cache.set(cache_key, 1, period)
+            return False
 
-        # Check if limit exceeded
-        # Verifica se limite foi excedido
-        if len(self.requests[identifier]) >= max_requests:
+        if request_count >= max_requests:
+            # If limit is exceeded, deny the request.
+            # Se o limite foi excedido, nega a requisição.
             return True
 
-        # Add current request
-        # Adiciona requisição atual
-        self.requests[identifier].append(now)
+        # If the limit is not exceeded, increment the count and allow.
+        # Se o limite não foi excedido, incrementa a contagem e permite.
+        cache.incr(cache_key)
         return False
 
 
 # Global rate limiter instance
 # Instância global do limitador de taxa
-rate_limiter = SimpleRateLimiter()
+rate_limiter = RedisRateLimiter()
 
 
 def rate_limit(max_requests=10, period=60, identifier_func=None):
@@ -341,9 +344,9 @@ def rate_limit(max_requests=10, period=60, identifier_func=None):
     Decorador para limitar taxa de chamadas de função.
 
     Args:
-        max_requests: Maximum requests allowed (default: 10)
-        period: Time period in seconds (default: 60)
-        identifier_func: Function to get unique identifier (default: uses IP)
+        max_requests: Maximum requests allowed (default: 10) / Máximo de requisições permitidas (padrão: 10)
+        period: Time period in seconds (default: 60) / Período de tempo em segundos (padrão: 60)
+        identifier_func: Function to get unique identifier (default: uses IP) / Função para obter identificador único (padrão: usa IP)
 
     Usage:
         @rate_limit(max_requests=5, period=60)

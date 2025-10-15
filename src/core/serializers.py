@@ -42,6 +42,8 @@ Examples / Exemplos:
     return Response(serializer.data)
 """
 
+from __future__ import annotations
+
 from decimal import Decimal
 
 from drf_spectacular.utils import extend_schema_field
@@ -166,7 +168,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     # Field-Level Validations / Validações em Nível de Campo
 
-    def validate_name(self, value):
+    def validate_name(self, value: str) -> str:
         """
         Validates the product name field.
 

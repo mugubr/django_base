@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: django-config
+  namespace: django-base
+data:
+  PYTHONPATH: "/app/src"
+  DJANGO_SETTINGS_MODULE: "django_base.settings.prod"
+  # Database configuration
+  POSTGRES_DB: "django_db"
+  POSTGRES_USER: "django_user"
+  POSTGRES_HOST: "postgres-service"
+  POSTGRES_PORT: "5432"
+  # Redis configuration
+  REDIS_HOST: "redis-service"
+  REDIS_PORT: "6379"
+  # Application settings
+  ALLOWED_HOSTS: "*" # Override in production
+  DEBUG: "False"

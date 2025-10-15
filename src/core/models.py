@@ -13,15 +13,22 @@
 # - Modelos Category e Tag com relacionamentos muitos-para-muitos
 # - Rastreamento de timestamps e funcionalidade de soft delete
 
+from __future__ import annotations
+
 from datetime import timedelta
 from decimal import Decimal
+from typing import TYPE_CHECKING, Any
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import QuerySet
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+
+if TYPE_CHECKING:
+    pass
 
 User = get_user_model()
 
@@ -155,7 +162,7 @@ class Product(models.Model):
 
     # Custom Validation / Validação Customizada
 
-    def clean(self):
+    def clean(self) -> None:
         """
         Custom validation logic executed before saving.
         Raises ValidationError if data is invalid.
@@ -207,7 +214,7 @@ class Product(models.Model):
                 }
             )
 
-    def save(self, *args, **kwargs):  # noqa: DJ012
+    def save(self, *args: Any, **kwargs: Any) -> None:  # noqa: DJ012
         """
         Override save to execute validation before saving.
         This ensures data integrity at the application level.
@@ -230,14 +237,14 @@ class Product(models.Model):
 
     # String Representations / Representações em String
 
-    def __str__(self):  # noqa: DJ012
+    def __str__(self) -> str:  # noqa: DJ012
         """
         Human-readable string representation used in Django admin and shell.
         Representação em string legível usada no admin Django e shell.
         """
         return self.name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Developer-friendly representation for debugging.
         Representação amigável para desenvolvedores para debugging.
@@ -250,7 +257,7 @@ class Product(models.Model):
     # Property Methods / Métodos de Propriedade
 
     @property
-    def is_new(self):
+    def is_new(self) -> bool:
         """
         Checks if the product was created within the last 7 days.
         Useful for displaying "NEW" badges in the frontend.
@@ -266,7 +273,7 @@ class Product(models.Model):
         return self.created_at >= timezone.now() - timedelta(days=7)
 
     @property
-    def formatted_price(self):
+    def formatted_price(self) -> str:
         """
         Returns price formatted with currency symbol.
         Can be customized based on locale/currency settings.
@@ -280,7 +287,7 @@ class Product(models.Model):
         return f"R$ {self.price:.2f}"
 
     @property
-    def age_in_days(self):
+    def age_in_days(self) -> int:
         """
         Calculate how many days since the product was created.
         Useful for analytics and reporting.
@@ -298,7 +305,7 @@ class Product(models.Model):
 
     # Business Logic Methods / Métodos de Lógica de Negócio
 
-    def apply_discount(self, percentage):
+    def apply_discount(self, percentage: float) -> None:
         """
         Applies a percentage discount to the product price.
         Validates discount percentage and updates price.
@@ -325,7 +332,7 @@ class Product(models.Model):
         self.price = (self.price - discount_amount).quantize(Decimal("0.01"))
         self.save()
 
-    def deactivate(self):
+    def deactivate(self) -> None:
         """
         Soft delete: Mark product as inactive instead of
         deleting from database.
@@ -337,7 +344,7 @@ class Product(models.Model):
         self.is_active = False
         self.save(update_fields=["is_active", "updated_at"])
 
-    def activate(self):
+    def activate(self) -> None:
         """
         Reactivate a previously deactivated product.
         Reativa um produto previamente desativado.
@@ -345,7 +352,7 @@ class Product(models.Model):
         self.is_active = True
         self.save(update_fields=["is_active", "updated_at"])
 
-    def duplicate(self):
+    def duplicate(self) -> Product:
         """
         Creates a duplicate of this product with a modified name.
         Useful for creating product variations.
@@ -365,7 +372,7 @@ class Product(models.Model):
     # Query Helpers / Auxiliares de Consulta
 
     @classmethod
-    def active_products(cls):
+    def active_products(cls) -> QuerySet[Product]:
         """
         Returns queryset of only active products.
         Retorna queryset apenas de produtos ativos.
@@ -376,7 +383,7 @@ class Product(models.Model):
         return cls.objects.filter(is_active=True)
 
     @classmethod
-    def get_recent(cls, days=7):
+    def get_recent(cls, days: int = 7) -> QuerySet[Product]:
         """
         Get products created within the specified number of days.
         Obtém produtos criados dentro do número especificado de dias.
@@ -391,7 +398,9 @@ class Product(models.Model):
         return cls.objects.filter(created_at__gte=cutoff_date, is_active=True)
 
     @classmethod
-    def get_price_range(cls, min_price, max_price):
+    def get_price_range(
+        cls, min_price: Decimal, max_price: Decimal
+    ) -> QuerySet[Product]:
         """
         Get products within a specific price range.
         Obtém produtos dentro de uma faixa de preço específica.
@@ -557,13 +566,13 @@ class UserProfile(models.Model):
             models.Index(fields=["country"]),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """String representation showing username and verification status."""
         """Representação em string mostrando username e status de verificação."""
         verified = "✓" if self.is_verified else "✗"
         return f"{self.user.username}'s profile ({verified})"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Developer-friendly representation for debugging."""
         """Representação amigável para desenvolvedores para debugging."""
         return (
@@ -572,7 +581,7 @@ class UserProfile(models.Model):
         )
 
     @property
-    def full_name(self):
+    def full_name(self) -> str:
         """
         Get user's full name from related User model.
         Obtém nome completo do usuário do modelo User relacionado.
@@ -585,7 +594,7 @@ class UserProfile(models.Model):
         return self.user.username
 
     @property
-    def age(self):
+    def age(self) -> int | None:
         """
         Calculate user's age from birth_date.
         Calcula idade do usuário a partir da birth_date.
@@ -602,7 +611,7 @@ class UserProfile(models.Model):
             - ((today.month, today.day) < (self.birth_date.month, self.birth_date.day))
         )
 
-    def verify(self):
+    def verify(self) -> None:
         """
         Mark user profile as verified.
         Marca perfil de usuário como verificado.
@@ -610,7 +619,7 @@ class UserProfile(models.Model):
         self.is_verified = True
         self.save(update_fields=["is_verified", "updated_at"])
 
-    def unverify(self):
+    def unverify(self) -> None:
         """
         Remove verification status from user profile.
         Remove status de verificação do perfil de usuário.
@@ -731,19 +740,19 @@ class Category(models.Model):
             models.Index(fields=["parent"]),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """String representation showing category hierarchy."""
         """Representação em string mostrando hierarquia de categoria."""
         if self.parent:
             return f"{self.parent.name} > {self.name}"
         return self.name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Developer-friendly representation for debugging."""
         """Representação amigável para desenvolvedores para debugging."""
         return f"<Category id={self.id} name='{self.name}' parent={self.parent_id}>"  # type: ignore
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         """
         Auto-generate slug from name if not provided.
         Gera automaticamente slug a partir do nome se não fornecido.
@@ -753,7 +762,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     @property
-    def product_count(self):
+    def product_count(self) -> int:
         """
         Get count of products in this category.
         Obtém contagem de produtos nesta categoria.
@@ -764,7 +773,7 @@ class Category(models.Model):
         return self.products.filter(is_active=True).count()
 
     @property
-    def is_root(self):
+    def is_root(self) -> bool:
         """
         Check if this is a root category (no parent).
         Verifica se esta é uma categoria raiz (sem pai).
@@ -774,7 +783,7 @@ class Category(models.Model):
         """
         return self.parent is None
 
-    def get_ancestors(self):
+    def get_ancestors(self) -> list[Category]:
         """
         Get all ancestor categories up to root.
         Obtém todas as categorias ancestrais até a raiz.
@@ -782,14 +791,14 @@ class Category(models.Model):
         Returns / Retorna:
             list[Category]: List of ancestor categories
         """
-        ancestors = []
+        ancestors: list[Category] = []
         current = self.parent
         while current:
             ancestors.append(current)
             current = current.parent
         return ancestors
 
-    def get_descendants(self):
+    def get_descendants(self) -> list[Category]:
         """
         Get all descendant categories recursively.
         Obtém todas as categorias descendentes recursivamente.
@@ -797,7 +806,7 @@ class Category(models.Model):
         Returns / Retorna:
             list[Category]: List of descendant categories
         """
-        descendants = []
+        descendants: list[Category] = []
         for child in self.children.all():
             descendants.append(child)
             descendants.extend(child.get_descendants())
@@ -887,17 +896,17 @@ class Tag(models.Model):
             models.Index(fields=["color"]),
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         """String representation showing tag name."""
         """Representação em string mostrando nome da tag."""
         return self.name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Developer-friendly representation for debugging."""
         """Representação amigável para desenvolvedores para debugging."""
         return f"<Tag id={self.id} name='{self.name}' color='{self.color}'>"  # type: ignore
 
-    def save(self, *args, **kwargs):
+    def save(self, *args: Any, **kwargs: Any) -> None:
         """
         Auto-generate slug from name if not provided.
         Gera automaticamente slug a partir do nome se não fornecido.
@@ -907,7 +916,7 @@ class Tag(models.Model):
         super().save(*args, **kwargs)
 
     @property
-    def product_count(self):
+    def product_count(self) -> int:
         """
         Get count of products using this tag.
         Obtém contagem de produtos usando esta tag.
@@ -918,7 +927,7 @@ class Tag(models.Model):
         return self.products.filter(is_active=True).count()
 
     @classmethod
-    def get_popular(cls, limit=10):
+    def get_popular(cls, limit: int = 10) -> QuerySet[Tag]:
         """
         Get most popular tags by product count.
         Obtém tags mais populares por contagem de produtos.

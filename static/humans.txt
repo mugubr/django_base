@@ -1,0 +1,37 @@
+# humanstxt.org
+
+/* TEAM / EQUIPE */
+
+Developer / Desenvolvedor: Miguel de Freitas Muniz
+GitHub: @mugubr
+Email: miguimuniz@gmail.com
+Location / Localização: Brazil / Brasil
+
+/* THANKS / AGRADECIMENTOS */
+
+Django Team - For the amazing web framework
+DRF Team - For Django REST Framework
+Open Source Community - For all the incredible tools
+
+/* SITE / SITE */
+
+Language / Idioma: English, Portuguese / Inglês, Português
+Doctype: HTML5
+IDE: Visual Studio Code, Claude Code
+Framework: Django 5.2+
+Backend: Python 3.13
+Database / Banco de Dados: PostgreSQL 15
+Cache: Redis 7
+API: Django REST Framework
+Containerization / Conteinerização: Docker
+Monitoring / Monitoramento: Prometheus, Grafana
+Server / Servidor: Nginx, Gunicorn
+Version Control / Controle de Versão: Git
+
+/* STANDARDS / PADRÕES */
+
+Bilingual Documentation / Documentação Bilíngue: EN/PT
+Code Quality / Qualidade de Código: Ruff, Pre-commit, Bandit
+Testing / Testes: Django TestCase, Coverage.py
+Security / Segurança: Security-first approach, HSTS, Secure cookies
+Performance / Performance: Redis caching, Query optimization, Gzip compression
