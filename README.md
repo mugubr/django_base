@@ -37,12 +37,13 @@ maintainability, and professional deployment.
 - **Package Manager:** `uv` (blazing fast Python package manager)
 - **Background Tasks:** Django Q2 (`django-q2`)
 - **API Features:** CORS, DRF Spectacular (OpenAPI/Swagger), django-filter
-- **Containerization:** Docker & Docker Compose (multi-stage builds)
+- **Containerization:** Docker & Docker Compose (multi-stage builds), Kubernetes
 - **Code Quality:** `Ruff` linter/formatter, `pre-commit` hooks, Bandit security
 - **Testing:** `django.test` with `coverage`
-- **Observability:** Prometheus & Grafana dashboards
+- **Observability:** Prometheus & Grafana dashboards with exporters
 - **Configuration:** `python-decouple` with comprehensive `.env` support
-- **Development Tools:** `django-extensions`, `watchdog` for hot-reloading
+- **Development Tools:** `django-extensions`, `watchdog` for hot-reloading,
+  Makefile (60+ commands)
 
 ### ✨ Key Features
 
@@ -50,12 +51,20 @@ maintainability, and professional deployment.
 
 - ✅ **Modular Settings:** Separate `base.py`, `dev.py`, `prod.py` for
   environment-specific config
-- ✅ **Security Hardening:** HSTS, SSL redirect, secure cookies, security
-  headers, rate limiting
+- ✅ **Environment Validation:** Automatic validation of critical configuration
+  on startup (prevents production misconfigurations)
+- ✅ **Security Hardening:** HSTS, SSL redirect, secure cookies, modern security
+  headers (Permissions-Policy, COOP, CORP), rate limiting
 - ✅ **Production-Ready:** Multi-stage Docker builds, non-root user, health
-  checks
+  checks, SSL/HTTPS ready
+- ✅ **Kubernetes Support:** Complete K8s manifests with Kustomize overlays for
+  dev/prod environments
+- ✅ **Database Backup System:** Professional backup/restore scripts with
+  retention policies and integrity verification
 - ✅ **Redis Integration:** Caching, session storage, task queue backend
-- ✅ **Observability:** Prometheus metrics + Grafana dashboards
+- ✅ **Enhanced Observability:** Prometheus + Grafana with PostgreSQL, Redis,
+  and Nginx exporters
+- ✅ **Developer Productivity:** Makefile with 60+ commands (18 for Kubernetes)
 - ✅ **Pre-commit Hooks:** 20+ hooks including Ruff, Bandit, detect-secrets,
   django-upgrade
 - ✅ **CI/CD Ready:** GitHub Actions pipeline with linting and tests
@@ -116,8 +125,8 @@ maintainability, and professional deployment.
 
 - ✅ **8 Custom Validators:** Phone, CPF, image validation, date validation,
   regex validators
-- ✅ **15 Decorators:** Permissions, caching, logging, rate limiting, AJAX, JSON
-  response
+- ✅ **15 Decorators:** Permissions, caching, logging, production-ready
+  Redis-based rate limiting, AJAX, JSON response
 - ✅ **13 Mixins:** Model mixins (timestamps, soft delete, user tracking) + view
   mixins (permissions, pagination, AJAX)
 - ✅ **Django Signals:** Auto-creation of related models with error handling
@@ -198,43 +207,60 @@ logging.
 This mode runs the production stack with Nginx, Gunicorn, Redis caching, and
 security hardening.
 
-1. **Configure Production Environment:**
+1. **Automated Setup (Recommended):**
 
    ```bash
-   # Copy and edit .env with production values / Copie e edite .env com valores de produção
+   # Configure .env for production first!
+   # Configure .env para produção primeiro!
+   cp .env.example .env
+   # Edit .env: Set DEBUG=False, strong SECRET_KEY, ALLOWED_HOSTS, etc.
+   # Edite .env: Defina DEBUG=False, SECRET_KEY forte, ALLOWED_HOSTS, etc.
+
+   # Run automated production setup / Execute o script de configuração de produção
+   ./setup-prod.sh
+   # or / ou
+   make setup-prod
+
+   # This automatically handles:
+   # - Environment validation (DEBUG, SECRET_KEY, etc.)
+   # - Docker build and startup
+   # - Database migrations
+   # - Static files collection
+   # - Translation compilation
+   # - Health checks
+   # - Security checklist reminder
+   ```
+
+2. **Manual Setup (Alternative):**
+
+   ```bash
+   # Copy and edit .env with production values
    cp .env.example .env
    # IMPORTANT: Set DEBUG=False, configure SECRET_KEY, ALLOWED_HOSTS, etc.
-   # IMPORTANTE: Defina DEBUG=False, configure SECRET_KEY, ALLOWED_HOSTS, etc.
-   ```
 
-2. **To Start the Production Stack:**
-
-   ```bash
-   # Build and start all production services / Construa e inicie todos os serviços de produção
+   # Build and start all production services
    docker-compose --profile prod up -d --build
-   ```
 
-3. **Required Commands (after starting):**
-
-   ```bash
-   # Run migrations / Execute migrações
+   # Run migrations
    docker-compose --profile prod exec web python manage.py migrate
 
-   # Compile i18n translations (optional) / Compile traduções i18n (opcional)
-   docker-compose --profile prod exec web python manage.py compilemessages
-
-   # Collect static files for Nginx / Colete arquivos estáticos para o Nginx
+   # Collect static files for Nginx
    docker-compose --profile prod exec web python manage.py collectstatic --no-input
 
-   # Create superuser (optional) / Crie superusuário (opcional)
+   # Compile i18n translations
+   docker-compose --profile prod exec web python manage.py compilemessages
+
+   # Create superuser (manual)
    docker-compose --profile prod exec web python manage.py createsuperuser
    ```
 
-4. **To Stop the Production Stack:**
+3. **To Stop the Production Stack:**
 
    ```bash
    # Stop all services / Pare todos os serviços
    docker-compose --profile prod down
+   # or / ou
+   make prod-down
    ```
 
 #### 🌐 Access Points
@@ -533,10 +559,19 @@ docker-compose --profile prod down
 #### Database Commands
 
 ```bash
-# Create database backup / Criar backup do banco
+# Professional backup with retention (RECOMMENDED) / Backup profissional com retenção (RECOMENDADO)
+./scripts/backup_database.sh
+
+# Restore from backup (interactive) / Restaurar de backup (interativo)
+./scripts/restore_database.sh
+
+# Restore specific backup / Restaurar backup específico
+./scripts/restore_database.sh backup_django_db_20250112.sql.gz
+
+# Manual backup (alternative) / Backup manual (alternativa)
 docker-compose exec db pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB} > backup.sql
 
-# Restore database backup / Restaurar backup do banco
+# Manual restore (alternative) / Restauração manual (alternativa)
 docker-compose exec -T db psql -U ${POSTGRES_USER} ${POSTGRES_DB} < backup.sql
 
 # Access PostgreSQL shell / Acessar shell PostgreSQL
@@ -545,6 +580,9 @@ docker-compose exec db psql -U ${POSTGRES_USER} -d ${POSTGRES_DB}
 # Check database is ready / Verificar se banco está pronto
 docker-compose exec db pg_isready -U ${POSTGRES_USER}
 ```
+
+**Note:** For complete backup/restore documentation, see `scripts/README.md`
+**Nota:** Para documentação completa de backup/restore, veja `scripts/README.md`
 
 #### Redis Commands
 
@@ -561,6 +599,71 @@ docker-compose exec redis redis-cli INFO
 # Flush all Redis data (CAREFUL!) / Limpar todos os dados Redis (CUIDADO!)
 docker-compose exec redis redis-cli FLUSHALL
 ```
+
+---
+
+### ☸️ Kubernetes Deployment
+
+This project includes complete Kubernetes manifests for deploying to any
+Kubernetes cluster.
+
+#### Quick Start
+
+**Automated Setup (Recommended):**
+
+```bash
+# Development setup (builds image + deploys)
+./setup-k8s.sh
+# or
+make setup-k8s
+
+# Production setup (builds image + deploys)
+./setup-k8s.sh --prod
+# or
+make setup-k8s-prod
+```
+
+**Manual Deployment:**
+
+```bash
+# Deploy to development
+make k8s-dev-deploy
+
+# Deploy to production (requires confirmation)
+make k8s-prod-deploy
+
+# Check deployment status
+make k8s-status
+
+# View logs
+make k8s-logs
+
+# Access application via port forward
+kubectl port-forward -n django-base svc/dev-nginx-service 8000:80
+```
+
+#### Features
+
+- **Complete Manifests:** 12 base manifests (namespace, configmaps, secrets,
+  PVCs, deployments, services, ingress)
+- **Kustomize Overlays:** Separate configurations for dev and prod environments
+- **Auto-Scaling Ready:** HPA configuration included
+- **Health Checks:** Liveness and readiness probes for all services
+- **Resource Limits:** CPU and memory limits defined
+- **RBAC:** Prometheus service account with cluster role
+- **Persistent Storage:** PVCs for PostgreSQL, Redis, static/media files,
+  Prometheus, Grafana
+
+#### Services Deployed
+
+- Django web application (with init containers for migrations/collectstatic)
+- PostgreSQL database
+- Redis cache
+- Nginx reverse proxy
+- Prometheus monitoring
+- Grafana dashboards
+
+For complete Kubernetes documentation, see [`k8s/README.md`](k8s/README.md).
 
 ---
 
@@ -651,14 +754,18 @@ Access Prometheus at `http://localhost:9090` to:
 
 Key metrics available:
 
-- `django_http_requests_total_by_view_transport_method`
-- `django_http_responses_total_by_status`
-- `django_http_requests_latency_seconds`
-- `django_db_query_count`
+- Django: `django_http_requests_total`, `django_http_responses_total`,
+  `django_http_requests_latency_seconds`, `django_db_query_count`
+- PostgreSQL: Connection pools, query performance, table statistics
+- Redis: Memory usage, hit rate, connected clients
+- Nginx: Request rates, connection stats, response codes
 
 #### Grafana
 
 Access Grafana at `http://localhost:3000` (default: `admin`/`admin`)
+
+Grafana dashboards are **automatically provisioned** on startup with
+pre-configured datasources.
 
 **First-Time Setup:**
 
@@ -749,6 +856,26 @@ Built-in rate limiting:
 - API routes: 10 requests/second (burst 20)
 - General routes: 100 requests/second (burst 50)
 
+**Django-Level Rate Limiting**
+
+In addition to Nginx-level limiting, the project includes a `@rate_limit`
+decorator for more granular control within your views. This decorator is
+production-ready and uses Redis to track requests, making it suitable for
+multi-process and multi-server environments.
+
+**Usage:**
+
+```python
+from src.core.decorators import rate_limit
+
+@rate_limit(max_requests=5, period=60) # 5 requests per minute
+def my_sensitive_api_view(request):
+    ...
+```
+
+This is ideal for protecting specific endpoints, applying different limits per
+user, or other custom logic.
+
 ---
 
 ### 🐛 Troubleshooting
@@ -813,9 +940,24 @@ django_base/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                  # GitHub Actions CI/CD pipeline
+├── docs/                           # Project documentation
+│   ├── JWT_AUTHENTICATION.md       # JWT authentication guide
+│   └── SSL_HTTPS_SETUP.md          # SSL/HTTPS configuration guide (NEW v1.2.0)
+├── grafana/                        # Grafana configuration (NEW v1.2.0)
+│   ├── dashboards/                 # Pre-configured dashboards
+│   └── provisioning/               # Auto-provisioning config
+├── k8s/                            # Kubernetes manifests (NEW v1.2.0)
+│   ├── base/                       # Base K8s manifests (12 files)
+│   ├── dev/                        # Development overlay
+│   ├── prod/                       # Production overlay
+│   └── README.md                   # Complete K8s deployment guide
 ├── nginx/
 │   ├── Dockerfile                  # Nginx image build
-│   └── nginx.conf                  # Nginx configuration (rate limiting, security, gzip)
+│   └── nginx.conf                  # Nginx configuration (enhanced security headers v1.2.0)
+├── scripts/                        # Operational scripts (NEW v1.2.0)
+│   ├── backup_database.sh          # Professional database backup script
+│   ├── restore_database.sh         # Safe database restoration script
+│   └── README.md                   # Complete backup/restore documentation
 ├── src/
 │   ├── core/                       # Main Django app
 │   │   ├── management/
@@ -824,8 +966,8 @@ django_base/
 │   │   ├── templatetags/
 │   │   │   └── core_tags.py        # 23 custom template tags & filters
 │   │   ├── models.py               # 4 models: Product, UserProfile, Category, Tag
-│   │   ├── forms.py                # 4 forms: Login, Register, UserProfile, UserUpdate
-│   │   ├── views.py                # 7 views: home, login, register, logout, profile, products, health_check_page
+│   │   ├── forms.py                # 5 forms: Login, Register, UserProfile, UserUpdate, ProductForm
+│   │   ├── views.py                # Views with JWT token endpoints (enhanced v1.2.0)
 │   │   ├── viewsets.py             # 4 DRF ViewSets with custom actions
 │   │   ├── serializers.py          # 10 DRF Serializers (detail + list)
 │   │   ├── validators.py           # 8 custom validators (phone, CPF, image, etc.)
@@ -840,8 +982,9 @@ django_base/
 │       ├── settings/               # Modular settings
 │       │   ├── __init__.py         # Auto-detects environment
 │       │   ├── base.py             # Shared settings
-│       │   ├── dev.py              # Development settings
-│       │   └── prod.py             # Production settings (security hardened)
+│       │   ├── dev.py              # Development settings (with validation v1.2.0)
+│       │   ├── prod.py             # Production settings (with validation v1.2.0)
+│       │   └── env_validator.py    # Environment validation module (NEW v1.2.0)
 │       ├── urls.py                 # Main URL routing
 │       ├── wsgi.py                 # WSGI entry point
 │       └── asgi.py                 # ASGI entry point
@@ -853,25 +996,37 @@ django_base/
 │   │   ├── login.html              # Login form with animations
 │   │   ├── register.html           # Registration form
 │   │   ├── profile.html            # User profile edit page
-│   │   └── products.html           # Product listing with filters
+│   │   └── project_info.html       # Project information page
+│   ├── core/
+│   │   └── product/
+│   │       ├── products.html         # Product page with product management
+│   │       └── product_create.html   # Page for creating a new product
 │   ├── health/
 │   │   └── health_check.html       # Visual health check page
 │   ├── partials/                   # Reusable partial templates
 │   └── components/
 │       ├── card.html               # Bootstrap card component
 │       └── pagination.html         # Pagination controls
+├── locale/                         # Internationalization (i18n)
+│   ├── en/LC_MESSAGES/             # English translations
+│   └── pt_BR/LC_MESSAGES/          # Portuguese (Brazil) translations
+├── backups/                        # Database backups directory (gitignored)
+│   └── database/                   # Automated backup storage
 ├── logs/                           # Application logs (gitignored)
 ├── staticfiles/                    # Collected static files (gitignored)
 ├── mediafiles/                     # User uploads (gitignored)
 ├── docker-compose.yml              # Production compose
 ├── docker-compose.dev.yml          # Development overrides
 ├── Dockerfile                      # Multi-stage Docker build
+├── Makefile                        # 60+ commands for dev/prod/K8s (NEW v1.2.0)
 ├── pyproject.toml                  # Dependencies & tool config
 ├── .env.example                    # Environment variables template
 ├── .pre-commit-config.yaml         # Pre-commit hooks (20+ checks)
-├── prometheus.yml                  # Prometheus configuration
+├── prometheus.yml                  # Prometheus configuration (enhanced v1.2.0)
 ├── README.md                       # This file
-├── CHANGELOG.md                    # Project changelog
+├── CHANGELOG.md                    # Project changelog (updated v1.2.0)
+├── TODOLIST.md                     # Development roadmap (updated v1.2.0)
+└── CONTRIBUTING.md                 # Contribution guidelines
 ```
 
 ---
@@ -940,14 +1095,14 @@ para escalabilidade, manutenibilidade e deploy profissional.
 - **Gerenciador de Pacotes:** `uv` (gerenciador de pacotes Python ultrarrápido)
 - **Tarefas em Background:** Django Q2 (`django-q2`)
 - **Recursos API:** CORS, DRF Spectacular (OpenAPI/Swagger), django-filter
-- **Containerização:** Docker & Docker Compose (builds multi-stage)
+- **Containerização:** Docker & Docker Compose (builds multi-stage), Kubernetes
 - **Qualidade de Código:** `Ruff` linter/formatter, `pre-commit` hooks,
   segurança Bandit
 - **Testes:** `django.test` com `coverage`
-- **Observabilidade:** Dashboards Prometheus & Grafana
+- **Observabilidade:** Dashboards Prometheus & Grafana com exporters
 - **Configuração:** `python-decouple` com suporte abrangente a `.env`
 - **Ferramentas de Desenvolvimento:** `django-extensions`, `watchdog` para
-  hot-reloading
+  hot-reloading, Makefile (60+ comandos)
 
 ### ✨ Funcionalidades Principais
 
@@ -955,13 +1110,22 @@ para escalabilidade, manutenibilidade e deploy profissional.
 
 - ✅ **Settings Modulares:** `base.py`, `dev.py`, `prod.py` separados para
   configuração por ambiente
+- ✅ **Validação de Ambiente:** Validação automática de configuração crítica na
+  inicialização
 - ✅ **Segurança Reforçada:** HSTS, redirecionamento SSL, cookies seguros,
   headers de segurança, rate limiting
 - ✅ **Pronto para Produção:** Builds Docker multi-stage, usuário não-root,
-  health checks
+  health checks, SSL/HTTPS pronto
+- ✅ **Suporte Kubernetes:** Manifestos K8s completos com Kustomize overlays
+  para ambientes dev/prod
+- ✅ **Sistema de Backup:** Scripts profissionais de backup/restore com
+  políticas de retenção
 - ✅ **Integração Redis:** Cache, armazenamento de sessão, backend de fila de
   tarefas
-- ✅ **Observabilidade:** Métricas Prometheus + dashboards Grafana
+- ✅ **Observabilidade Aprimorada:** Prometheus + Grafana com exporters para
+  PostgreSQL, Redis e Nginx
+- ✅ **Produtividade do Desenvolvedor:** Makefile com 60+ comandos (18 para
+  Kubernetes)
 - ✅ **Pre-commit Hooks:** 20+ hooks incluindo Ruff, Bandit, detect-secrets,
   django-upgrade
 - ✅ **CI/CD Pronto:** Pipeline GitHub Actions com linting e testes
@@ -1024,8 +1188,8 @@ para escalabilidade, manutenibilidade e deploy profissional.
 
 - ✅ **8 Validadores Customizados:** Telefone, CPF, validação de imagem,
   validação de data, validadores regex
-- ✅ **15 Decoradores:** Permissões, cache, logging, rate limiting, AJAX,
-  resposta JSON
+- ✅ **15 Decoradores:** Permissões, cache, logging, limitação de taxa pronta
+  para produção baseada em Redis, AJAX, resposta JSON
 - ✅ **13 Mixins:** Mixins de modelo (timestamps, soft delete, rastreamento de
   usuário) + mixins de view (permissões, paginação, AJAX)
 - ✅ **Django Signals:** Auto-criação de modelos relacionados com tratamento de
@@ -1108,42 +1272,58 @@ verboso.
 Este modo executa a stack de produção com Nginx, Gunicorn, cache Redis e
 segurança reforçada.
 
-1. **Configure o Ambiente de Produção:**
+1. **Configuração Automatizada (Recomendado):**
+
+   ```bash
+   # Configure .env para produção primeiro!
+   cp .env.example .env
+   # Edite .env: Defina DEBUG=False, SECRET_KEY forte, ALLOWED_HOSTS, etc.
+
+   # Execute o script de configuração de produção
+   ./setup-prod.sh
+   # ou
+   make setup-prod
+
+   # Isso configura automaticamente:
+   # - Validação de ambiente (DEBUG, SECRET_KEY, etc.)
+   # - Build e inicialização do Docker
+   # - Migrações do banco de dados
+   # - Coleta de arquivos estáticos
+   # - Compilação de traduções
+   # - Verificações de saúde
+   # - Lembrete de checklist de segurança
+   ```
+
+2. **Configuração Manual (Alternativa):**
 
    ```bash
    # Copie e edite .env com valores de produção
    cp .env.example .env
    # IMPORTANTE: Defina DEBUG=False, configure SECRET_KEY, ALLOWED_HOSTS, etc.
-   ```
 
-2. **Para Iniciar a Stack de Produção:**
-
-   ```bash
    # Construa e inicie todos os serviços de produção
    docker-compose --profile prod up -d --build
-   ```
 
-3. **Comandos Necessários (após iniciar):**
-
-   ```bash
    # Execute as migrações
    docker-compose --profile prod exec web python manage.py migrate
-
-   # Compile traduções i18n (opcional)
-   docker-compose --profile prod exec web python manage.py compilemessages
 
    # Colete arquivos estáticos para o Nginx
    docker-compose --profile prod exec web python manage.py collectstatic --no-input
 
-   # Crie um superusuário (opcional)
+   # Compile traduções i18n
+   docker-compose --profile prod exec web python manage.py compilemessages
+
+   # Crie um superusuário (manual)
    docker-compose --profile prod exec web python manage.py createsuperuser
    ```
 
-4. **Para Parar a Stack de Produção:**
+3. **Para Parar a Stack de Produção:**
 
    ```bash
    # Parar todos os serviços
    docker-compose --profile prod down
+   # ou
+   make prod-down
    ```
 
 #### 🌐 Pontos de Acesso
@@ -1468,6 +1648,71 @@ docker-compose exec redis redis-cli FLUSHALL
 
 ---
 
+### ☸️ Deploy Kubernetes
+
+Este projeto inclui manifestos Kubernetes completos para deploy em qualquer
+cluster Kubernetes.
+
+#### Início Rápido
+
+**Configuração Automatizada (Recomendado):**
+
+```bash
+# Configuração de desenvolvimento (build da imagem + deploy)
+./setup-k8s.sh
+# ou
+make setup-k8s
+
+# Configuração de produção (build da imagem + deploy)
+./setup-k8s.sh --prod
+# ou
+make setup-k8s-prod
+```
+
+**Deploy Manual:**
+
+```bash
+# Deploy em desenvolvimento
+make k8s-dev-deploy
+
+# Deploy em produção (requer confirmação)
+make k8s-prod-deploy
+
+# Verificar status do deployment
+make k8s-status
+
+# Ver logs
+make k8s-logs
+
+# Acessar aplicação via port forward
+kubectl port-forward -n django-base svc/dev-nginx-service 8000:80
+```
+
+#### Recursos
+
+- **Manifestos Completos:** 12 manifestos base (namespace, configmaps, secrets,
+  PVCs, deployments, services, ingress)
+- **Kustomize Overlays:** Configurações separadas para ambientes dev e prod
+- **Pronto para Auto-Scaling:** Configuração HPA incluída
+- **Health Checks:** Probes de liveness e readiness para todos os serviços
+- **Limites de Recursos:** Limites de CPU e memória definidos
+- **RBAC:** Service account do Prometheus com cluster role
+- **Armazenamento Persistente:** PVCs para PostgreSQL, Redis, arquivos
+  static/media, Prometheus, Grafana
+
+#### Serviços Deployados
+
+- Aplicação web Django (com init containers para migrations/collectstatic)
+- Banco de dados PostgreSQL
+- Cache Redis
+- Nginx reverse proxy
+- Monitoramento Prometheus
+- Dashboards Grafana
+
+Para documentação completa do Kubernetes, veja [`k8s/README.md`](k8s/README.md).
+
+---
+
 ### 🧪 Testes
 
 #### Executar Testes (Docker)
@@ -1555,14 +1800,18 @@ Acesse o Prometheus em `http://localhost:9090` para:
 
 Métricas principais disponíveis:
 
-- `django_http_requests_total_by_view_transport_method`
-- `django_http_responses_total_by_status`
-- `django_http_requests_latency_seconds`
-- `django_db_query_count`
+- Django: `django_http_requests_total`, `django_http_responses_total`,
+  `django_http_requests_latency_seconds`, `django_db_query_count`
+- PostgreSQL: Pools de conexão, performance de queries, estatísticas de tabelas
+- Redis: Uso de memória, taxa de acerto, clientes conectados
+- Nginx: Taxas de requisição, estatísticas de conexão, códigos de resposta
 
 #### Grafana
 
 Acesse o Grafana em `http://localhost:3000` (padrão: `admin`/`admin`)
+
+Os dashboards Grafana são **automaticamente provisionados** na inicialização com
+datasources pré-configurados.
 
 **Configuração Inicial:**
 
@@ -1657,6 +1906,26 @@ Rate limiting integrado:
 - Rotas de API: 10 requisições/segundo (burst 20)
 - Rotas gerais: 100 requisições/segundo (burst 50)
 
+**Limitação de Taxa a Nível de Django**
+
+Além da limitação a nível de Nginx, o projeto inclui um decorador `@rate_limit`
+para um controle mais granular dentro de suas views. Este decorador é pronto
+para produção e usa Redis para rastrear requisições, tornando-o adequado para
+ambientes com múltiplos processos e servidores.
+
+**Uso:**
+
+```python
+from src.core.decorators import rate_limit
+
+@rate_limit(max_requests=5, period=60) # 5 requisições por minuto
+def my_sensitive_api_view(request):
+    ...
+```
+
+Isso é ideal para proteger endpoints específicos, aplicar limites diferentes por
+usuário, ou outra lógica customizada.
+
 ---
 
 ### 🐛 Solução de Problemas
@@ -1721,6 +1990,14 @@ django_base/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml                  # Pipeline CI/CD GitHub Actions
+├── grafana/                        # Configuração Grafana (NOVO v1.2.0)
+│   ├── dashboards/                 # Dashboards pré-configurados
+│   └── provisioning/               # Config de auto-provisionamento
+├── k8s/                            # Manifestos Kubernetes (NOVO v1.2.0)
+│   ├── base/                       # Manifestos K8s base (12 arquivos)
+│   ├── dev/                        # Overlay de desenvolvimento
+│   ├── prod/                       # Overlay de produção
+│   └── README.md                   # Guia completo de deploy K8s
 ├── nginx/
 │   ├── Dockerfile                  # Build da imagem Nginx
 │   └── nginx.conf                  # Configuração Nginx (rate limiting, segurança, gzip)
@@ -1761,7 +2038,10 @@ django_base/
 │   │   ├── login.html              # Formulário de login
 │   │   ├── register.html           # Formulário de cadastro
 │   │   ├── profile.html            # Página de Edição de Perfil do Usuário
-│   │   └── products.html           # Listagem de Produtos com Filtros
+│   ├── core/
+│   │   └── product/
+│   │       ├── products.html           # Listagem de Produtos com Filtros
+│   │       └── product_create.html   # Página para criar um novo produto
 │   ├── health/
 │   │   └── health_check.html       # Página de Health Check
 │   ├── partials/                   # Partial templates reutilizáveis
@@ -1774,12 +2054,15 @@ django_base/
 ├── docker-compose.yml              # Production compose
 ├── docker-compose.dev.yml          # Sobrescrita de desenvolvimento
 ├── Dockerfile                      # Build Docker multi-stage
+├── Makefile                        # 60+ comandos para dev/prod/K8s (NOVO v1.2.0)
 ├── pyproject.toml                  # Dependências & configuração de ferramentas
 ├── .env.example                    # Template de variáveis de ambiente
 ├── .pre-commit-config.yaml         # Pre-commit hooks (20+ checks)
-├── prometheus.yml                  # Configuração Prometheus
+├── prometheus.yml                  # Configuração Prometheus (melhorado v1.2.0)
 ├── README.md                       # Este arquivo
-├── CHANGELOG.md                    # Changelog do projeto
+├── CHANGELOG.md                    # Changelog do projeto (atualizado v1.2.0)
+├── TODOLIST.md                     # Roadmap de desenvolvimento (atualizado v1.2.0)
+└── CONTRIBUTING.md                 # Diretrizes de contribuição
 ```
 
 ---

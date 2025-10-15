@@ -1,0 +1,172 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-web
+  namespace: django-base
+  labels:
+    app: django
+    component: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: django
+      component: web
+  template:
+    metadata:
+      labels:
+        app: django
+        component: web
+    spec:
+      initContainers:
+        - name: migrations
+          image: django-base:latest # Will be replaced by kustomize
+          imagePullPolicy: Never # Use local image only
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              cd /app
+              /app/.venv/bin/python manage.py migrate --noinput
+          env:
+            - name: PYTHONPATH
+              value: "/app/src"
+          envFrom:
+            - configMapRef:
+                name: django-config
+            - secretRef:
+                name: django-secrets
+        - name: collectstatic
+          image: django-base:latest # Will be replaced by kustomize
+          imagePullPolicy: Never # Use local image only
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              cd /app
+              /app/.venv/bin/python manage.py collectstatic --noinput
+          env:
+            - name: PYTHONPATH
+              value: "/app/src"
+          envFrom:
+            - configMapRef:
+                name: django-config
+            - secretRef:
+                name: django-secrets
+          volumeMounts:
+            - name: static-storage
+              mountPath: /app/staticfiles
+      containers:
+        - name: django
+          image: django-base:latest # Will be replaced by kustomize
+          imagePullPolicy: Never # Use local image only
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              cd /app
+              /app/.venv/bin/gunicorn django_base.wsgi:application --bind 0.0.0.0:8000 --workers 4
+          env:
+            - name: PYTHONPATH
+              value: "/app/src"
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: django-config
+            - secretRef:
+                name: django-secrets
+          volumeMounts:
+            - name: static-storage
+              mountPath: /app/staticfiles
+            - name: media-storage
+              mountPath: /app/mediafiles
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health/
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health/
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+      volumes:
+        - name: static-storage
+          persistentVolumeClaim:
+            claimName: static-pvc
+        - name: media-storage
+          persistentVolumeClaim:
+            claimName: media-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-service
+  namespace: django-base
+  labels:
+    app: django
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+  selector:
+    app: django
+    component: web
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-qcluster
+  namespace: django-base
+  labels:
+    app: django
+    component: qcluster
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django
+      component: qcluster
+  template:
+    metadata:
+      labels:
+        app: django
+        component: qcluster
+    spec:
+      containers:
+        - name: qcluster
+          image: django-base:latest # Will be replaced by kustomize
+          imagePullPolicy: Never # Use local image only
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              cd /app
+              /app/.venv/bin/python manage.py qcluster
+          env:
+            - name: PYTHONPATH
+              value: "/app/src"
+          envFrom:
+            - configMapRef:
+                name: django-config
+            - secretRef:
+                name: django-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"

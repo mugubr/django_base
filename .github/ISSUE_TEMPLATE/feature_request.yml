@@ -1,0 +1,121 @@
+name: ✨ Feature Request / Solicitação de Funcionalidade
+description:
+  Suggest an idea for this project / Sugira uma ideia para este projeto
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature!
+        Obrigado por dedicar tempo para sugerir uma nova funcionalidade!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label:
+        Is your feature request related to a problem? / Sua solicitação está
+        relacionada a um problema?
+      description:
+        A clear and concise description of what the problem is / Uma descrição
+        clara e concisa do problema
+      placeholder:
+        I'm always frustrated when... / Sempre fico frustrado quando...
+
+  - type: textarea
+    id: solution
+    attributes:
+      label:
+        Describe the solution you'd like / Descreva a solução que você gostaria
+      description:
+        A clear and concise description of what you want to happen / Uma
+        descrição clara e concisa do que você quer que aconteça
+      placeholder: I would like... / Eu gostaria...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label:
+        Describe alternatives you've considered / Descreva alternativas que você
+        considerou
+      description:
+        A clear and concise description of any alternative solutions or features
+        you've considered / Uma descrição clara e concisa de soluções
+        alternativas ou funcionalidades que você considerou
+      placeholder: I also thought about... / Também pensei em...
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type / Tipo de Funcionalidade
+      description:
+        What type of feature is this? / Que tipo de funcionalidade é esta?
+      options:
+        - New API endpoint / Novo endpoint de API
+        - New UI page / Nova página de UI
+        - Authentication/Authorization / Autenticação/Autorização
+        - Performance improvement / Melhoria de performance
+        - Documentation / Documentação
+        - DevOps/Infrastructure / DevOps/Infraestrutura
+        - Testing / Testes
+        - Other / Outro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority / Prioridade
+      description:
+        How important is this feature to you? / Quão importante é esta
+        funcionalidade para você?
+      options:
+        - Low / Baixa
+        - Medium / Média
+        - High / Alta
+        - Critical / Crítica
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case / Caso de Uso
+      description:
+        Describe a specific use case for this feature / Descreva um caso de uso
+        específico para esta funcionalidade
+      placeholder: |
+        As a [type of user]...
+        I want to [action]...
+        So that [benefit]...
+
+        Como um [tipo de usuário]...
+        Eu quero [ação]...
+        Para que [benefício]...
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context / Contexto Adicional
+      description:
+        Add any other context, mockups, or screenshots about the feature request
+        here / Adicione qualquer outro contexto, mockups ou screenshots sobre a
+        solicitação aqui
+      placeholder: Any other details... / Quaisquer outros detalhes...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct / Código de Conduta
+      description:
+        By submitting this issue, you agree to follow our Code of Conduct / Ao
+        submeter esta issue, você concorda em seguir nosso Código de Conduta
+      options:
+        - label:
+            I agree to follow this project's Code of Conduct / Concordo em
+            seguir o Código de Conduta deste projeto
+          required: true

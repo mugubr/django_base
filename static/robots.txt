@@ -1,0 +1,33 @@
+# robots.txt for Django Base Project
+# Arquivo robots.txt para Projeto Django Base
+
+# Global rules / Regras globais
+User-agent: *
+
+# Allow all pages by default / Permite todas as páginas por padrão
+Allow: /
+
+# Disallow admin and private areas / Não permite admin e áreas privadas
+Disallow: /admin/
+Disallow: /api/schema/
+Disallow: /metrics/
+Disallow: /health/
+Disallow: /health-status/
+
+# Disallow authentication pages / Não permite páginas de autenticação
+Disallow: /login/
+Disallow: /logout/
+Disallow: /register/
+
+# Disallow user profile pages / Não permite páginas de perfil
+Disallow: /profile/
+
+# Allow API documentation / Permite documentação da API
+Allow: /api/docs/
+Allow: /api/redoc/
+
+# Crawl delay (optional) / Atraso de crawl (opcional)
+# Crawl-delay: 1
+
+# Sitemap location / Localização do sitemap
+Sitemap: http://localhost:8000/sitemap.xml

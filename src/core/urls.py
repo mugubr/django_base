@@ -38,15 +38,21 @@ router.register(
 )  # User Profile CRUD / CRUD de Perfis
 
 urlpatterns = [
+    # Main Pages / Páginas Principais
+    path("", views.home, name="home"),  # Portfolio home / Home do portfolio
+    path(
+        "project/", views.project_info_view, name="project_info"
+    ),  # Project information / Informações do projeto
+    path(
+        "products/", views.products_view, name="products"
+    ),  # Products page / Página de produtos
     # Authentication URLs / URLs de Autenticação
-    path("", views.home, name="home"),
     path("login/", views.login_view, name="login"),
     path("register/", views.register_view, name="register"),
     path("logout/", views.logout_view, name="logout"),
     path("profile/", views.profile_view, name="profile"),
-    path("products/", views.products_view, name="products"),
+    # Product Management / Gerenciamento de Produtos
     path("products/create/", views.product_create_view, name="product_create"),
-    path("about/", views.about_view, name="about"),
     # API Endpoints / Endpoints da API
     path("api/hello/", views.hello_api, name="hello-api"),
     path("api/info/", views.api_info, name="api-info"),

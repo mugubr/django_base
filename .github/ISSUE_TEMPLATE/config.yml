@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation / Documentação
+    url: https://github.com/mugubr/django-base#readme
+    about: Read the project documentation / Leia a documentação do projeto
+  - name: 💬 Discussions / Discussões
+    url: https://github.com/mugubr/django-base/discussions
+    about: Ask questions and discuss ideas / Faça perguntas e discuta ideias

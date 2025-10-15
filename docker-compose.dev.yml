@@ -73,3 +73,8 @@ services:
     # No restart policy in dev - fail fast to catch errors
     # Sem política de restart em dev - falha rápida para capturar erros
     restart: "no"
+
+  grafana:
+    # In development, we don't need to mount any volumes for provisioning
+    # as it is handled by the grafana-provisioning service.
+    volumes: []

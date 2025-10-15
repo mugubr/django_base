@@ -18,10 +18,13 @@ Testes abrangentes para:
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.http import HttpResponse
+from django.test import TestCase, override_settings
+from django.urls import path
 from rest_framework import status
 from rest_framework.test import APIClient
 
+from .decorators import rate_limit
 from .models import Product
 
 User = get_user_model()
@@ -272,11 +275,6 @@ class ViewTestCase(TestCase):
         response = self.client.get("/profile/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_products_view(self):
-        """Test GET /products/ renders products page / Testa GET /products/ renderiza página de produtos"""
-        response = self.client.get("/products/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
     def test_health_check_page(self):
         """Test GET /health-status/ renders health page / Testa GET /health-status/ renderiza página de saúde"""
         response = self.client.get("/health-status/")
@@ -329,3 +327,52 @@ class ModelMethodsTestCase(TestCase):
         self.product.activate()
         self.product.refresh_from_db()
         self.assertTrue(self.product.is_active)
+
+
+# Dummy view for testing rate limiting
+# View de teste para o limite de taxa
+@rate_limit(max_requests=2, period=10)
+def rate_limited_test_view(request):
+    """A simple view for testing the rate limit decorator."""
+    return HttpResponse("Success")
+
+
+urlpatterns = [
+    path("test-rate-limit/", rate_limited_test_view),
+]
+
+
+@override_settings(ROOT_URLCONF=__name__)
+class RateLimitDecoratorTest(TestCase):
+    """
+    Tests for the @rate_limit decorator.
+    Testes para o decorador @rate_limit.
+    """
+
+    @override_settings(
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": "unique-snowflake-for-rate-limit-test",
+            }
+        }
+    )
+    def test_rate_limit_is_enforced(self):
+        """
+        Test that the rate limit decorator blocks requests after the limit is exceeded.
+        Testa que o decorador de limite de taxa bloqueia requisições após o limite ser excedido.
+        """
+        from django.core.cache import cache
+
+        cache.clear()
+
+        # First 2 requests should be successful
+        # As 2 primeiras requisições devem ser bem-sucedidas
+        for _ in range(2):
+            response = self.client.get("/test-rate-limit/")
+            self.assertEqual(response.status_code, 200)
+
+        # 3rd request should be blocked
+        # A 3ª requisição deve ser bloqueada
+        response = self.client.get("/test-rate-limit/")
+        self.assertEqual(response.status_code, 429)

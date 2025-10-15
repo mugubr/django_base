@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Django Base 1.0.0\n"
+"Project-Id-Version: Django Base 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-07 12:00+0000\n"
-"PO-Revision-Date: 2025-10-07 12:00+0000\n"
+"POT-Creation-Date: 2025-01-13 12:00+0000\n"
+"PO-Revision-Date: 2025-01-13 12:00+0000\n"
 "Last-Translator: Miguel de Freitas Muniz <miguimuniz@gmail.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
 "Language: pt_BR\n"
@@ -79,9 +79,6 @@ msgstr "Perfil do Usuário"
 msgid "User Profiles"
 msgstr "Perfis de Usuário"
 
-msgid "Category"
-msgstr "Categoria"
-
 msgid "Categories"
 msgstr "Categorias"
 
@@ -90,9 +87,6 @@ msgstr "Categoria pai"
 
 msgid "Tag"
 msgstr "Tag"
-
-msgid "Tags"
-msgstr "Tags"
 
 msgid "Name"
 msgstr "Nome"
@@ -258,7 +252,7 @@ msgid "Register here"
 msgstr "Cadastre-se aqui"
 
 msgid "Your connection is secure. We never store your password in plain text."
-msgstr "Sua conexão é segura. Nunca armazenamos sua senha diretament."
+msgstr "Sua conexão é segura. Nunca armazenamos sua senha em texto simples."
 
 # Profile page - additional strings
 msgid "Basic Information"
@@ -302,15 +296,6 @@ msgstr "Registre-se"
 msgid "Latest Django 5.2 with Django REST Framework for building robust APIs"
 msgstr "Django 5.2 com Django REST Framework para construir APIs robustas"
 
-msgid "Fully containerized with Docker Compose for easy development and deployment"
-msgstr "Totalmente containerizado com Docker Compose para desenvolvimento e deploy fáceis"
-
-msgid "Production-grade database with optimized configurations"
-msgstr "Banco de dados de nível de produção com configurações otimizadas"
-
-msgid "High-performance caching and session storage"
-msgstr "Cache de alta performance e armazenamento de sessão"
-
 msgid "Bootstrap 5.3 + HTMX for responsive, dynamic interfaces"
 msgstr "Bootstrap 5.3 + HTMX para interfaces responsivas e dinâmicas"
 
@@ -340,15 +325,6 @@ msgstr "Status do sistema"
 msgid "Edit Profile"
 msgstr "Editar Perfil"
 
-msgid "Admin Panel"
-msgstr "Painel Admin"
-
-msgid "About"
-msgstr "Sobre"
-
-msgid "A modern, production-ready Django starter template with Docker, PostgreSQL, Redis, and all the best practices built-in."
-msgstr "Um template Django moderno e pronto para produção com Docker, PostgreSQL, Redis e todas as melhores práticas integradas."
-
 msgid "Features & Technologies"
 msgstr "Recursos & Tecnologias"
 
@@ -358,32 +334,6 @@ msgstr "Tudo que você precisa para uma aplicação Django moderna"
 msgid "Showing %(start)s to %(end)s of %(total)s items"
 msgstr "Mostrando %(start)s a %(end)s de %(total)s itens"
 
-msgid "Browse our product catalog"
-msgstr "Navegue pelo nosso catálogo de produtos"
-
-msgid "Filters"
-msgstr "Filtros"
-
-msgid "All Categories"
-msgstr "Todas as Categorias"
-
-msgid "Min"
-msgstr "Mín"
-
-msgid "Max"
-msgstr "Máx"
-
-msgid "Apply Filters"
-msgstr "Aplicar Filtros"
-
-msgid "Clear"
-msgstr "Limpar"
-
-msgid "Inactive"
-msgstr "Inativo"
-
-msgid "No products found"
-msgstr "Nenhum produto encontrado"
 
 msgid "Real-time system status and diagnostics"
 msgstr "Status do sistema e diagnósticos em tempo real"
@@ -418,20 +368,11 @@ msgstr "Tecnologias"
 msgid "Features"
 msgstr "Recursos"
 
-msgid "REST API with DRF"
-msgstr "API REST com DRF"
-
 msgid "Authentication System"
 msgstr "Sistema de Autenticação"
 
-msgid "Monitoring & Observability"
-msgstr "Monitoramento & Observabilidade"
-
 msgid "Pre-commit Hooks"
 msgstr "Hooks de Pre-commit"
-
-msgid "Internationalization (i18n)"
-msgstr "Internacionalização (i18n)"
 
 msgid "Developer"
 msgstr "Desenvolvedor"
@@ -448,35 +389,14 @@ msgstr "Este projeto foi criado como um template Django pronto para produção c
 msgid "Repository"
 msgstr "Repositório"
 
-msgid "Source Code"
-msgstr "Código Fonte"
-
 msgid "License"
 msgstr "Licença"
-
-msgid "Free to use and modify"
-msgstr "Livre para usar e modificar"
-
-msgid "Report Issues"
-msgstr "Reportar Problemas"
-
-msgid "Fork Repository"
-msgstr "Fazer Fork do Repositório"
-
-msgid "Star on GitHub"
-msgstr "Dar Star no GitHub"
 
 msgid "Contributing"
 msgstr "Contribuindo"
 
 msgid "Contributions are welcome! If you'd like to improve this project, please:"
 msgstr "Contribuições são bem-vindas! Se você gostaria de melhorar este projeto, por favor:"
-
-msgid "Fork the repository"
-msgstr "Faça um fork do repositório"
-
-msgid "Create a feature branch"
-msgstr "Crie uma branch de feature"
 
 msgid "Commit your changes"
 msgstr "Faça commit das suas mudanças"
@@ -486,12 +406,6 @@ msgstr "Faça push para a branch"
 
 msgid "Open a Pull Request"
 msgstr "Abra um Pull Request"
-
-msgid "Questions or suggestions?"
-msgstr "Dúvidas ou sugestões?"
-
-msgid "Feel free to open an issue on GitHub!"
-msgstr "Sinta-se à vontade para abrir uma issue no GitHub!"
 
 msgid "Back to Home"
 msgstr "Voltar ao Início"
@@ -556,9 +470,6 @@ msgstr "Frontend Moderno"
 msgid "Member Since"
 msgstr "Membro Desde"
 
-msgid "Price Range"
-msgstr "Faixa de Preço"
-
 msgid "Joined"
 msgstr "Entrou em"
 
@@ -583,11 +494,263 @@ msgstr "OK"
 msgid "ERROR"
 msgstr "ERRO"
 
-msgid "Create Product"
-msgstr "Criar Produto"
-
 msgid "Product created successfully!"
 msgstr "Produto criado com sucesso!"
 
 msgid "Hold Ctrl/Cmd to select multiple tags"
 msgstr "Segure Ctrl/Cmd para selecionar múltiplas tags"
+
+# Portfolio / Home Page - New strings
+msgid "Portfolio"
+msgstr "Portfólio"
+
+msgid "Bio"
+msgstr "Biografia"
+
+msgid "About Me"
+msgstr "Sobre Mim"
+
+msgid "Featured Project"
+msgstr "Projeto em Destaque"
+
+msgid "A production-ready Django boilerplate with Docker, DRF, authentication system, and complete features. Includes REST API, JWT authentication, monitoring with Prometheus/Grafana, and bilingual documentation (EN/PT)."
+msgstr "Um boilerplate Django pronto para produção com Docker, DRF, sistema de autenticação e recursos completos. Inclui API REST, autenticação JWT, monitoramento com Prometheus/Grafana e documentação bilíngue (EN/PT)."
+
+msgid "Skills & Technologies"
+msgstr "Habilidades & Tecnologias"
+
+msgid "Backend"
+msgstr "Backend"
+
+msgid "DevOps & Tools"
+msgstr "DevOps & Ferramentas"
+
+msgid "Frontend"
+msgstr "Frontend"
+
+msgid "Best Practices"
+msgstr "Melhores Práticas"
+
+msgid "API Docs"
+msgstr "Docs da API"
+
+msgid "Metrics"
+msgstr "Métricas"
+
+msgid "Dashboards"
+msgstr "Painéis"
+
+msgid "Get in Touch"
+msgstr "Entre em Contato"
+
+msgid "Interested in collaborating or have questions? Feel free to reach out!"
+msgstr "Interessado em colaborar ou tem dúvidas? Sinta-se à vontade para entrar em contato!"
+
+msgid "View GitHub"
+msgstr "Ver GitHub"
+
+msgid "Send Email"
+msgstr "Enviar E-mail"
+
+# Project Info Page
+msgid "Django Base Project"
+msgstr "Projeto Django Base"
+
+msgid "Production-Ready Django Boilerplate"
+msgstr "Boilerplate Django Pronto para Produção"
+
+msgid "Django 5.2 with Django REST Framework for building robust APIs"
+msgstr "Django 5.2 com Django REST Framework para construir APIs robustas"
+
+msgid "Fully containerized with Docker Compose for easy development and deployment"
+msgstr "Totalmente containerizado com Docker Compose para desenvolvimento e deploy fáceis"
+
+msgid "Production-grade database with optimized configurations"
+msgstr "Banco de dados de nível de produção com configurações otimizadas"
+
+msgid "High-performance caching and session storage"
+msgstr "Cache de alta performance e armazenamento de sessão"
+
+msgid "JWT Authentication"
+msgstr "Autenticação JWT"
+
+msgid "Stateless authentication with refresh tokens and blacklisting"
+msgstr "Autenticação stateless com tokens de refresh e blacklisting"
+
+msgid "Monitoring"
+msgstr "Monitoramento"
+
+msgid "Prometheus metrics and Grafana dashboards for observability"
+msgstr "Métricas Prometheus e painéis Grafana para observabilidade"
+
+msgid "Architecture & Design Principles"
+msgstr "Arquitetura & Princípios de Design"
+
+msgid "Bilingual by Default"
+msgstr "Bilíngue por Padrão"
+
+msgid "All code, documentation, and templates are in English and Portuguese"
+msgstr "Todo código, documentação e templates estão em Inglês e Português"
+
+msgid "Security First"
+msgstr "Segurança em Primeiro Lugar"
+
+msgid "HSTS, secure cookies, rate limiting, JWT tokens, Bandit security analysis"
+msgstr "HSTS, cookies seguros, limitação de taxa, tokens JWT, análise de segurança Bandit"
+
+msgid "Developer Experience"
+msgstr "Experiência do Desenvolvedor"
+
+msgid "Automated setup script, pre-commit hooks, comprehensive documentation"
+msgstr "Script de configuração automatizado, hooks de pre-commit, documentação abrangente"
+
+msgid "Performance Optimized"
+msgstr "Otimizado para Performance"
+
+msgid "Redis caching, optimized queries, Gzip compression, database indexes"
+msgstr "Cache Redis, queries otimizadas, compressão Gzip, índices de banco de dados"
+
+msgid "Soft Deletion"
+msgstr "Exclusão Suave"
+
+msgid "Data never permanently deleted - maintains referential integrity"
+msgstr "Dados nunca são excluídos permanentemente - mantém integridade referencial"
+
+msgid "Key Components"
+msgstr "Componentes Principais"
+
+msgid "Models"
+msgstr "Modelos"
+
+msgid "API Endpoints"
+msgstr "Endpoints da API"
+
+msgid "Utilities"
+msgstr "Utilitários"
+
+msgid "Infrastructure"
+msgstr "Infraestrutura"
+
+msgid "Getting Started"
+msgstr "Começando"
+
+msgid "Clone and run the project in minutes:"
+msgstr "Clone e execute o projeto em minutos:"
+
+msgid "Automated setup"
+msgstr "Configuração automatizada"
+
+msgid "Access"
+msgstr "Acesso"
+
+msgid "The setup script handles everything: Docker setup, migrations, superuser creation, and database seeding."
+msgstr "O script de configuração cuida de tudo: configuração Docker, migrações, criação de superusuário e seed do banco de dados."
+
+msgid "Repository & License"
+msgstr "Repositório & Licença"
+
+msgid "Source Code"
+msgstr "Código Fonte"
+
+msgid "Free to use and modify"
+msgstr "Livre para usar e modificar"
+
+msgid "Report Issues"
+msgstr "Reportar Problemas"
+
+msgid "Fork Repository"
+msgstr "Fazer Fork do Repositório"
+
+msgid "Star on GitHub"
+msgstr "Dar Star no GitHub"
+
+msgid "Contributions are welcome! See CONTRIBUTING.md for guidelines:"
+msgstr "Contribuições são bem-vindas! Veja CONTRIBUTING.md para diretrizes:"
+
+msgid "Fork the repository"
+msgstr "Faça fork do repositório"
+
+msgid "Create a feature branch"
+msgstr "Crie uma branch de feature"
+
+msgid "Make your changes with tests"
+msgstr "Faça suas alterações com testes"
+
+msgid "Run linting and formatting"
+msgstr "Execute linting e formatação"
+
+msgid "Submit a Pull Request"
+msgstr "Envie um Pull Request"
+
+msgid "Questions or suggestions?"
+msgstr "Dúvidas ou sugestões?"
+
+msgid "Feel free to open an issue on GitHub!"
+msgstr "Sinta-se à vontade para abrir uma issue no GitHub!"
+
+msgid "Back to Portfolio"
+msgstr "Voltar ao Portfólio"
+
+msgid "Interactive demonstration of product management features"
+msgstr "Demonstração interativa dos recursos de gerenciamento de produtos"
+
+msgid "Create Product"
+msgstr "Criar Produto"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid "Category"
+msgstr "Categoria"
+
+msgid "All Categories"
+msgstr "Todas as Categorias"
+
+msgid "Tags"
+msgstr "Tags"
+
+msgid "Price Range"
+msgstr "Faixa de Preço"
+
+msgid "Min"
+msgstr "Mín"
+
+msgid "Max"
+msgstr "Máx"
+
+msgid "Apply Filters"
+msgstr "Aplicar Filtros"
+
+msgid "Clear"
+msgstr "Limpar"
+
+msgid "Inactive"
+msgstr "Inativo"
+
+msgid "No products found"
+msgstr "Nenhum produto encontrado"
+
+# Navigation
+msgid "Project"
+msgstr "Projeto"
+
+msgid "Examples"
+msgstr "Produtos"
+
+msgid "API Authentication"
+msgstr "Autenticação da API"
+
+msgid "For API access, use JWT tokens. See documentation:"
+msgstr "Para acesso à API, use tokens JWT. Veja a documentação:"
+
+msgid "Project Details"
+msgstr "Detalhes do Projeto"
+
+msgid "View on GitHub"
+msgstr "Ver no GitHub"
+
+msgid "Project Info"
+msgstr "Info do Projeto"
+
+msgid "Terms"
+msgstr "Termos"

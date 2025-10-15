@@ -24,6 +24,7 @@
 # Importa handlers de erro customizados da app core
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -32,7 +33,14 @@ from drf_spectacular.views import (
 )
 
 from core import views
+from core.sitemaps import ProductSitemap, StaticViewSitemap
 from django_base import settings
+
+# Sitemaps configuration / Configuração de sitemaps
+sitemaps = {
+    "static": StaticViewSitemap,
+    "products": ProductSitemap,
+}
 
 # URL Patterns
 # Padrões de URL
@@ -76,6 +84,30 @@ urlpatterns = [
         "api/redoc/",
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
+    ),
+    # Sitemap for SEO / Sitemap para SEO
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
+    # JWT Authentication Endpoints / Endpoints de Autenticação JWT
+    # Obtain JWT token pair (access + refresh) / Obter par de tokens JWT (acesso + refresh)
+    path(
+        "api/token/",
+        views.CustomTokenObtainPairView.as_view(),
+        name="token_obtain_pair",
+    ),
+    # Refresh access token using refresh token / Renovar token de acesso usando token de refresh
+    path(
+        "api/token/refresh/",
+        views.CustomTokenRefreshView.as_view(),
+        name="token_refresh",
+    ),
+    # Verify token validity / Verificar validade do token
+    path(
+        "api/token/verify/", views.CustomTokenVerifyView.as_view(), name="token_verify"
     ),
 ]
 

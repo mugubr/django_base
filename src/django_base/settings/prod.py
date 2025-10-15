@@ -364,3 +364,24 @@ CORS_ALLOWED_ORIGINS = config(  # noqa: F405
 
 
 # ALLOWED_HOSTS=.yourdomain.com,yourdomain.com
+
+# Environment Variables Validation
+# Validação de Variáveis de Ambiente
+
+# Validate critical environment variables on startup
+# This prevents misconfiguration errors in production
+# Valida variáveis de ambiente críticas na inicialização
+# Isso previne erros de configuração em produção
+
+from django_base.settings.env_validator import validate_environment  # noqa: E402
+
+validate_environment(
+    environment="production",
+    debug=DEBUG,
+    secret_key=SECRET_KEY,  # noqa: F405
+    allowed_hosts=ALLOWED_HOSTS,  # noqa: F405
+    database_config=DATABASES["default"],  # noqa: F405
+    secure_ssl_redirect=SECURE_SSL_REDIRECT,
+    session_cookie_secure=SESSION_COOKIE_SECURE,
+    csrf_cookie_secure=CSRF_COOKIE_SECURE,
+)

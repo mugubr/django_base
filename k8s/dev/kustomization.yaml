@@ -1,0 +1,88 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../base
+
+namePrefix: dev-
+
+labels:
+  - pairs:
+      environment: development
+
+patches:
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+    target:
+      kind: Deployment
+      name: django-web
+  - patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 1
+    target:
+      kind: Deployment
+      name: nginx
+  - patch: |-
+      - op: replace
+        path: /data/DEBUG
+        value: "True"
+      - op: replace
+        path: /data/ALLOWED_HOSTS
+        value: "*"
+      - op: replace
+        path: /data/DJANGO_SETTINGS_MODULE
+        value: "django_base.settings.dev"
+      - op: replace
+        path: /data/POSTGRES_HOST
+        value: "dev-postgres-service"
+      - op: replace
+        path: /data/REDIS_HOST
+        value: "dev-redis-service"
+    target:
+      kind: ConfigMap
+      name: django-config
+  - patch: |-
+      - op: replace
+        path: /data/default.conf
+        value: |
+          upstream django {
+              server dev-django-service:8000;
+          }
+
+          server {
+              listen 80;
+              server_name _;
+              client_max_body_size 100M;
+
+              location /static/ {
+                  alias /app/staticfiles/;
+                  expires 30d;
+                  add_header Cache-Control "public, immutable";
+              }
+
+              location /media/ {
+                  alias /app/mediafiles/;
+                  expires 7d;
+                  add_header Cache-Control "public";
+              }
+
+              location / {
+                  proxy_pass http://django;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                  proxy_redirect off;
+              }
+          }
+    target:
+      kind: ConfigMap
+      name: nginx-config
+
+images:
+  - name: your-registry/django-base
+    newName: django-base
+    newTag: dev-latest

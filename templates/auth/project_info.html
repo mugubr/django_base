@@ -1,0 +1,281 @@
+{% extends "base/base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Project Information" %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            {# Project Header / Cabeçalho do Projeto #}
+            <div class="text-center mb-5">
+                <i class="bi bi-code-square text-success" style="font-size: 4rem;"></i>
+                <h1 class="mt-3">{% trans "Django Base Project" %}</h1>
+                <p class="lead text-muted">
+                    {% trans "Production-Ready Django Boilerplate" %}
+                </p>
+            </div>
+
+            {# Features Cards with Icons / Cards de Recursos com Ícones #}
+            <div class="row g-4 mb-4">
+                <!-- Django & DRF -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-gear-fill text-success" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">{% trans "Django & DRF" %}</h5>
+                            <p class="card-text text-muted">
+                                {% trans "Django 5.2 with Django REST Framework for building robust APIs" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Docker -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-box-seam" style="font-size: 3rem; color: #198754;"></i>
+                            </div>
+                            <h5 class="card-title">{% trans "Docker Ready" %}</h5>
+                            <p class="card-text text-muted">
+                                {% trans "Fully containerized with Docker Compose for easy development and deployment" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PostgreSQL -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-database text-info" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">{% trans "PostgreSQL" %}</h5>
+                            <p class="card-text text-muted">
+                                {% trans "Production-grade database with optimized configurations" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redis -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-lightning-charge text-danger" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">{% trans "Redis Cache" %}</h5>
+                            <p class="card-text text-muted">
+                                {% trans "High-performance caching and session storage" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JWT Auth -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-shield-check text-secondary" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">{% trans "JWT Authentication" %}</h5>
+                            <p class="card-text text-muted">
+                                {% trans "Stateless authentication with refresh tokens and blacklisting" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monitoring -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-graph-up text-warning" style="font-size: 3rem;"></i>
+                            </div>
+                            <h5 class="card-title">{% trans "Monitoring" %}</h5>
+                            <p class="card-text text-muted">
+                                {% trans "Prometheus metrics and Grafana dashboards for observability" %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Architecture & Design / Arquitetura & Design #}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-diagram-3"></i> {% trans "Architecture & Design Principles" %}</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="mb-0">
+                        <li class="mb-2">
+                            <strong>{% trans "Bilingual by Default" %}:</strong>
+                            {% trans "All code, documentation, and templates are in English and Portuguese" %}
+                        </li>
+                        <li class="mb-2">
+                            <strong>{% trans "Security First" %}:</strong>
+                            {% trans "HSTS, secure cookies, rate limiting, JWT tokens, Bandit security analysis" %}
+                        </li>
+                        <li class="mb-2">
+                            <strong>{% trans "Developer Experience" %}:</strong>
+                            {% trans "Automated setup script, pre-commit hooks, comprehensive documentation" %}
+                        </li>
+                        <li class="mb-2">
+                            <strong>{% trans "Performance Optimized" %}:</strong>
+                            {% trans "Redis caching, optimized queries, Gzip compression, database indexes" %}
+                        </li>
+                        <li class="mb-2">
+                            <strong>{% trans "Soft Deletion" %}:</strong>
+                            {% trans "Data never permanently deleted - maintains referential integrity" %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {# Key Components / Componentes Principais #}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-puzzle"></i> {% trans "Key Components" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <h6 class="text-success">{% trans "Models" %} (4)</h6>
+                            <ul class="small">
+                                <li>Product</li>
+                                <li>UserProfile</li>
+                                <li>Category (hierarchical)</li>
+                                <li>Tag</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-success">{% trans "API Endpoints" %} (REST + JWT)</h6>
+                            <ul class="small">
+                                <li>ProductViewSet</li>
+                                <li>CategoryViewSet</li>
+                                <li>TagViewSet</li>
+                                <li>UserProfileViewSet</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-success">{% trans "Utilities" %}</h6>
+                            <ul class="small">
+                                <li>23 template tags</li>
+                                <li>8 validators</li>
+                                <li>15 decorators</li>
+                                <li>13 mixins</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-success">{% trans "Infrastructure" %}</h6>
+                            <ul class="small">
+                                <li>Multi-stage Dockerfile</li>
+                                <li>Docker Compose (dev/prod)</li>
+                                <li>Nginx reverse proxy</li>
+                                <li>Gunicorn WSGI server</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Getting Started / Começando #}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-play-circle"></i> {% trans "Getting Started" %}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">{% trans "Clone and run the project in minutes:" %}</p>
+                    <div class="bg-dark text-light p-3 rounded">
+                        <code>
+                            git clone https://github.com/mugubr/django_base.git<br>
+                            cd django_base<br>
+                            bash setup.sh  # {% trans "Automated setup" %}<br>
+                            # {% trans "Access" %}: http://localhost:8000
+                        </code>
+                    </div>
+                    <p class="mt-3 mb-0 small text-muted">
+                        <i class="bi bi-info-circle"></i>
+                        {% trans "The setup script handles everything: Docker setup, migrations, superuser creation, and database seeding." %}
+                    </p>
+                </div>
+            </div>
+
+            {# Repository Info Card / Card de Informações do Repositório #}
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-github"></i> {% trans "Repository & License" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-2">{% trans "Source Code" %}</h6>
+                            <a href="https://github.com/mugubr/django_base" target="_blank" rel="noopener noreferrer" class="btn btn-success">
+                                <i class="bi bi-github"></i> github.com/mugubr/django_base
+                            </a>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-2">{% trans "License" %}</h6>
+                            <p class="mb-0">
+                                <i class="bi bi-file-earmark-text"></i> MIT License
+                                <br>
+                                <small class="text-muted">{% trans "Free to use and modify" %}</small>
+                            </p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                        <a href="https://github.com/mugubr/django_base/issues" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-bug"></i> {% trans "Report Issues" %}
+                        </a>
+                        <a href="https://github.com/mugubr/django_base/fork" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-diagram-2"></i> {% trans "Fork Repository" %}
+                        </a>
+                        <a href="https://github.com/mugubr/django_base/stargazers" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-star"></i> {% trans "Star on GitHub" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {# Contributing Card / Card de Contribuição #}
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-heart"></i> {% trans "Contributing" %}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-3">
+                        {% trans "Contributions are welcome! See CONTRIBUTING.md for guidelines:" %}
+                    </p>
+                    <ol>
+                        <li>{% trans "Fork the repository" %}</li>
+                        <li>{% trans "Create a feature branch" %}</li>
+                        <li>{% trans "Make your changes with tests" %}</li>
+                        <li>{% trans "Run linting and formatting" %} (<code>make check</code>)</li>
+                        <li>{% trans "Submit a Pull Request" %}</li>
+                    </ol>
+                    <p class="mb-0 mt-3">
+                        <strong>{% trans "Questions or suggestions?" %}</strong>
+                        {% trans "Feel free to open an issue on GitHub!" %}
+                    </p>
+                </div>
+            </div>
+
+            {# Back Button / Botão Voltar #}
+            <div class="text-center mt-4">
+                <a href="{% url 'home' %}" class="btn btn-outline-success">
+                    <i class="bi bi-arrow-left"></i> {% trans "Back to Portfolio" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
