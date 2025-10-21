@@ -1,0 +1,76 @@
+# Coverage.py Configuration
+# Configuração do Coverage.py
+#
+# This file configures coverage.py to track code coverage for tests.
+# Este arquivo configura o coverage.py para rastrear cobertura de código nos testes.
+
+[run]
+# Source code directory to measure coverage
+# Diretório de código fonte para medir cobertura
+source = src/
+
+# Files to include in coverage (only important files)
+# Arquivos a incluir na cobertura (apenas arquivos importantes)
+include =
+    src/*/models.py
+    src/*/views.py
+    src/*/viewsets.py
+    src/*/serializers.py
+    src/*/forms.py
+    src/*/validators.py
+    src/*/mixins.py
+    src/*/tasks.py
+    src/*/signals.py
+
+# Files to omit from coverage
+# Arquivos a omitir da cobertura
+omit =
+    */migrations/*
+    */tests/*
+    */test_*.py
+    */__init__.py
+    */admin.py
+    */apps.py
+    */urls.py
+    */wsgi.py
+    */asgi.py
+    */manage.py
+    */settings/*
+    */templatetags/*
+    */.venv/*
+    */venv/*
+    */env/*
+    src/core/mangement/commands/*.py
+    src/core/sitemaps.py
+    src/core/validators.py
+
+[report]
+# Show lines that weren't covered
+# Mostrar linhas que não foram cobertas
+show_missing = True
+
+# Number of decimal places for coverage percentage
+# Número de casas decimais para porcentagem de cobertura
+precision = 2
+
+# Skip files with no statements
+# Pular arquivos sem declarações
+skip_empty = True
+
+# Skip files that are 100% covered
+# Pular arquivos com 100% de cobertura
+skip_covered = False
+
+# Sort results by coverage percentage (ascending)
+# Ordenar resultados por porcentagem de cobertura (crescente)
+sort = Cover
+
+[html]
+# Directory for HTML coverage report
+# Diretório para relatório HTML de cobertura
+directory = htmlcov
+
+[xml]
+# Output file for XML coverage report (for CI/CD)
+# Arquivo de saída para relatório XML de cobertura (para CI/CD)
+output = coverage.xml

@@ -21,12 +21,13 @@ import logging
 from datetime import datetime
 
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_http_methods
 from drf_spectacular.utils import extend_schema
@@ -76,7 +77,7 @@ def home(request: HttpRequest) -> HttpResponse:
         "title": _("Welcome to Django Base"),
         "user": request.user,
     }
-    return render(request, "auth/home.html", context)
+    return render(request, "core/home.html", context)
 
 
 # Authentication Views / Views de Autenticação
@@ -164,7 +165,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
         form = LoginForm()
 
     context = {"form": form, "title": _("Login")}
-    return render(request, "auth/login.html", context)
+    return render(request, "registration/login.html", context)
 
 
 @require_http_methods(["GET", "POST"])
@@ -218,7 +219,7 @@ def register_view(request: HttpRequest) -> HttpResponse:
         form = RegisterForm()
 
     context = {"form": form, "title": _("Register")}
-    return render(request, "auth/register.html", context)
+    return render(request, "registration/register.html", context)
 
 
 @require_http_methods(["POST", "GET"])
@@ -288,7 +289,7 @@ def profile_view(request: HttpRequest) -> HttpResponse:
         "profile_form": profile_form,
         "title": _("My Profile"),
     }
-    return render(request, "auth/profile.html", context)
+    return render(request, "registration/profile.html", context)
 
 
 @require_http_methods(["GET"])
@@ -297,7 +298,7 @@ def health_check_page(request: HttpRequest) -> HttpResponse:
     Beautiful health check page for visual monitoring.
     Página bonita de health check para monitoramento visual.
     """
-    return render(request, "health/health_check.html", {"title": "Health Check"})
+    return render(request, "core/health_check.html", {"title": "Health Check"})
 
 
 def project_info_view(request: HttpRequest) -> HttpResponse:
@@ -319,7 +320,7 @@ def project_info_view(request: HttpRequest) -> HttpResponse:
         HttpResponse: Rendered project_info.html template / Template project_info.html renderizado
     """
     return render(
-        request, "auth/project_info.html", {"title": _("Project Information")}
+        request, "core/project_info.html", {"title": _("Project Information")}
     )
 
 
@@ -342,7 +343,7 @@ def products_view(request: HttpRequest) -> HttpResponse:
         HttpResponse: Rendered products.html template / Template products.html renderizado
     """
     products = (
-        Product.objects.filter(is_active=True)
+        Product.objects.filter(is_deleted=False)
         .select_related("category", "created_by")
         .prefetch_related("tags")
     )
@@ -363,9 +364,7 @@ def products_view(request: HttpRequest) -> HttpResponse:
     if max_price:
         products = products.filter(price__lte=max_price)
     if search_query:
-        products = products.filter(
-            Q(name__icontains=search_query) | Q(description__icontains=search_query)
-        )
+        products = products.filter(Q(name__icontains=search_query))
 
     # Pagination / Paginação
     from django.core.paginator import Paginator
@@ -376,11 +375,11 @@ def products_view(request: HttpRequest) -> HttpResponse:
 
     context = {
         "products": products_page,
-        "categories": Category.objects.filter(is_active=True),
+        "categories": Category.objects.filter(is_deleted=False),
         "tags": Tag.objects.all()[:10],
         "title": _("Products"),
     }
-    return render(request, "core/product/products.html", context)
+    return render(request, "core/products/list.html", context)
 
 
 # Health Check Endpoint
@@ -711,18 +710,22 @@ def api_info(request: Request) -> Response:
 
 
 @login_required
+@staff_member_required
 @require_http_methods(["GET", "POST"])
 def product_create_view(request: HttpRequest) -> HttpResponse:
-    """Product creation view / View de criação de produto"""
+    """
+    Product creation view - Admin only.
+    View de criação de produto - Apenas admin.
+    """
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
             product = form.save(commit=False)
             product.created_by = request.user
             product.save()
-            form.save_m2m()  # Save tags
+            form.save_m2m()
             messages.success(request, _("Product created successfully!"))
-            return redirect("products")  # Redirect to products page
+            return redirect("products")
         else:
             messages.error(request, _("Please correct the errors below."))
     else:
@@ -730,8 +733,39 @@ def product_create_view(request: HttpRequest) -> HttpResponse:
 
     return render(
         request,
-        "core/product/product_create.html",
+        "core/products/create.html",
         {"title": _("Create Product"), "form": form},
+    )
+
+
+@login_required
+@staff_member_required
+@require_http_methods(["GET", "POST"])
+def product_edit_view(request: HttpRequest, pk: int) -> HttpResponse:
+    """
+    Product edit view - Admin only.
+    View de edição de produto - Apenas admin.
+    """
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == "POST":
+        form = ProductForm(request.POST, instance=product)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.updated_by = request.user
+            product.save()
+            form.save_m2m()
+            messages.success(request, _("Product updated successfully!"))
+            return redirect("products")
+        else:
+            messages.error(request, _("Please correct the errors below."))
+    else:
+        form = ProductForm(instance=product)
+
+    return render(
+        request,
+        "core/products/edit.html",
+        {"title": _("Edit Product"), "form": form, "product": product},
     )
 
 

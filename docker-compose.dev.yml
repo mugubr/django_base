@@ -53,6 +53,9 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
+      # Django settings module for development
+      # Módulo de configurações do Django para desenvolvimento
+      - DJANGO_SETTINGS_MODULE=django_base.settings.dev
       # Force DEBUG mode in development (security: OK for dev only!)
       # Força modo DEBUG em desenvolvimento (segurança: OK apenas para dev!)
       - DEBUG=True

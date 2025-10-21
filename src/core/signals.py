@@ -180,8 +180,10 @@ def product_pre_save_handler(sender, instance, **kwargs):
 
                 # Track status changes
                 # Rastreia mudanças de status
-                if old_instance.is_active != instance.is_active:
-                    status_change = "activated" if instance.is_active else "deactivated"
+                if old_instance.is_deleted != instance.is_deleted:
+                    status_change = (
+                        "activated" if instance.is_deleted else "deactivated"
+                    )
                     logger.info(f"Product {instance.pk} {status_change}")
 
             except Product.DoesNotExist:
@@ -344,7 +346,7 @@ def update_search_index(sender, instance, created, **kwargs):
         #     meta={'id': instance.id},
         #     name=instance.name,
         #     price=float(instance.price),
-        #     is_active=instance.is_active,
+        #     is_deleted=instance.is_deleted,
         # )
         # document.save()
 
@@ -380,11 +382,11 @@ def product_post_delete_handler(sender, instance, **kwargs):
         **kwargs: Additional signal parameters
 
     Note:
-        In this project, we use soft delete (is_active=False) instead of
+        In this project, we use soft delete (is_deleted=False) instead of
         hard delete, so this signal rarely fires. It's here for completeness.
 
     Nota:
-        Neste projeto, usamos soft delete (is_active=False) ao invés de
+        Neste projeto, usamos soft delete (is_deleted=False) ao invés de
         hard delete, então este sinal raramente dispara. Está
         aqui por completude.
     """

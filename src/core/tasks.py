@@ -236,7 +236,7 @@ def send_product_update_notification(
 
 
 def bulk_update_product_status(
-    product_ids: list[int], is_active: bool
+    product_ids: list[int], is_deleted: bool
 ) -> dict[str, Any]:
     """
     Background task to update multiple products' active status.
@@ -247,19 +247,19 @@ def bulk_update_product_status(
 
     Args:
         product_ids (list): List of product IDs to update
-        is_active (bool): New active status
+        is_deleted (bool): New active status
 
     Returns:
         dict: Execution result with count of updated products
     """
     logger.info(f"Starting bulk update for {len(product_ids)} products")
-    logger.info(f"Setting is_active={is_active}")
+    logger.info(f"Setting is_deleted={is_deleted}")
 
     try:
         # Update products in bulk (efficient single query)
         # Atualiza produtos em massa (query única eficiente)
         updated_count = Product.objects.filter(id__in=product_ids).update(
-            is_active=is_active
+            is_deleted=is_deleted
         )
 
         logger.info(f"Successfully updated {updated_count} products")
@@ -269,7 +269,7 @@ def bulk_update_product_status(
             "message": f"Updated {updated_count} products",
             "updated_count": updated_count,
             "product_ids": product_ids,
-            "is_active": is_active,
+            "is_deleted": is_deleted,
         }
 
     except Exception as e:
@@ -304,7 +304,7 @@ def calculate_product_statistics() -> dict[str, Any]:
 
         stats = Product.objects.aggregate(
             total_products=Count("id"),
-            active_products=Count("id", filter=models.Q(is_active=True)),
+            active_products=Count("id", filter=models.Q(is_deleted=True)),
             average_price=Avg("price"),
             min_price=Min("price"),
             max_price=Max("price"),

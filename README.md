@@ -29,21 +29,48 @@ maintainability, and professional deployment.
 
 #### Core Technologies
 
-- **Web Server:** Nginx (with rate limiting, gzip, security headers)
-- **Application Server:** Gunicorn (multi-worker WSGI)
-- **Backend:** Django 5.2+, Django REST Framework
-- **Database:** PostgreSQL 15 (with connection pooling)
-- **Cache & Queue:** Redis 7 (for caching, sessions, Django Q)
-- **Package Manager:** `uv` (blazing fast Python package manager)
-- **Background Tasks:** Django Q2 (`django-q2`)
-- **API Features:** CORS, DRF Spectacular (OpenAPI/Swagger), django-filter
-- **Containerization:** Docker & Docker Compose (multi-stage builds), Kubernetes
-- **Code Quality:** `Ruff` linter/formatter, `pre-commit` hooks, Bandit security
-- **Testing:** `django.test` with `coverage`
-- **Observability:** Prometheus & Grafana dashboards with exporters
-- **Configuration:** `python-decouple` with comprehensive `.env` support
-- **Development Tools:** `django-extensions`, `watchdog` for hot-reloading,
-  Makefile (60+ commands)
+- **Web Server:** [Nginx](https://nginx.org/en/docs/) (with rate limiting, gzip,
+  security headers)
+- **Application Server:** [Gunicorn](https://docs.gunicorn.org/) (multi-worker
+  WSGI)
+- **Backend:** [Django](https://docs.djangoproject.com/) 5.2+,
+  [Django REST Framework](https://www.django-rest-framework.org/)
+- **Database:** [PostgreSQL](https://www.postgresql.org/docs/) 15 (with
+  connection pooling)
+- **Cache & Queue:** [Redis](https://redis.io/docs/) 7 (for caching, sessions,
+  Django Q)
+- **Package Manager:** [uv](https://docs.astral.sh/uv/) (blazing fast Python
+  package manager)
+- **Background Tasks:** [Django Q2](https://django-q2.readthedocs.io/)
+  (`django-q2`)
+- **API Features:** [CORS](https://pypi.org/project/django-cors-headers/),
+  [DRF Spectacular](https://drf-spectacular.readthedocs.io/) (OpenAPI/Swagger),
+  [django-filter](https://django-filter.readthedocs.io/)
+- **Containerization:** [Docker](https://docs.docker.com/) &
+  [Docker Compose](https://docs.docker.com/compose/) (multi-stage builds),
+  [Kubernetes](https://kubernetes.io/docs/)
+- **Code Quality:** [Ruff](https://docs.astral.sh/ruff/) linter/formatter,
+  [pre-commit](https://pre-commit.com/) hooks,
+  [Bandit](https://bandit.readthedocs.io/) security
+- **Testing:**
+  [django.test](https://docs.djangoproject.com/en/stable/topics/testing/) with
+  [coverage](https://coverage.readthedocs.io/),
+  [Factory Boy](https://factoryboy.readthedocs.io/)
+- **Error Tracking:**
+  [Sentry](https://docs.sentry.io/platforms/python/integrations/django/) for
+  error monitoring and performance
+- **Observability:** [Prometheus](https://prometheus.io/docs/) &
+  [Grafana](https://grafana.com/docs/) dashboards with exporters
+- **Configuration:**
+  [python-decouple](https://pypi.org/project/python-decouple/) with
+  comprehensive `.env` support
+- **Development Tools:**
+  [django-extensions](https://django-extensions.readthedocs.io/),
+  [django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/),
+  [watchdog](https://python-watchdog.readthedocs.io/) for hot-reloading,
+  [Makefile](https://www.gnu.org/software/make/manual/make.html) (60+ commands)
+- **AI Assistant:** [Claude Code](https://docs.claude.com/claude-code)
+  integration with custom agents and MCP server
 
 ### ✨ Key Features
 
@@ -69,6 +96,26 @@ maintainability, and professional deployment.
   django-upgrade
 - ✅ **CI/CD Ready:** GitHub Actions pipeline with linting and tests
 - ✅ **Bilingual Documentation:** Full PT-BR/EN comments throughout codebase
+- ✅ **Query Optimization:** All ViewSets optimized with
+  select_related/prefetch_related
+- ✅ **Dark Mode Support:** Elegant dark/light theme toggle with localStorage
+  persistence
+- ✅ **Internationalization (i18n):** Multi-language support (EN/PT-BR) with
+  navbar language selector
+- ✅ **Template Reorganization:** Clean, organized template structure following
+  Django best practices
+- ✅ **Soft Delete Pattern:** All models use soft deletion with mixins for data
+  integrity
+- ✅ **Cross-Platform Setup:** Windows support with PowerShell (.ps1) and Batch
+  (.bat) scripts
+- ✅ **Enhanced Project Info Page:** Complete technology stack documentation
+  with links
+- ✅ **Error Tracking:** Sentry integration with traces and profiling
+- ✅ **Debug Toolbar:** django-debug-toolbar for development profiling
+- ✅ **Test Factories:** Factory Boy for realistic test data generation
+- ✅ **Integration Tests:** Complete API workflow testing
+- ✅ **Claude Code Integration:** Custom agents (Django Expert, Code Reviewer,
+  Backend Architect, Python Pro) + Memory MCP server
 
 #### Portfolio Features (Authentication & User Management)
 
@@ -142,22 +189,51 @@ logging.
 
 1. **Automated Setup (Recommended):**
 
+   **Linux/macOS:**
+
    ```bash
    # Clone the repo and enter the directory / Clone o repo e entre no diretório
    git clone <your-repository-url> && cd django_base
 
    # Run automated setup script / Execute o script de configuração automatizada
    ./setup.sh
-
-   # This automatically handles:
-   # - .env file creation
-   # - Docker build and startup
-   # - Database migrations
-   # - Superuser creation (admin/admin)
-   # - Database seeding
-   # - Translation compilation (PT-BR/EN)
-   # - Running tests with coverage
    ```
+
+   **Windows (PowerShell - Recommended):**
+
+   ```powershell
+   # Clone the repo and enter the directory / Clone o repo e entre no diretório
+   git clone <your-repository-url>
+   cd django_base
+
+   # Run automated setup script / Execute o script de configuração automatizada
+   .\setup.ps1
+   ```
+
+   **Windows (Command Prompt):**
+
+   ```cmd
+   # Clone the repo and enter the directory / Clone o repo e entre no diretório
+   git clone <your-repository-url>
+   cd django_base
+
+   # Run automated setup script / Execute o script de configuração automatizada
+   setup.bat
+   ```
+
+   **This automatically handles:**
+   - .env file creation
+   - Docker build and startup
+   - Database migrations
+   - Superuser creation (admin/admin)
+   - Database seeding
+   - Translation compilation (PT-BR/EN)
+   - Running tests with coverage
+
+   **Available options / Opções disponíveis:**
+   - `--quick` or `-Quick`: Skip tests and pre-commit (faster setup)
+   - `--skip-build` or `-SkipBuild`: Skip Docker build (use if images exist)
+   - `--help` or `-Help`: Show all available options
 
 2. **Manual Setup (Alternative):**
 
@@ -209,6 +285,8 @@ security hardening.
 
 1. **Automated Setup (Recommended):**
 
+   **Linux/macOS:**
+
    ```bash
    # Configure .env for production first!
    # Configure .env para produção primeiro!
@@ -218,18 +296,43 @@ security hardening.
 
    # Run automated production setup / Execute o script de configuração de produção
    ./setup-prod.sh
-   # or / ou
-   make setup-prod
-
-   # This automatically handles:
-   # - Environment validation (DEBUG, SECRET_KEY, etc.)
-   # - Docker build and startup
-   # - Database migrations
-   # - Static files collection
-   # - Translation compilation
-   # - Health checks
-   # - Security checklist reminder
    ```
+
+   **Windows (PowerShell - Recommended):**
+
+   ```powershell
+   # Configure .env for production first!
+   Copy-Item .env.example .env
+   # Edit .env: Set DEBUG=False, strong SECRET_KEY, ALLOWED_HOSTS, etc.
+
+   # Run automated production setup / Execute o script de configuração de produção
+   .\setup-prod.ps1
+   ```
+
+   **Windows (Command Prompt):**
+
+   ```cmd
+   # Configure .env for production first!
+   copy .env.example .env
+   # Edit .env: Set DEBUG=False, strong SECRET_KEY, ALLOWED_HOSTS, etc.
+
+   # Run automated production setup / Execute o script de configuração automatizada
+   setup-prod.bat
+   ```
+
+   **This automatically handles:**
+   - Environment validation (DEBUG, SECRET_KEY, etc.)
+   - Docker build and startup
+   - Database migrations
+   - Static files collection
+   - Translation compilation
+   - Health checks
+   - Security checklist reminder
+
+   **Available options / Opções disponíveis:**
+   - `--skip-build` or `-SkipBuild`: Skip Docker build (use if images exist)
+   - `--no-static` or `-NoStatic`: Skip collecting static files
+   - `--help` or `-Help`: Show all available options
 
 2. **Manual Setup (Alternative):**
 
@@ -611,17 +714,41 @@ Kubernetes cluster.
 
 **Automated Setup (Recommended):**
 
+**Linux/macOS:**
+
 ```bash
 # Development setup (builds image + deploys)
 ./setup-k8s.sh
-# or
-make setup-k8s
 
 # Production setup (builds image + deploys)
 ./setup-k8s.sh --prod
-# or
-make setup-k8s-prod
 ```
+
+**Windows (PowerShell - Recommended):**
+
+```powershell
+# Development setup (builds image + deploys)
+.\setup-k8s.ps1
+
+# Production setup (builds image + deploys)
+.\setup-k8s.ps1 -Prod
+```
+
+**Windows (Command Prompt):**
+
+```cmd
+# Development setup (builds image + deploys)
+setup-k8s.bat
+
+# Production setup (builds image + deploys)
+setup-k8s.bat --prod
+```
+
+**Available options / Opções disponíveis:**
+
+- `--skip-build` or `-SkipBuild`: Skip Docker image build
+- `--skip-deploy` or `-SkipDeploy`: Only build image, don't deploy
+- `--help` or `-Help`: Show all available options
 
 **Manual Deployment:**
 
@@ -811,6 +938,49 @@ Pre-configured community dashboards you can import:
 - If no data is shown, check that `/metrics/metrics` endpoint is accessible
 - You can create custom panels by clicking **Add panel** on any dashboard
 - Export your customized dashboards as JSON for backup
+
+---
+
+### 🤖 Claude Code Integration
+
+This project includes comprehensive
+[Claude Code](https://docs.claude.com/claude-code) configuration for AI-assisted
+development.
+
+#### Features
+
+- **Custom Agents**: 4 specialized agents (Django Expert, Code Reviewer, Backend
+  Architect, Python Pro)
+- **Memory MCP Server**: Persistent context across sessions
+- **Token Optimization**: Configured for maximum efficiency
+- **Bilingual Support**: All agents understand PT-BR/EN project standards
+
+#### Quick Start
+
+```bash
+# Claude Code is pre-configured in .claude/
+# View configuration:
+cat .claude/README.md
+cat .claude/context.md
+
+# Available agents in .claude/agents/:
+# - django-expert.md - Django/DRF specialist
+# - code-reviewer.md - Code quality and security
+# - backend-architect.md - System architecture
+# - python-pro.md - Python optimization
+```
+
+#### Usage Examples
+
+```bash
+# In Claude Code conversation:
+"Use django-expert to create a new API endpoint"
+"Use code-reviewer to check my changes"
+"Use backend-architect to design the caching strategy"
+```
+
+**Documentation**: See [`.claude/README.md`](.claude/README.md) for complete
+guide.
 
 ---
 
@@ -1087,22 +1257,47 @@ para escalabilidade, manutenibilidade e deploy profissional.
 
 #### Tecnologias Principais
 
-- **Servidor Web:** Nginx (com rate limiting, gzip, headers de segurança)
-- **Servidor de Aplicação:** Gunicorn (WSGI multi-worker)
-- **Backend:** Django 5.2+, Django REST Framework
-- **Banco de Dados:** PostgreSQL 15 (com connection pooling)
-- **Cache & Fila:** Redis 7 (para cache, sessões, Django Q)
-- **Gerenciador de Pacotes:** `uv` (gerenciador de pacotes Python ultrarrápido)
-- **Tarefas em Background:** Django Q2 (`django-q2`)
-- **Recursos API:** CORS, DRF Spectacular (OpenAPI/Swagger), django-filter
-- **Containerização:** Docker & Docker Compose (builds multi-stage), Kubernetes
-- **Qualidade de Código:** `Ruff` linter/formatter, `pre-commit` hooks,
-  segurança Bandit
-- **Testes:** `django.test` com `coverage`
-- **Observabilidade:** Dashboards Prometheus & Grafana com exporters
-- **Configuração:** `python-decouple` com suporte abrangente a `.env`
-- **Ferramentas de Desenvolvimento:** `django-extensions`, `watchdog` para
-  hot-reloading, Makefile (60+ comandos)
+- **Servidor Web:** [Nginx](https://nginx.org/en/docs/) (com rate limiting,
+  gzip, headers de segurança)
+- **Servidor de Aplicação:** [Gunicorn](https://docs.gunicorn.org/) (WSGI
+  multi-worker)
+- **Backend:** [Django](https://docs.djangoproject.com/) 5.2+,
+  [Django REST Framework](https://www.django-rest-framework.org/)
+- **Banco de Dados:** [PostgreSQL](https://www.postgresql.org/docs/) 15 (com
+  connection pooling)
+- **Cache & Fila:** [Redis](https://redis.io/docs/) 7 (para cache, sessões,
+  Django Q)
+- **Gerenciador de Pacotes:** [uv](https://docs.astral.sh/uv/) (gerenciador de
+  pacotes Python ultrarrápido)
+- **Tarefas em Background:** [Django Q2](https://django-q2.readthedocs.io/)
+  (`django-q2`)
+- **Recursos API:** [CORS](https://pypi.org/project/django-cors-headers/),
+  [DRF Spectacular](https://drf-spectacular.readthedocs.io/) (OpenAPI/Swagger),
+  [django-filter](https://django-filter.readthedocs.io/)
+- **Containerização:** [Docker](https://docs.docker.com/) &
+  [Docker Compose](https://docs.docker.com/compose/) (builds multi-stage),
+  [Kubernetes](https://kubernetes.io/docs/)
+- **Qualidade de Código:** [Ruff](https://docs.astral.sh/ruff/)
+  linter/formatter, [pre-commit](https://pre-commit.com/) hooks,
+  [Bandit](https://bandit.readthedocs.io/) segurança
+- **Testes:**
+  [django.test](https://docs.djangoproject.com/en/stable/topics/testing/) com
+  [coverage](https://coverage.readthedocs.io/),
+  [Factory Boy](https://factoryboy.readthedocs.io/)
+- **Rastreamento de Erros:**
+  [Sentry](https://docs.sentry.io/platforms/python/integrations/django/) para
+  monitoramento de erros e performance
+- **Observabilidade:** [Prometheus](https://prometheus.io/docs/) &
+  [Grafana](https://grafana.com/docs/) dashboards com exporters
+- **Configuração:** [python-decouple](https://pypi.org/project/python-decouple/)
+  com suporte abrangente a `.env`
+- **Ferramentas de Desenvolvimento:**
+  [django-extensions](https://django-extensions.readthedocs.io/),
+  [django-debug-toolbar](https://django-debug-toolbar.readthedocs.io/),
+  [watchdog](https://python-watchdog.readthedocs.io/) para hot-reloading,
+  [Makefile](https://www.gnu.org/software/make/manual/make.html) (60+ comandos)
+- **Assistente IA:** [Claude Code](https://docs.claude.com/claude-code)
+  integração com agentes customizados e servidor MCP
 
 ### ✨ Funcionalidades Principais
 
@@ -1130,6 +1325,27 @@ para escalabilidade, manutenibilidade e deploy profissional.
   django-upgrade
 - ✅ **CI/CD Pronto:** Pipeline GitHub Actions com linting e testes
 - ✅ **Documentação Bilíngue:** Comentários completos PT-BR/EN em todo o código
+- ✅ **Otimização de Queries:** Todos os ViewSets otimizados com
+  select_related/prefetch_related
+- ✅ **Suporte a Dark Mode:** Toggle elegante de tema claro/escuro com
+  persistência em localStorage
+- ✅ **Internacionalização (i18n):** Suporte multi-idioma (EN/PT-BR) com seletor
+  de idioma na navbar
+- ✅ **Reorganização de Templates:** Estrutura de templates limpa e organizada
+  seguindo melhores práticas Django
+- ✅ **Padrão Soft Delete:** Todos os modelos usam exclusão suave com mixins
+  para integridade de dados
+- ✅ **Setup Multi-Plataforma:** Suporte Windows com scripts PowerShell (.ps1) e
+  Batch (.bat)
+- ✅ **Página Info Aprimorada:** Documentação completa da stack tecnológica com
+  links
+- ✅ **Rastreamento de Erros:** Integração Sentry com traces e profiling
+- ✅ **Debug Toolbar:** django-debug-toolbar para profiling em desenvolvimento
+- ✅ **Factories de Teste:** Factory Boy para geração de dados de teste
+  realistas
+- ✅ **Testes de Integração:** Testes completos de fluxos de trabalho da API
+- ✅ **Integração Claude Code:** Agentes customizados (Django Expert, Code
+  Reviewer, Backend Architect, Python Pro) + servidor Memory MCP
 
 #### Recursos de Portfólio (Autenticação & Gerenciamento de Usuários)
 
@@ -1137,12 +1353,14 @@ para escalabilidade, manutenibilidade e deploy profissional.
   gerenciamento de perfil
 - ✅ **Perfis de Usuário:** Modelo de usuário estendido com avatar, bio,
   telefone, localização, website
-- ✅ **4 Formulários Customizados:** LoginForm com remember_me, RegisterForm com
-  validação, UserProfileForm, UserUpdateForm
+- ✅ **5 Formulários Customizados:** LoginForm com remember_me, RegisterForm com
+  validação, UserProfileForm, UserUpdateForm, ProductForm
 - ✅ **Templates Bootstrap 5:** UI responsiva com páginas home, login, registro,
-  perfil
+  perfil, listagem de produtos, criação de produtos
 - ✅ **Criação Automática de Perfil:** Signals do Django criam automaticamente
   UserProfile quando User é criado
+- ✅ **Gerenciamento de Produtos:** CRUD completo para produtos com filtragem
+  por categoria/tag
 
 #### Modelos de Dados & Relacionamentos
 
@@ -1206,23 +1424,52 @@ verboso.
 
 1. **Configuração Automatizada (Recomendado):**
 
+   **Linux/macOS:**
+
    ```bash
    # Clone o repositório e entre no diretório
    git clone <url-do-seu-repositorio> && cd django_base
 
    # Execute o script de configuração automatizada
    ./setup.sh
-
-   # Isso configura automaticamente:
-   # - Criação do arquivo .env
-   # - Build e inicialização do Docker
-   # - Migrações do banco de dados
-   # - Criação de superusuário (admin/admin)
-   # - Seed do banco de dados
-   # - Compilação de traduções
-   # - Instalação de pre-commit hooks
-   # - Execução de testes com coverage
    ```
+
+   **Windows (PowerShell - Recomendado):**
+
+   ```powershell
+   # Clone o repositório e entre no diretório
+   git clone <url-do-seu-repositorio>
+   cd django_base
+
+   # Execute o script de configuração automatizada
+   .\setup.ps1
+   ```
+
+   **Windows (Prompt de Comando):**
+
+   ```cmd
+   # Clone o repositório e entre no diretório
+   git clone <url-do-seu-repositorio>
+   cd django_base
+
+   # Execute o script de configuração automatizada
+   setup.bat
+   ```
+
+   **Isso configura automaticamente:**
+   - Criação do arquivo .env
+   - Build e inicialização do Docker
+   - Migrações do banco de dados
+   - Criação de superusuário (admin/admin)
+   - Seed do banco de dados
+   - Compilação de traduções (PT-BR/EN)
+   - Execução de testes com coverage
+
+   **Opções disponíveis:**
+   - `--quick` ou `-Quick`: Pular testes e pre-commit (setup mais rápido)
+   - `--skip-build` ou `-SkipBuild`: Pular build do Docker (use se as imagens já
+     existem)
+   - `--help` ou `-Help`: Mostrar todas as opções disponíveis
 
 2. **Configuração Manual (Alternativa):**
 
