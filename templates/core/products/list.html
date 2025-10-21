@@ -93,8 +93,8 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h5 class="card-title mb-0">{{ product.name }}</h5>
-                                {% if not product.is_active %}
-                                <span class="badge bg-secondary">{% trans "Inactive" %}</span>
+                                {% if product.is_deleted %}
+                                <span class="badge bg-danger">{% trans "Deleted" %}</span>
                                 {% endif %}
                             </div>
 
@@ -102,9 +102,9 @@
                                 <i class="bi bi-folder"></i> {{ product.category.name|default:"-" }}
                             </p>
 
-                            {% if product.description %}
-                            <p class="card-text small">{{ product.description|truncatewords:20 }}</p>
-                            {% endif %}
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-box-seam"></i> {% trans "Stock" %}: {{ product.stock }}
+                            </p>
 
                             <!-- Tags -->
                             {% if product.tags.all %}
@@ -131,6 +131,15 @@
                                 <small class="text-muted">
                                     <i class="bi bi-person"></i> {{ product.created_by.username }}
                                 </small>
+                            </div>
+                            {% endif %}
+
+                            <!-- Admin Actions -->
+                            {% if user.is_staff %}
+                            <div class="mt-3 d-grid gap-2">
+                                <a href="{% url 'product_edit' product.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i> {% trans "Edit" %}
+                                </a>
                             </div>
                             {% endif %}
                         </div>

@@ -27,70 +27,75 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
+from core.mixins import (
+    SoftDeleteModelMixin,
+    TimeStampedModelMixin,
+    UserTrackingModelMixin,
+)
+
 if TYPE_CHECKING:
     pass
 
 User = get_user_model()
 
 
-class Product(models.Model):
+class Product(TimeStampedModelMixin, SoftDeleteModelMixin, UserTrackingModelMixin):
     """
-    Represents a product in the system with complete
-    validation and business logic.
+    Represents a product in the system with complete validation and business logic.
+    Uses mixins for timestamp, soft delete, and user tracking functionality.
+
+    Mixins:
+        TimeStampedModelMixin: Provides created_at and updated_at fields
+        SoftDeleteModelMixin: Provides is_deleted, deleted_at, soft_delete(), restore()
+        UserTrackingModelMixin: Provides created_by and updated_by fields
 
     Fields:
-        name: Product name (max 100 characters, indexed)
-        price: Product price (decimal with 10 digits, 2 decimal places)
-        created_at: Timestamp when product was created (auto-generated)
-        updated_at: Timestamp when product was last updated (auto-updated)
-        is_active: Soft delete flag (allows "deleting" without removing
-        from DB)
+        name: Product name (max 200 characters, indexed, required)
+        price: Product price (decimal with 10 digits, 2 decimal places, required)
+        stock: Product stock quantity (integer, default 0)
+        category: ForeignKey to Category (optional)
+        tags: ManyToMany to Tag (optional)
 
-    Representa um produto no sistema com validação completa e lógica de
-    negócio.
+    Representa um produto no sistema com validação completa e lógica de negócio.
+    Usa mixins para timestamp, soft delete e rastreamento de usuário.
+
+    Mixins:
+        TimeStampedModelMixin: Fornece campos created_at e updated_at
+        SoftDeleteModelMixin: Fornece is_deleted, deleted_at, soft_delete(), restore()
+        UserTrackingModelMixin: Fornece campos created_by e updated_by
 
     Campos:
-        name: Nome do produto (máx 100 caracteres, indexado)
-        price: Preço do produto (decimal com 10 dígitos, 2 casas decimais)
-        created_at: Timestamp de quando o produto foi criado (auto-gerado)
-        updated_at: Timestamp da última atualização do
-        produto (auto-atualizado)
-        is_active: Flag de soft delete (permite "deletar" sem remover do BD)
+        name: Nome do produto (máx 200 caracteres, indexado, obrigatório)
+        price: Preço do produto (decimal com 10 dígitos, 2 casas decimais, obrigatório)
+        stock: Quantidade em estoque (inteiro, padrão 0)
+        category: ForeignKey para Category (opcional)
+        tags: ManyToMany para Tag (opcional)
     """
 
     # Database Fields / Campos do Banco de Dados
 
     name = models.CharField(
-        max_length=100,
-        db_index=True,  # Index for faster queries by name / Índice para consultas mais rápidas pelo nome
+        max_length=200,
+        db_index=True,
         verbose_name=_("Product Name"),
-        help_text=_("The name of the product (max 100 characters)"),
+        help_text=_(
+            "The name of the product (max 200 characters) / Nome do produto (máx 200 caracteres)"
+        ),
     )
 
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name=_("Price"),
-        help_text=_("Product price in currency units"),
+        help_text=_(
+            "Product price in currency units / Preço do produto em unidades monetárias"
+        ),
     )
 
-    created_at = models.DateTimeField(
-        auto_now_add=True,  # Automatically set when object is first created / Automaticamente definido quando o objeto é criado pela primeira vez
-        verbose_name=_("Created At"),
-        help_text=_("Timestamp when the product was created"),
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,  # Automatically updated on every save
-        verbose_name="Updated At",
-        help_text=_("Timestamp when the product was last updated"),
-    )
-
-    is_active = models.BooleanField(
-        default=True,
-        db_index=True,  # Index for filtering active/inactive products
-        verbose_name=_("Is Active"),
-        help_text=_("Indicates if the product is active"),
+    stock = models.IntegerField(
+        default=0,
+        verbose_name=_("Stock"),
+        help_text=_("Product stock quantity / Quantidade em estoque do produto"),
     )
 
     # Relationships / Relacionamentos
@@ -110,17 +115,7 @@ class Product(models.Model):
         blank=True,
         related_name="products",
         verbose_name=_("Tags"),
-        help_text=_("Product tagso"),
-    )
-
-    created_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="created_products",
-        verbose_name=_("Created by"),
-        help_text=_("User who created this product"),
+        help_text=_("Product tags / Tags do produto"),
     )
 
     # Meta Options / Opções Meta
@@ -138,12 +133,12 @@ class Product(models.Model):
         # Database indexes for query optimization
         # Índices de banco de dados para otimização de queries
         indexes = [
-            # Composite index for common query pattern: active products by
+            # Composite index for common query pattern: non-deleted products by
             # creation date
             # Índice composto para padrão comum de consulta: produtos
-            # ativos por data de criação
+            # não deletados por data de criação
             models.Index(
-                fields=["is_active", "-created_at"], name="active_created_idx"
+                fields=["is_deleted", "-created_at"], name="deleted_created_idx"
             ),
             # Index for searching products by name
             # Índice para busca de produtos por nome
@@ -151,12 +146,15 @@ class Product(models.Model):
             # Index for price-based queries
             # Índice para consultas baseadas em preço
             models.Index(fields=["price"], name="price_idx"),
+            # Index for stock queries
+            # Índice para consultas de estoque
+            models.Index(fields=["stock"], name="stock_idx"),
         ]
 
         # Permissions for fine-grained access control
         # Permissões para controle de acesso granular
         permissions = [
-            ("can_deactivate_product", "Can deactivate product"),
+            ("can_delete_product", "Can soft delete product"),
             ("can_set_special_price", "Can set special pricing"),
         ]
 
@@ -214,7 +212,22 @@ class Product(models.Model):
                 }
             )
 
-    def save(self, *args: Any, **kwargs: Any) -> None:  # noqa: DJ012
+        # Validate stock is non-negative / Valida se estoque não é negativo
+        if self.stock is not None and self.stock < 0:
+            raise ValidationError(
+                {"stock": "Stock cannot be negative. / Estoque não pode ser negativo."}
+            )
+
+        # Validate stock maximum / Valida máximo de estoque
+        if self.stock is not None and self.stock > 1000000:
+            raise ValidationError(
+                {
+                    "stock": "Stock cannot exceed 1,000,000 units. / "
+                    "Estoque não pode exceder 1.000.000 unidades."
+                }
+            )
+
+    def save(self, *args: Any, **kwargs: Any) -> None:
         """
         Override save to execute validation before saving.
         This ensures data integrity at the application level.
@@ -237,7 +250,7 @@ class Product(models.Model):
 
     # String Representations / Representações em String
 
-    def __str__(self) -> str:  # noqa: DJ012
+    def __str__(self) -> str:
         """
         Human-readable string representation used in Django admin and shell.
         Representação em string legível usada no admin Django e shell.
@@ -251,7 +264,7 @@ class Product(models.Model):
         """
         return (
             f"<Product id={self.id} name='{self.name}' "  # type: ignore
-            f"price={self.price} active={self.is_active}>"
+            f"price={self.price} deleted={self.is_deleted}>"
         )
 
     # Property Methods / Métodos de Propriedade
@@ -332,25 +345,8 @@ class Product(models.Model):
         self.price = (self.price - discount_amount).quantize(Decimal("0.01"))
         self.save()
 
-    def deactivate(self) -> None:
-        """
-        Soft delete: Mark product as inactive instead of
-        deleting from database.
-        This preserves data integrity and allows for recovery.
-
-        Soft delete: Marca produto como inativo ao invés de deletar do banco de dados.
-        Isso preserva integridade de dados e permite recuperação.
-        """
-        self.is_active = False
-        self.save(update_fields=["is_active", "updated_at"])
-
-    def activate(self) -> None:
-        """
-        Reactivate a previously deactivated product.
-        Reativa um produto previamente desativado.
-        """
-        self.is_active = True
-        self.save(update_fields=["is_active", "updated_at"])
+    # Note: deactivate() and activate() removed - use soft_delete() and restore() from SoftDeleteModelMixin
+    # Nota: deactivate() e activate() removidos - use soft_delete() e restore() do SoftDeleteModelMixin
 
     def duplicate(self) -> Product:
         """
@@ -366,7 +362,7 @@ class Product(models.Model):
         return Product(
             name=f"{self.name} (Copy)",
             price=self.price,
-            is_active=self.is_active,
+            is_deleted=self.is_deleted,
         )
 
     # Query Helpers / Auxiliares de Consulta
@@ -380,7 +376,7 @@ class Product(models.Model):
         Returns:
             QuerySet: Filtered queryset of active products
         """
-        return cls.objects.filter(is_active=True)
+        return cls.objects.filter(is_deleted=False)
 
     @classmethod
     def get_recent(cls, days: int = 7) -> QuerySet[Product]:
@@ -395,7 +391,7 @@ class Product(models.Model):
             QuerySet: Recent products
         """
         cutoff_date = timezone.now() - timedelta(days=days)
-        return cls.objects.filter(created_at__gte=cutoff_date, is_active=True)
+        return cls.objects.filter(created_at__gte=cutoff_date, is_deleted=False)
 
     @classmethod
     def get_price_range(
@@ -413,17 +409,19 @@ class Product(models.Model):
             QuerySet: Products in price range
         """
         return cls.objects.filter(
-            price__gte=min_price, price__lte=max_price, is_active=True
+            price__gte=min_price, price__lte=max_price, is_deleted=False
         )
 
 
 # User Profile Model / Modelo de Perfil de Usuário
 
 
-class UserProfile(models.Model):
+class UserProfile(TimeStampedModelMixin):
     """
     Extended user profile with additional information beyond default Django User.
     One-to-one relationship with Django User model - automatically created via signals.
+
+    Uses TimeStampedModelMixin for automatic timestamp management.
 
     Fields:
         user: OneToOne link to Django User (CASCADE delete)
@@ -435,11 +433,14 @@ class UserProfile(models.Model):
         country: Country name (max 100 chars, optional)
         website: Personal website URL (optional)
         is_verified: Verification status flag (default False)
-        created_at: Profile creation timestamp (auto-generated)
-        updated_at: Last update timestamp (auto-updated)
+
+    Mixins:
+        TimeStampedModelMixin: Provides created_at and updated_at fields
 
     Perfil de usuário estendido com informações adicionais além do User padrão do Django.
     Relacionamento um-para-um com modelo User do Django - criado automaticamente via signals.
+
+    Usa TimeStampedModelMixin para gerenciamento automático de timestamps.
 
     Campos:
         user: Link OneToOne para Django User (delete CASCADE)
@@ -451,8 +452,9 @@ class UserProfile(models.Model):
         country: Nome do país (máx 100 chars, opcional)
         website: URL do website pessoal (opcional)
         is_verified: Flag de status de verificação (padrão False)
-        created_at: Timestamp de criação do perfil (auto-gerado)
-        updated_at: Timestamp da última atualização (auto-atualizado)
+
+    Mixins:
+        TimeStampedModelMixin: Fornece campos created_at e updated_at
 
     Examples / Exemplos:
         # Access user's profile / Acessar perfil do usuário
@@ -541,18 +543,7 @@ class UserProfile(models.Model):
         help_text=_("Indicates if user is verified / Indica se usuário é verificado"),
     )
 
-    # Timestamps / Timestamps
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name=_("Created at"),
-        help_text=_("Profile creation date / Data de criação do perfil"),
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name=_("Updated at"),
-        help_text=_("Last update date / Data da última atualização"),
-    )
+    # Note: created_at, updated_at from TimeStampedModelMixin
 
     class Meta:
         verbose_name = _("User Profile")
@@ -631,31 +622,39 @@ class UserProfile(models.Model):
 # Category Model / Modelo de Categoria
 
 
-class Category(models.Model):
+class Category(TimeStampedModelMixin, SoftDeleteModelMixin, UserTrackingModelMixin):
     """
     Product category for organization and filtering with hierarchical structure.
     Self-referencing foreign key allows parent-child relationships (tree structure).
+
+    Uses mixins for timestamps, soft delete, and user tracking.
 
     Fields:
         name: Category name (max 100 chars, unique, required)
         slug: URL-friendly slug (auto-generated from name, unique)
         description: Optional description text
         parent: Self-referencing FK for parent category (CASCADE delete, optional)
-        is_active: Active status flag (default True)
-        created_at: Creation timestamp (auto-generated)
-        updated_at: Last update timestamp (auto-updated)
+
+    Mixins:
+        TimeStampedModelMixin: Provides created_at and updated_at fields
+        SoftDeleteModelMixin: Provides is_deleted, deleted_at, soft_delete(), restore()
+        UserTrackingModelMixin: Provides created_by and updated_by fields
 
     Categoria de produto para organização e filtragem com estrutura hierárquica.
     Chave estrangeira auto-referenciada permite relacionamentos pai-filho (estrutura de árvore).
+
+    Usa mixins para timestamps, soft delete e rastreamento de usuário.
 
     Campos:
         name: Nome da categoria (máx 100 chars, único, obrigatório)
         slug: Slug amigável para URL (auto-gerado do nome, único)
         description: Texto de descrição opcional
         parent: FK auto-referenciada para categoria pai (delete CASCADE, opcional)
-        is_active: Flag de status ativo (padrão True)
-        created_at: Timestamp de criação (auto-gerado)
-        updated_at: Timestamp da última atualização (auto-atualizado)
+
+    Mixins:
+        TimeStampedModelMixin: Fornece campos created_at e updated_at
+        SoftDeleteModelMixin: Fornece is_deleted, deleted_at, soft_delete(), restore()
+        UserTrackingModelMixin: Fornece campos created_by e updated_by
 
     Examples / Exemplos:
         # Create root category / Criar categoria raiz
@@ -711,23 +710,9 @@ class Category(models.Model):
         ),
     )
 
-    # Status fields / Campos de status
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name=_("Active"),
-        help_text=_("Active status / Status ativo"),
-    )
-
-    # Timestamps / Timestamps
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name=_("Created at"),
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name=_("Updated at"),
-    )
+    # Note: is_deleted, deleted_at from SoftDeleteModelMixin
+    # Note: created_at, updated_at from TimeStampedModelMixin
+    # Note: created_by, updated_by from UserTrackingModelMixin
 
     class Meta:
         verbose_name = _("Category")
@@ -736,7 +721,7 @@ class Category(models.Model):
         ordering = ["name"]
         # Add indexes for frequently filtered fields / Adiciona indexes para campos frequentemente filtrados
         indexes = [
-            models.Index(fields=["is_active"]),
+            models.Index(fields=["is_deleted"]),
             models.Index(fields=["parent"]),
         ]
 
@@ -764,13 +749,13 @@ class Category(models.Model):
     @property
     def product_count(self) -> int:
         """
-        Get count of products in this category.
-        Obtém contagem de produtos nesta categoria.
+        Get count of active (not deleted) products in this category.
+        Obtém contagem de produtos ativos (não deletados) nesta categoria.
 
         Returns / Retorna:
             int: Number of products
         """
-        return self.products.filter(is_active=True).count()
+        return self.products.filter(is_deleted=False).count()
 
     @property
     def is_root(self) -> bool:
@@ -816,25 +801,35 @@ class Category(models.Model):
 # Tag Model / Modelo de Tag
 
 
-class Tag(models.Model):
+class Tag(TimeStampedModelMixin, UserTrackingModelMixin):
     """
     Tag for flexible product labeling, filtering and search.
     Many-to-many relationship with products for flexible categorization.
+
+    Uses mixins for timestamps and user tracking.
 
     Fields:
         name: Tag name (max 50 chars, unique, required)
         slug: URL-friendly slug (auto-generated from name, unique)
         color: Hex color code for UI display (default #6c757d - Bootstrap secondary)
-        created_at: Creation timestamp (auto-generated)
+
+    Mixins:
+        TimeStampedModelMixin: Provides created_at and updated_at fields
+        UserTrackingModelMixin: Provides created_by and updated_by fields
 
     Tag para rotulagem flexível, filtragem e busca de produtos.
     Relacionamento muitos-para-muitos com produtos para categorização flexível.
+
+    Usa mixins para timestamps e rastreamento de usuário.
 
     Campos:
         name: Nome da tag (máx 50 chars, único, obrigatório)
         slug: Slug amigável para URL (auto-gerado do nome, único)
         color: Código de cor hex para exibição na UI (padrão #6c757d - Bootstrap secondary)
-        created_at: Timestamp de criação (auto-gerado)
+
+    Mixins:
+        TimeStampedModelMixin: Fornece campos created_at e updated_at
+        UserTrackingModelMixin: Fornece campos created_by e updated_by
 
     Examples / Exemplos:
         # Create tag / Criar tag
@@ -879,12 +874,8 @@ class Tag(models.Model):
         ),
     )
 
-    # Timestamp / Timestamp
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name=_("Created at"),
-        help_text=_("Tag creation date / Data de criação da tag"),
-    )
+    # Note: created_at, updated_at from TimeStampedModelMixin
+    # Note: created_by, updated_by from UserTrackingModelMixin
 
     class Meta:
         verbose_name = _("Tag")
@@ -924,7 +915,7 @@ class Tag(models.Model):
         Returns / Retorna:
             int: Number of products with this tag
         """
-        return self.products.filter(is_active=True).count()
+        return self.products.filter(is_deleted=False).count()
 
     @classmethod
     def get_popular(cls, limit: int = 10) -> QuerySet[Tag]:

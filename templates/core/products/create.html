@@ -1,0 +1,124 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Create Product" %} - Django Base{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-plus-circle"></i> {% trans "Create Product" %}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>{% trans "Error!" %}</strong> {% trans "Please correct the errors below." %}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endif %}
+
+                        {# Name field / Campo nome #}
+                        <div class="mb-3">
+                            <label for="{{ form.name.id_for_label }}" class="form-label">
+                                {{ form.name.label }} <span class="text-danger">*</span>
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.name.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">{{ form.name.help_text }}</small>
+                        </div>
+
+                        {# Price field / Campo preço #}
+                        <div class="mb-3">
+                            <label for="{{ form.price.id_for_label }}" class="form-label">
+                                {{ form.price.label }} <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                {{ form.price }}
+                            </div>
+                            {% if form.price.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.price.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">{{ form.price.help_text }}</small>
+                        </div>
+
+                        {# Stock field / Campo estoque #}
+                        <div class="mb-3">
+                            <label for="{{ form.stock.id_for_label }}" class="form-label">
+                                {{ form.stock.label }}
+                            </label>
+                            {{ form.stock }}
+                            {% if form.stock.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.stock.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">{% trans "Initial stock quantity" %}</small>
+                        </div>
+
+                        {# Category field / Campo categoria #}
+                        <div class="mb-3">
+                            <label for="{{ form.category.id_for_label }}" class="form-label">
+                                {{ form.category.label }}
+                            </label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.category.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">{{ form.category.help_text }}</small>
+                        </div>
+
+                        {# Tags field / Campo tags #}
+                        <div class="mb-3">
+                            <label for="{{ form.tags.id_for_label }}" class="form-label">
+                                {{ form.tags.label }}
+                            </label>
+                            {{ form.tags }}
+                            {% if form.tags.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.tags.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">
+                                {% trans "Hold Ctrl (Windows) or Cmd (Mac) to select multiple tags" %}
+                            </small>
+                        </div>
+
+                        {# Action buttons / Botões de ação #}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'products' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> {% trans "Cancel" %}
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> {% trans "Create Product" %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {# Additional info / Informações adicionais #}
+            <div class="mt-3">
+                <small class="text-muted">
+                    <span class="text-danger">*</span> {% trans "Required fields" %}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

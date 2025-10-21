@@ -464,13 +464,13 @@ class ActiveOnlyQuerySetMixin:
     Usage:
         class MyListView(ActiveOnlyQuerySetMixin, ListView):
             model = MyModel
-            active_field = 'is_active'  # Field name to filter by
+            active_field = 'is_deleted'  # Field name to filter by
 
     Attributes:
-        active_field: Name of the boolean field (default: 'is_active')
+        active_field: Name of the boolean field (default: 'is_deleted')
     """
 
-    active_field = "is_active"
+    active_field = "is_deleted"
 
     def get_queryset(self):
         queryset = super().get_queryset()

@@ -66,7 +66,7 @@ class ProductListSerializer(serializers.ModelSerializer):
         - id: Product unique identifier
         - name: Product name
         - price: Product price
-        - is_active: Active status
+        - is_deleted: Soft delete status
 
     Use Cases:
         - GET /api/v1/products/ (list view)
@@ -84,12 +84,12 @@ class ProductListSerializer(serializers.ModelSerializer):
 
         Attributes / Atributos:
             model: Product model class
-            fields: Minimal field set for list view (id, name, price, is_active)
+            fields: Minimal field set for list view (id, name, price, is_deleted)
             read_only_fields: Fields that cannot be modified (id)
         """
 
         model = Product
-        fields = ["id", "name", "price", "is_active"]
+        fields = ["id", "name", "price", "is_deleted"]
         read_only_fields = ["id"]
 
 
@@ -107,7 +107,7 @@ class ProductSerializer(serializers.ModelSerializer):
         - price: Product price (validated)
         - created_at: Creation timestamp (read-only)
         - updated_at: Last update timestamp (read-only)
-        - is_active: Active status
+        - is_deleted: Soft delete status
         - is_new: Computed field indicating if product is new (read-only)
         - formatted_price: Formatted price with currency (read-only)
         - age_in_days: Days since creation (read-only)
@@ -153,7 +153,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "formatted_price",  # Computed field / Campo computado
             "created_at",
             "updated_at",
-            "is_active",
+            "is_deleted",
             "is_new",  # Computed field / Campo computado
             "age_in_days",  # Computed field / Campo computado
         ]
@@ -442,12 +442,16 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         """
 
         model = Product
-        fields = ["name", "price", "is_active"]
+        fields = ["id", "name", "price", "stock", "category", "tags", "is_deleted"]
+        read_only_fields = ["id"]
         # All fields are required on creation / Todos os campos são obrigatórios na criação
         extra_kwargs = {
             "name": {"required": True},
             "price": {"required": True},
-            "is_active": {"required": False, "default": True},
+            "stock": {"required": False, "default": 0},
+            "category": {"required": False},
+            "tags": {"required": False},
+            "is_deleted": {"required": False, "default": False},
         }
 
 
@@ -480,12 +484,12 @@ class ProductUpdateSerializer(serializers.ModelSerializer):
         """
 
         model = Product
-        fields = ["name", "price", "is_active"]
+        fields = ["name", "price", "is_deleted"]
         # All fields optional for partial updates / Todos os campos opcionais para atualizações parciais
         extra_kwargs = {
             "name": {"required": False},
             "price": {"required": False},
-            "is_active": {"required": False},
+            "is_deleted": {"required": False},
         }
 
 
@@ -506,7 +510,7 @@ class CategorySerializer(serializers.ModelSerializer):
         - parent_name: Parent category name (read-only)
         - children_count: Number of child categories (read-only)
         - products_count: Number of products in category (read-only)
-        - is_active: Active status
+        - is_deleted: Soft delete status
     """
 
     parent_name = serializers.SerializerMethodField()
@@ -537,7 +541,7 @@ class CategorySerializer(serializers.ModelSerializer):
             "parent_name",
             "children_count",
             "products_count",
-            "is_active",
+            "is_deleted",
             "created_at",
             "updated_at",
         ]
@@ -583,7 +587,7 @@ class CategorySerializer(serializers.ModelSerializer):
         Returns / Retorna:
             int: Count of active products
         """
-        return obj.products.filter(is_active=True).count()
+        return obj.products.filter(is_deleted=False).count()
 
     def validate_parent(self, value):
         """
@@ -625,7 +629,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
         id: Category ID (read-only)
         name: Category name
         slug: URL-friendly slug (read-only)
-        is_active: Active status
+        is_deleted: Soft delete status
         products_count: Number of active products (computed)
     """
 
@@ -638,7 +642,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
         """
 
         model = Category
-        fields = ["id", "name", "slug", "is_active", "products_count"]
+        fields = ["id", "name", "slug", "is_deleted", "products_count"]
         read_only_fields = ["id", "slug"]
 
     @extend_schema_field(serializers.IntegerField)
@@ -647,7 +651,7 @@ class CategoryListSerializer(serializers.ModelSerializer):
         Returns count of active products.
         Retorna contagem de produtos ativos.
         """
-        return obj.products.filter(is_active=True).count()
+        return obj.products.filter(is_deleted=False).count()
 
 
 # Tag Serializers / Serializadores de Tag
@@ -702,7 +706,7 @@ class TagSerializer(serializers.ModelSerializer):
         Returns / Retorna:
             int: Count of active products
         """
-        return obj.products.filter(is_active=True).count()
+        return obj.products.filter(is_deleted=False).count()
 
     def validate_color(self, value):
         """

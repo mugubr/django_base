@@ -58,9 +58,10 @@ dependencies = [
     # Production Server / Servidor de Produção
     "gunicorn>=23.0.0", # WSGI HTTP server / Servidor HTTP WSGI
     "whitenoise>=6.11.0", # Static files serving / Servir arquivos estáticos
+    # Error Tracking / Rastreamento de Erros
+    "sentry-sdk[django]>=2.19.2", # Error tracking and performance / Rastreamento de erros e performance
     # Monitoring & Security / Monitoramento & Segurança
     "django-prometheus>=2.4.1", # Prometheus metrics / Métricas Prometheus
-    "sentry-sdk>=2.39.0", # Error tracking / Rastreamento de erros
     # Media & Files / Mídia & Arquivos
     "pillow>=11.3.0", # Image processing / Processamento de imagens
 ]
@@ -69,7 +70,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "coverage>=7.10.7",          # Code coverage / Cobertura de código
+    "django-debug-toolbar>=4.4.6", # Debug toolbar / Barra de debug
     "django-extensions>=4.1",    # Enhanced shell, runserver_plus / Shell melhorado
+    "factory-boy>=3.3.1",        # Test data factories / Fábricas de dados de teste
     "pre-commit>=4.3.0",         # Git hooks automation / Automação de hooks Git
     "ruff>=0.13.2",              # Fast linter & formatter / Linter e formatador rápido
     "watchdog>=6.0.0",           # File system monitoring / Monitoramento de arquivos
@@ -118,23 +121,24 @@ ignore = [
 # Configuração do Coverage.py
 [tool.coverage.run]
 source = ["src"]
+# Only include important files: models, views, viewsets, serializers, forms
+# Incluir apenas arquivos importantes: models, views, viewsets, serializers, forms
+include = [
+    "src/*/models.py",
+    "src/*/views.py",
+    "src/*/viewsets.py",
+    "src/*/serializers.py",
+    "src/*/forms.py",
+]
 omit = [
     "src/*/migrations/*",
     "src/*/tests/*",
-    "src/*/admin.py",
-    "src/django_base/*",
-    "src/*/apps.py",
-    "src/*/settings.py",
-    "src/*/wsgi.py",
-    "src/*/asgi.py",
-    "src/*/management/*",
-    "src/*/templatetags/*",
-    "src/*/__init__.py",
-    "manage.py",
 ]
 
 [tool.coverage.report]
 show_missing = true
+precision = 2
+skip_empty = true
 
 # Bandit Security Linter Configuration
 # Configuração do Linter de Segurança Bandit
@@ -169,6 +173,8 @@ exclude_files = "uv.lock|.*\\.svg$|package-lock\\.json|yarn\\.lock"
 dev = [
     "coverage>=7.10.7", # Code coverage / Cobertura de código
     "django-extensions>=4.1", # Enhanced shell, runserver_plus / Shell melhorado
+    "factory-boy>=3.3.3",
+    "faker>=37.11.0",
     "mypy>=1.18.2",
     "pre-commit>=4.3.0", # Git hooks automation / Automação de hooks Git
     "ruff>=0.13.2", # Fast linter & formatter / Linter e formatador rápido
@@ -177,7 +183,7 @@ dev = [
 ]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = false

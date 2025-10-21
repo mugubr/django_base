@@ -405,14 +405,14 @@ class ProductForm(forms.ModelForm):
 
     This form provides a complete interface for product management with:
     - Required fields: name, price
-    - Optional fields: category, tags, is_active
+    - Optional fields: category, tags, stock
     - Price validation (must be positive)
     - Bootstrap 5 styling for all fields
     - Bilingual labels and help texts (EN/PT-BR)
 
     Este formulário fornece uma interface completa para gerenciamento de produtos com:
     - Campos obrigatórios: name, price
-    - Campos opcionais: category, tags, is_active
+    - Campos opcionais: category, tags, stock
     - Validação de preço (deve ser positivo)
     - Estilização Bootstrap 5 para todos os campos
     - Labels e textos de ajuda bilíngues (EN/PT-BR)
@@ -433,20 +433,20 @@ class ProductForm(forms.ModelForm):
     Fields / Campos:
         name (str): Product name, required / Nome do produto, obrigatório
         price (Decimal): Product price, must be positive / Preço do produto, deve ser positivo
+        stock (int): Product stock quantity / Quantidade em estoque do produto
         category (FK): Optional category selection / Seleção de categoria opcional
         tags (M2M): Multiple tag selection / Seleção múltipla de tags
-        is_active (bool): Product visibility toggle / Alternância de visibilidade do produto
 
     Validation / Validação:
         - name: Required, max 200 chars / Obrigatório, máx 200 caracteres
         - price: Required, must be positive decimal / Obrigatório, decimal positivo
-        - category: Optional, filtered to active only / Opcional, filtrado apenas ativos
+        - stock: Optional, must be non-negative / Opcional, deve ser não-negativo
+        - category: Optional, filtered to non-deleted only / Opcional, filtrado apenas não-deletados
         - tags: Optional, multiple selection / Opcional, seleção múltipla
-        - is_active: Defaults to True / Padrão True
 
     Notes / Notas:
-        - Category queryset filtered to show only active categories
-        - Categoria queryset filtrado para mostrar apenas categorias ativas
+        - Category queryset filtered to show only non-deleted categories
+        - Categoria queryset filtrado para mostrar apenas categorias não-deletadas
         - Tags use Ctrl/Cmd for multiple selection
         - Tags usam Ctrl/Cmd para seleção múltipla
         - All widgets use Bootstrap CSS classes
@@ -457,7 +457,7 @@ class ProductForm(forms.ModelForm):
         """Meta configuration / Configuração Meta"""
 
         model = Product
-        fields = ["name", "price", "category", "tags", "is_active"]
+        fields = ["name", "price", "stock", "category", "tags"]
         widgets = {
             "name": forms.TextInput(
                 attrs={
@@ -475,6 +475,13 @@ class ProductForm(forms.ModelForm):
                     "required": True,
                 }
             ),
+            "stock": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "0",
+                    "min": "0",
+                }
+            ),
             "category": forms.Select(
                 attrs={
                     "class": "form-select",
@@ -486,21 +493,20 @@ class ProductForm(forms.ModelForm):
                     "size": "5",
                 }
             ),
-            "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
         labels = {
             "name": _("Name"),
             "price": _("Price"),
+            "stock": _("Stock"),
             "category": _("Category"),
             "tags": _("Tags"),
-            "is_active": _("Active"),
         }
         help_texts = {
             "name": _("Enter the product name"),
             "price": _("Enter the product price"),
+            "stock": _("Enter the stock quantity"),
             "category": _("Select a category (optional)"),
             "tags": _("Hold Ctrl/Cmd to select multiple tags"),
-            "is_active": _("Check to make product visible"),
         }
 
     def __init__(self, *args, **kwargs):
@@ -509,8 +515,8 @@ class ProductForm(forms.ModelForm):
         Inicializa formulário e define filtros de queryset.
         """
         super().__init__(*args, **kwargs)
-        # Only show active categories / Mostrar apenas categorias ativas
-        self.fields["category"].queryset = Category.objects.filter(is_active=True)
+        # Only show non-deleted categories / Mostrar apenas categorias não-deletadas
+        self.fields["category"].queryset = Category.objects.filter(is_deleted=False)
         self.fields["category"].required = False
 
     def clean_price(self):

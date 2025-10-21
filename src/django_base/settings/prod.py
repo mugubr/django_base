@@ -43,6 +43,9 @@ Usage / Uso:
 export DJANGO_SETTINGS_MODULE=django_base.settings.prod
 """
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from .base import *  # noqa: F403
 
 # Debug Mode / Modo Debug
@@ -310,18 +313,20 @@ TEMPLATES[0]["OPTIONS"]["loaders"] = [  # noqa: F405
 # Error Monitoring (Sentry Integration)
 # Monitoramento de Erros (Integração Sentry)
 
-# Uncomment and configure if using Sentry
-# Descomente e configure se usar Sentry
-# import sentry_sdk
-# from sentry_sdk.integrations.django import DjangoIntegration
-#
-# sentry_sdk.init(
-#     dsn=config("SENTRY_DSN", default=""),
-#     integrations=[DjangoIntegration()],
-#     traces_sample_rate=0.1,
-#     send_default_pii=False,
-#     environment=config("ENVIRONMENT", default="production"),
-# )
+SENTRY_DSN = config("SENTRY_DSN", default="")  # noqa: F405
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=config("SENTRY_TRACES_SAMPLE_RATE", default=0.1, cast=float),  # noqa: F405
+        profiles_sample_rate=config(  # noqa: F405
+            "SENTRY_PROFILES_SAMPLE_RATE", default=0.1, cast=float
+        ),
+        send_default_pii=False,
+        environment=config("ENVIRONMENT", default="production"),  # noqa: F405
+        release=config("SENTRY_RELEASE", default=None),  # noqa: F405
+    )
 
 # Django Q Configuration for Production
 # Configuração Django Q para Produção

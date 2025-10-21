@@ -1,3 +1,228 @@
+## [Unreleased] - 2025-01-20
+
+### Added - Development & Testing / Desenvolvimento & Testes
+
+- **Django Debug Toolbar:** Added django-debug-toolbar for development profiling
+  - **Django Debug Toolbar:** Adicionado django-debug-toolbar para profiling em
+    desenvolvimento
+  - Configured in `settings/dev.py` with middleware
+  - URL patterns for `__debug__/` in development
+  - Helps identify N+1 queries and slow database operations
+
+- **Query Optimization:** Optimized all DRF ViewSets with
+  select_related/prefetch_related
+  - **Otimização de Queries:** Otimizados todos ViewSets DRF com
+    select_related/prefetch_related
+  - ProductViewSet: `select_related('category', 'created_by', 'updated_by')` +
+    `prefetch_related('tags')`
+  - CategoryViewSet: `select_related('parent', 'created_by', 'updated_by')` +
+    `prefetch_related('children')`
+  - TagViewSet: `select_related('created_by')`
+  - UserProfileViewSet: `select_related('user')`
+  - Eliminates N+1 query problems
+
+- **Factory Boy Integration:** Test data factories for all models
+  - **Integração Factory Boy:** Fábricas de dados de teste para todos os modelos
+  - New file: `src/core/factories.py`
+  - Factories: UserFactory, UserProfileFactory, CategoryFactory, TagFactory,
+    ProductFactory
+  - Uses Faker with PT-BR and EN-US locales for realistic data
+  - Automatic relationship creation
+
+- **Integration Tests:** Complete API workflow testing
+  - **Testes de Integração:** Testes completos de fluxos de trabalho da API
+  - New directory: `src/core/tests/`
+  - ProductAPIIntegrationTest: Full CRUD + filtering workflows
+  - AuthenticationIntegrationTest: Registration → profile → update flows
+  - CategoryHierarchyIntegrationTest: Tree structure operations
+  - Uses Factory Boy for test data generation
+
+### Added - Monitoring & Error Tracking / Monitoramento & Rastreamento de Erros
+
+- **Sentry Integration:** Complete Sentry setup for error tracking and
+  performance monitoring
+  - **Integração Sentry:** Configuração completa Sentry para rastreamento de
+    erros e monitoramento de performance
+  - Added `sentry-sdk[django]>=2.19.2` dependency
+  - Configured in `settings/prod.py` with traces and profiles sampling
+  - Environment variables: `SENTRY_DSN`, `SENTRY_TRACES_SAMPLE_RATE`,
+    `SENTRY_PROFILES_SAMPLE_RATE`, `SENTRY_RELEASE`
+  - Only active in production when DSN is configured
+  - Supports release tracking and custom environments
+
+### Added - Claude Code Integration / Integração Claude Code
+
+- **Custom AI Agents:** 4 specialized agents for different development tasks
+  - **Agentes IA Customizados:** 4 agentes especializados para diferentes
+    tarefas de desenvolvimento
+  - Django Expert (`agents/django-expert.md`) - Django/DRF specialist
+  - Code Reviewer (`agents/code-reviewer.md`) - Quality and security review
+  - Backend Architect (`agents/backend-architect.md`) - System architecture
+  - Python Pro (`agents/python-pro.md`) - Python optimization
+  - Complete documentation in `.claude/README.md`
+
+- **Memory MCP Server:** Persistent context across sessions
+  - **Servidor Memory MCP:** Contexto persistente entre sessões
+  - Configuration in `.mcp.json`
+  - Reduces context repetition and improves continuity
+
+- **Token Optimization:** Optimized configuration for Claude Code
+  - **Otimização de Tokens:** Configuração otimizada para Claude Code
+  - Project context in `.claude/context.md`
+  - Simplified permissions in `.claude/settings.local.json`
+  - Status line with token monitoring
+
+### Changed - Documentation / Documentação
+
+- **Enhanced README:** Added direct links to all library and tool documentation
+  - **README Aprimorado:** Adicionados links diretos para documentação de todas
+    bibliotecas e ferramentas
+  - Links to Django, DRF, PostgreSQL, Redis, Docker, Kubernetes docs
+  - New Claude Code integration section
+  - Updated feature list with recent additions
+  - Cross-platform setup instructions (Linux/macOS/Windows)
+
+- **Cross-Platform Setup Scripts:** Complete Windows support for all setup
+  scripts
+  - **Scripts de Configuração Multi-Plataforma:** Suporte completo Windows para
+    todos scripts de configuração
+  - New files: `setup.ps1`, `setup.bat` (development)
+  - New files: `setup-prod.ps1`, `setup-prod.bat` (production)
+  - New files: `setup-k8s.ps1`, `setup-k8s.bat` (Kubernetes)
+  - PowerShell versions with colored output and better error handling
+  - Batch versions for Command Prompt compatibility
+  - All scripts support same flags as bash versions
+  - Updated README with platform-specific instructions
+
+### Fixed - Pre-commit & Code Quality / Correções Pre-commit & Qualidade de Código
+
+- **Pre-commit Claude Code Exclusions:** Fixed pre-commit formatting `.claude/`
+  configuration files
+  - **Exclusões Claude Code no Pre-commit:** Corrigido pre-commit formatando
+    arquivos de configuração `.claude/`
+  - Added `exclude: ^\.claude/` to all formatting hooks (Ruff, Prettier,
+    trailing-whitespace, etc.)
+  - Created `.prettierignore` file to explicitly exclude `.claude/` from
+    Prettier
+  - Updated `.gitignore` to ignore `.claude/settings.local.json` and
+    `.claude/todos/`
+  - Prevents accidental formatting of AI assistant configuration files
+
+- **Windows Batch Scripts Fixes:** Fixed syntax and encoding issues in batch
+  scripts
+  - **Correções Scripts Batch Windows:** Corrigidos problemas de sintaxe e
+    encoding em scripts batch
+  - Fixed `docker compose` command handling with proper quoting
+  - Removed accents to prevent encoding issues in Command Prompt
+  - Added `test-setup.bat` for system diagnostics
+  - Created `setup-quiet.bat` for minimal output (logs to setup.log)
+  - New file: `WINDOWS-SETUP.md` with complete Windows troubleshooting guide
+  - All batch scripts now work correctly on Windows 10/11
+  - **Added `makemigrations` step** to all setup scripts (was missing)
+  - All Windows scripts now match bash versions exactly
+
+- **Tests Directory Structure Fix:** Resolved test discovery conflicts
+  - **Correção da Estrutura do Diretório Tests:** Resolvido conflitos de
+    descoberta de testes
+  - Moved `tests.py` to `tests/test_models.py`
+  - Now using proper package structure: `src/core/tests/`
+  - Prevents ImportError during test discovery
+
+### Changed - Complete Model Refactoring / Refatoração Completa de Modelos
+
+- **All Models Refactored to Use Mixins:** Complete refactoring of all models
+  for consistency
+  - **Todos os Modelos Refatorados para Usar Mixins:** Refatoração completa de
+    todos modelos para consistência
+
+- **Product Model:**
+  - Now uses `TimeStampedModelMixin`, `SoftDeleteModelMixin`,
+    `UserTrackingMixin`
+  - Removed duplicate fields (created_at, updated_at, created_by)
+  - Added `stock` field (IntegerField, default=0)
+  - Added `updated_by` field (from UserTrackingMixin)
+  - Changed from `is_active` to `is_deleted` pattern (proper soft delete)
+  - Removed deprecated `deactivate()` and `activate()` methods
+  - Use `soft_delete()` and `restore()` instead
+  - Updated indexes: `is_active` → `is_deleted`
+  - Added `stock_idx` index for stock queries
+  - Updated permission: `can_deactivate_product` → `can_delete_product`
+
+- **Category Model:**
+  - Now uses `TimeStampedModelMixin`, `SoftDeleteModelMixin`,
+    `UserTrackingMixin`
+  - Removed duplicate fields (created_at, updated_at, is_active)
+  - Added `created_by`, `updated_by`, `deleted_at` fields
+  - Changed from `is_active` to `is_deleted` pattern
+  - Updated `product_count` property to filter by `is_deleted=False`
+  - Updated indexes to use `is_deleted`
+
+- **Tag Model:**
+  - Now uses `TimeStampedModelMixin`, `UserTrackingMixin`
+  - Removed duplicate `created_at` field
+  - Added `created_by`, `updated_by`, `updated_at` fields
+
+- **UserProfile Model:**
+  - Now uses `TimeStampedModelMixin`
+  - Removed duplicate `created_at`, `updated_at` fields
+  - Model structure unchanged (already had timestamps)
+
+- **Enhanced Product Validation:** Added comprehensive validation rules
+  - **Validação Aprimorada de Produto:** Adicionadas regras de validação
+    abrangentes
+  - Stock validation: cannot be negative, max 1,000,000 units
+  - Price validation: must be positive, max 9,999,999.99
+  - Name validation: minimum 3 characters, no empty/whitespace only
+
+- **Admin-Only Product Management:** Product create/edit restricted to staff
+  members
+  - **Gerenciamento de Produto Admin-Only:** Criação/edição de produto restrita
+    a staff
+  - `product_create_view` requires `@staff_member_required`
+  - New `product_edit_view` for editing (admin only)
+  - URL pattern: `/products/<pk>/edit/`
+  - Template: `product_edit.html` with product history info
+
+- **ProductForm Updates:** Updated form to reflect model changes
+  - **Atualizações ProductForm:** Formulário atualizado para refletir mudanças
+    no modelo
+  - Added `stock` field with validation
+  - Removed `is_active` field (now handled by soft delete)
+  - Fields: name, price, stock, category, tags
+
+- **Products Template Updates:** Updated UI for new model structure
+  - **Atualizações Template Products:** UI atualizada para nova estrutura do
+    modelo
+  - Shows stock quantity for each product
+  - Changed "Inactive" badge to "Deleted" badge
+  - Added "Edit" button for staff members only
+  - Edit button uses `{% if user.is_staff %}` conditional
+
+### Fixed - Code Quality / Qualidade de Código
+
+- **Removed Duplicate Dependency:** Removed duplicate sentry-sdk entry in
+  pyproject.toml
+  - **Removida Dependência Duplicada:** Removida entrada duplicada sentry-sdk em
+    pyproject.toml
+
+### Migration Required / Migração Necessária
+
+⚠️ **Important:** Run migrations after pulling these changes:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+⚠️ **Importante:** Execute migrations após baixar estas mudanças:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+---
+
 ## [1.2.0] - 2025-01-13
 
 This version focuses on infrastructure improvements, Kubernetes support,

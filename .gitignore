@@ -55,8 +55,9 @@ ehthumbs.db
 node_modules/
 
 # AI Assisted Documentation / Documentação assistida por AI
-.claude/
 .claude_context.md
+.claude/settings.local.json
+.claude/todos/
 generate_project_summary.py
 project_summary.txt
 FEATURES.md
