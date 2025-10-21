@@ -260,6 +260,7 @@ dev = [
 [package.dev-dependencies]
 dev = [
     { name = "coverage" },
+    { name = "django-debug-toolbar" },
     { name = "django-extensions" },
     { name = "factory-boy" },
     { name = "faker" },
@@ -304,6 +305,7 @@ provides-extras = ["dev"]
 [package.metadata.requires-dev]
 dev = [
     { name = "coverage", specifier = ">=7.10.7" },
+    { name = "django-debug-toolbar", specifier = ">=6.0.0" },
     { name = "django-extensions", specifier = ">=4.1" },
     { name = "factory-boy", specifier = ">=3.3.3" },
     { name = "faker", specifier = ">=37.11.0" },

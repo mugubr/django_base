@@ -127,12 +127,18 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
     # Django Debug Toolbar / Django Debug Toolbar
-    try:
-        import debug_toolbar
+    # Only load if debug_toolbar is in INSTALLED_APPS
+    # Só carrega se debug_toolbar estiver em INSTALLED_APPS
+    if "debug_toolbar" in settings.INSTALLED_APPS:
+        try:
+            import debug_toolbar
 
-        urlpatterns = [path("__debug__/", include(debug_toolbar.urls)), *urlpatterns]
-    except ImportError:
-        pass
+            urlpatterns = [
+                path("__debug__/", include(debug_toolbar.urls)),
+                *urlpatterns,
+            ]
+        except ImportError:
+            pass
 
 # Custom Error Handlers
 # Handlers de Erro Customizados

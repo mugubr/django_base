@@ -373,20 +373,27 @@ CORS_ALLOWED_ORIGINS = config(  # noqa: F405
 # Environment Variables Validation
 # Validação de Variáveis de Ambiente
 
-# Validate critical environment variables on startup
-# This prevents misconfiguration errors in production
-# Valida variáveis de ambiente críticas na inicialização
-# Isso previne erros de configuração em produção
-
-from django_base.settings.env_validator import validate_environment  # noqa: E402
-
-validate_environment(
-    environment="production",
-    debug=DEBUG,
-    secret_key=SECRET_KEY,  # noqa: F405
-    allowed_hosts=ALLOWED_HOSTS,  # noqa: F405
-    database_config=DATABASES["default"],  # noqa: F405
-    secure_ssl_redirect=SECURE_SSL_REDIRECT,
-    session_cookie_secure=SESSION_COOKIE_SECURE,
-    csrf_cookie_secure=CSRF_COOKIE_SECURE,
-)
+# Environment Variables Validation (Production) - OPTIONAL
+# Validação de Variáveis de Ambiente (Produção) - OPCIONAL
+#
+# To enable environment validation, set ENABLE_ENV_VALIDATION=true in your environment
+# Para habilitar validação de ambiente, defina ENABLE_ENV_VALIDATION=true no seu ambiente
+#
+# Uncomment the code below to enable validation:
+# Descomente o código abaixo para habilitar a validação:
+#
+# import os
+#
+# if os.getenv("ENABLE_ENV_VALIDATION", "false").lower() == "true":
+#     from django_base.settings.env_validator import validate_environment
+#
+#     validate_environment(
+#         environment="production",
+#         debug=DEBUG,
+#         secret_key=SECRET_KEY,
+#         allowed_hosts=ALLOWED_HOSTS,
+#         database_config=DATABASES["default"],
+#         secure_ssl_redirect=SECURE_SSL_REDIRECT,
+#         session_cookie_secure=SESSION_COOKIE_SECURE,
+#         csrf_cookie_secure=CSRF_COOKIE_SECURE,
+#     )

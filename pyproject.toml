@@ -172,6 +172,7 @@ exclude_files = "uv.lock|.*\\.svg$|package-lock\\.json|yarn\\.lock"
 [dependency-groups]
 dev = [
     "coverage>=7.10.7", # Code coverage / Cobertura de código
+    "django-debug-toolbar>=6.0.0",
     "django-extensions>=4.1", # Enhanced shell, runserver_plus / Shell melhorado
     "factory-boy>=3.3.3",
     "faker>=37.11.0",
