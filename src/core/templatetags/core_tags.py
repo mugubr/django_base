@@ -27,7 +27,7 @@ Filters (transform values):
     - get_item: Get dictionary item by key
     - multiply/divide: Math operations
     - initials: Extract initials from name
-    - active_badge: Bootstrap badge for active/inactive
+    - deleted_badge: Bootstrap badge for deleted/active
 
 Este módulo define tags e filtros customizados para templates Django.
 
@@ -54,7 +54,7 @@ Filtros (transformam valores):
     - get_item: Obtém item do dicionário por chave
     - multiply/divide: Operações matemáticas
     - initials: Extrai iniciais do nome
-    - active_badge: Badge Bootstrap para ativo/inativo
+    - deleted_badge: Badge Bootstrap para deletado/ativo
 
 Usage Examples:
     {% load core_tags %}
@@ -425,18 +425,18 @@ def initials(name):
 
 
 @register.filter
-def active_badge(is_active):
+def deleted_badge(is_deleted):
     """
-    Returns a Bootstrap badge for active/inactive status.
-    Retorna um badge Bootstrap para status ativo/inativo.
+    Returns a Bootstrap badge for deleted/active status.
+    Retorna um badge Bootstrap para status deletado/ativo.
 
     Usage:
         {% load core_tags %}
-        {{ product.is_active|active_badge }}
+        {{ product.is_deleted|deleted_badge }}
     """
-    if is_active:
-        return mark_safe('<span class="badge bg-success">Active</span>')
-    return mark_safe('<span class="badge bg-danger">Inactive</span>')
+    if is_deleted:
+        return mark_safe('<span class="badge bg-danger">Deleted</span>')
+    return mark_safe('<span class="badge bg-success">Active</span>')
 
 
 # Conditional Tags / Tags Condicionais

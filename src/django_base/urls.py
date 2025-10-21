@@ -51,6 +51,10 @@ urlpatterns = [
     # Django's built-in admin panel for content management
     # Painel administrativo integrado do Django para gerenciamento de conteúdo
     path("admin/", admin.site.urls),
+    # Internationalization (i18n) / Internacionalização (i18n)
+    # Language selection for multi-language support
+    # Seleção de idioma para suporte multi-idioma
+    path("i18n/", include("django.conf.urls.i18n")),
     # Health Check Endpoints
     # Endpoints de Health Check
     # Used by Docker, Kubernetes, load balancers to monitor application health
@@ -122,15 +126,19 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-    # Optional: Django Debug Toolbar (if installed)
-    # Opcional: Django Debug Toolbar (se instalado)
-    # try:
-    #     import debug_toolbar
-    #     urlpatterns = [
-    #         path('__debug__/', include(debug_toolbar.urls)),
-    #     ] + urlpatterns
-    # except ImportError:
-    #     pass
+    # Django Debug Toolbar / Django Debug Toolbar
+    # Only load if debug_toolbar is in INSTALLED_APPS
+    # Só carrega se debug_toolbar estiver em INSTALLED_APPS
+    if "debug_toolbar" in settings.INSTALLED_APPS:
+        try:
+            import debug_toolbar
+
+            urlpatterns = [
+                path("__debug__/", include(debug_toolbar.urls)),
+                *urlpatterns,
+            ]
+        except ImportError:
+            pass
 
 # Custom Error Handlers
 # Handlers de Erro Customizados

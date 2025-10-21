@@ -1,0 +1,38 @@
+# Prettier Ignore File
+# Arquivo de Ignore do Prettier
+
+# Claude Code configuration files
+# Arquivos de configuração do Claude Code
+.claude/
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+staticfiles/
+mediafiles/
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Version control
+.git/
+
+# IDE
+.vscode/
+.idea/
+
+# Coverage
+htmlcov/
+.coverage
+
+# Logs
+*.log

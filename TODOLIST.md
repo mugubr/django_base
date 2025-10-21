@@ -17,8 +17,9 @@
 
 ### Frontend / Interface
 
-- [ ] **HTMX Integration** - ✅ Quick Win - Add more dynamic content with HTMX.
-      / ✅ Vitória Rápida - Adicionar mais conteúdo dinâmico com HTMX.
+- [x] **HTMX Integration** - ✅ Quick Win - Add more dynamic content with HTMX.
+      (Completed) / ✅ Vitória Rápida - Adicionar mais conteúdo dinâmico com
+      HTMX. (Concluído)
 - [ ] **Dark Mode** - Implement a dark mode toggle for the UI. / Implementar um
       seletor de modo escuro para a UI.
 - [ ] **PWA Support** - Add Progressive Web App (PWA) support. / Adicionar
@@ -30,13 +31,14 @@
 
 ## ✅ Testing & Code Quality / Testes & Qualidade de Código
 
-- [ ] **Integration Tests** - 🔥 Critical - Add integration tests for API
-      workflows. / 🔥 Crítico - Adicionar testes de integração para fluxos de
-      trabalho da API.
+- [x] **Integration Tests** - 🔥 Critical - Add integration tests for API
+      workflows. (Completed) / 🔥 Crítico - Adicionar testes de integração para
+      fluxos de trabalho da API. (Concluído)
 - [ ] **Unit Tests** - Increase test coverage for serializers and forms. /
       Aumentar a cobertura de testes para serializers e formulários.
-- [ ] **Factory Boy** - Implement Factory Boy for test data generation. /
-      Implementar Factory Boy para geração de dados de teste.
+- [x] **Factory Boy** - Implement Factory Boy for test data generation.
+      (Completed) / Implementar Factory Boy para geração de dados de teste.
+      (Concluído)
 - [x] **Type Hints** - ✅ COMPLETED - Add comprehensive type hints to all Python
       files (models, views, serializers, forms, etc.). / ✅ CONCLUÍDO -
       Adicionar type hints abrangentes a todos os arquivos Python.
@@ -56,9 +58,9 @@
       Implementar logging estruturado (ex: python-json-logger).
 - [ ] **Log Aggregation** - Add ELK Stack or Loki for log aggregation. /
       Adicionar ELK Stack ou Loki para agregação de logs.
-- [ ] **Error Tracking** - 🔥 Critical - Complete Sentry integration with custom
-      context. / 🔥 Crítico - Completar a integração com Sentry com contexto
-      customizado.
+- [x] **Error Tracking** - 🔥 Critical - Complete Sentry integration with custom
+      context. (Completed) / 🔥 Crítico - Completar a integração com Sentry com
+      contexto customizado. (Concluído)
 - [ ] **Performance Monitoring** - Add APM (Sentry/New Relic). / Adicionar APM
       (Sentry/New Relic).
 - [ ] **Custom Metrics** - Add custom business metrics for Prometheus. /
@@ -70,9 +72,9 @@
 
 ## ⚡ Performance / Desempenho
 
-- [ ] **Query Optimization** - 🔥 Critical - Add `django-debug-toolbar` and
-      optimize queries. / 🔥 Crítico - Adicionar `django-debug-toolbar` e
-      otimizar queries.
+- [x] **Query Optimization** - 🔥 Critical - Add `django-debug-toolbar` and
+      optimize queries. (Completed) / 🔥 Crítico - Adicionar
+      `django-debug-toolbar` e otimizar queries. (Concluído)
 - [ ] **Database Indexes** - Review and optimize database indexes. / Revisar e
       otimizar índices do banco de dados.
 - [ ] **Caching** - Implement per-view, template fragment, and query result

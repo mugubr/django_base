@@ -33,14 +33,22 @@ class ProductAdmin(admin.ModelAdmin):
         "name",
         "price",
         "category",
-        "is_active",
-        "created_at",
+        "stock",
+        "is_deleted",
         "created_by",
+        "updated_by",
+        "created_at",
     )
-    list_filter = ("is_active", "category", "tags", "created_at")
+    list_filter = ("is_deleted", "category", "tags", "created_at")
     search_fields = ("name",)
     filter_horizontal = ("tags",)
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+        "deleted_at",
+        "created_by",
+        "updated_by",
+    )
 
     def get_urls(self):
         """
@@ -113,11 +121,17 @@ class CategoryAdmin(admin.ModelAdmin):
         - search_fields: Searches in name and description / Busca em nome e descrição
     """
 
-    list_display = ("name", "slug", "parent", "is_active", "created_at")
-    list_filter = ("is_active", "created_at")
+    list_display = ("name", "slug", "parent", "is_deleted", "created_by", "created_at")
+    list_filter = ("is_deleted", "created_at")
     search_fields = ("name", "description")
     prepopulated_fields = {"slug": ("name",)}
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+        "deleted_at",
+        "created_by",
+        "updated_by",
+    )
 
 
 @admin.register(Tag)
@@ -131,7 +145,7 @@ class TagAdmin(admin.ModelAdmin):
         - prepopulated_fields: Auto-generates slug / Auto-gera slug
     """
 
-    list_display = ("name", "slug", "color", "created_at")
+    list_display = ("name", "slug", "color", "created_by", "created_at")
     search_fields = ("name",)
     prepopulated_fields = {"slug": ("name",)}
-    readonly_fields = ("created_at",)
+    readonly_fields = ("created_at", "updated_at", "created_by", "updated_by")

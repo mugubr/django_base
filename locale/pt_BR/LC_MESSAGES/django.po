@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Django Base 1.2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-13 12:00+0000\n"
+"POT-Creation-Date: 2025-10-21 13:17-0300\n"
 "PO-Revision-Date: 2025-01-13 12:00+0000\n"
 "Last-Translator: Miguel de Freitas Muniz <miguimuniz@gmail.com>\n"
 "Language-Team: Portuguese (Brazil)\n"
@@ -17,740 +17,1425 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-# Forms - Login/Register/Profile
-msgid "Username"
-msgstr "Nome de usuário"
-
-msgid "Password"
-msgstr "Senha"
-
-msgid "Remember me"
-msgstr "Lembre-se de mim"
-
-msgid "Email"
-msgstr "E-mail"
-
-msgid "First Name"
-msgstr "Primeiro Nome"
-
-msgid "Last Name"
-msgstr "Sobrenome"
-
-msgid "Biography"
-msgstr "Biografia"
-
-msgid "Phone"
-msgstr "Celular"
-
-msgid "Birth date"
-msgstr "Data de nascimento"
-
-msgid "City"
-msgstr "Cidade"
-
-msgid "Country"
-msgstr "País"
-
-msgid "Website"
-msgstr "Site"
-
-msgid "Avatar"
-msgstr "Avatar"
-
-msgid "Verified"
-msgstr "Verificado"
-
-msgid "Active"
-msgstr "Ativo"
-
-msgid "Created at"
-msgstr "Criado em"
-
-msgid "Updated at"
-msgstr "Atualizado em"
-
-# Models
-msgid "User"
-msgstr "Usuário"
-
-msgid "User Profile"
-msgstr "Perfil do Usuário"
-
-msgid "User Profiles"
-msgstr "Perfis de Usuário"
-
-msgid "Categories"
-msgstr "Categorias"
-
-msgid "Parent category"
-msgstr "Categoria pai"
-
-msgid "Tag"
-msgstr "Tag"
-
-msgid "Name"
-msgstr "Nome"
-
-msgid "Slug"
-msgstr "Slug"
-
-msgid "Description"
-msgstr "Descrição"
-
-msgid "Color"
-msgstr "Cor"
-
-msgid "Product"
-msgstr "Produto"
-
-msgid "Products"
-msgstr "Produtos"
-
-msgid "Price"
-msgstr "Preço"
-
-msgid "Created by"
-msgstr "Criado por"
-
-# Messages
-msgid "Welcome back, {username}!"
-msgstr "Bem-vindo de volta, {username}!"
-
-msgid "Invalid username or password."
-msgstr "Nome de usuário ou senha inválidos."
-
-msgid "Please correct the errors below."
-msgstr "Por favor, corrija os erros abaixo."
-
-msgid "Account created successfully! Welcome, {username}!"
-msgstr "Conta criada com sucesso! Bem-vindo, {username}!"
-
-msgid "Goodbye, {username}!"
-msgstr "Até logo, {username}!"
-
-msgid "Profile updated successfully!"
-msgstr "Perfil atualizado com sucesso!"
-
-msgid "This email is already in use."
-msgstr "Este e-mail já está sendo utilizado."
-
-# Validation
-msgid "Tell us about yourself..."
-msgstr "Conte-nos sobre você..."
-
-msgid "+1 234 567 8900"
-msgstr "+55 61 98765-4321"
-
-msgid "https://example.com"
-msgstr "https://exemplo.com.br"
-
-# Admin
-msgid "User Info"
-msgstr "Informações do Usuário"
-
-msgid "Contact"
-msgstr "Contato"
-
-msgid "Location"
-msgstr "Local"
-
-msgid "Status"
-msgstr "Status"
-
-msgid "Timestamps"
-msgstr "Datas"
-
-# Common
-msgid "Home"
-msgstr "Início"
-
-msgid "Login"
-msgstr "Entrar"
-
-msgid "Register"
-msgstr "Registre-se"
-
-msgid "Logout"
-msgstr "Sair"
-
-msgid "Profile"
-msgstr "Perfil"
-
-msgid "Admin"
-msgstr "Admin"
-
-msgid "Welcome to Django Base"
-msgstr "Bem-vindo ao Django Base"
-
-msgid "Create Account"
-msgstr "Criar Conta"
-
-msgid "Join us today!"
-msgstr "Junte-se a nós!"
-
-msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-msgstr "Obrigatório. 150 caracteres ou menos. Apenas letras, dígitos e @/./+/-/_."
-
-msgid "Email Address"
-msgstr "Endereço de E-mail"
-
-msgid "We'll never share your email with anyone else."
-msgstr "Nunca compartilharemos seu e-mail com terceiros."
-
-msgid "Your password can't be too similar to your other personal information."
-msgstr "Sua senha não pode ser muito similar às suas outras informações pessoais."
-
-msgid "Your password must contain at least 8 characters."
-msgstr "Sua senha deve conter pelo menos 8 caracteres."
-
-msgid "Your password can't be a commonly used password."
-msgstr "Sua senha não pode ser uma senha comumente usada."
-
-msgid "Your password can't be entirely numeric."
-msgstr "Sua senha não pode ser inteiramente numérica."
-
-msgid "Confirm Password"
-msgstr "Confirmar Senha"
-
-msgid "Enter the same password as before, for verification."
-msgstr "Digite a mesma senha de antes, para verificação."
-
-msgid "I agree to the"
-msgstr "Eu concordo com os"
-
-msgid "Terms and Conditions"
-msgstr "Termos e Condições"
-
-msgid "Already have an account?"
-msgstr "Já tem uma conta?"
-
-msgid "Login here"
-msgstr "Faça login"
-
-msgid "My Profile"
-msgstr "Meu Perfil"
-
-msgid "Access your account"
-msgstr "Acesse sua conta"
-
+#: src/core/decorators.py:79 src/core/decorators.py:105
+#: src/core/decorators.py:131
+msgid "You must be logged in to access this page."
+msgstr "Você precisa estar logado para acessar esta página."
+
+#: src/core/decorators.py:83 src/core/mixins.py:256
+msgid "You must be an admin to access this page."
+msgstr "Você precisa ser um administrador para acessar esta página."
+
+#: src/core/decorators.py:109 src/core/mixins.py:274
+msgid "You must be a superuser to access this page."
+msgstr "Você precisa ser um superusuário para acessar esta página."
+
+#: src/core/decorators.py:138 src/core/mixins.py:296
+msgid ""
+"You must have a verified profile to access this page. Please complete your "
+"profile and wait for verification."
+msgstr ""
+"Você precisa ter um perfil verificado para acessar esta página. Por favor, "
+"complete seu perfil e aguarde a verificação."
+
+#: src/core/decorators.py:166
+msgid "You are already logged in."
+msgstr "Você já está logado."
+
+#: src/core/forms.py:74 templates/registration/login.html:39
 msgid "Username or Email"
 msgstr "Usuário ou E-mail"
 
-msgid "Enter your username or email address"
-msgstr "Digite seu nome de usuário ou endereço de e-mail"
-
-msgid "Remember me for 2 weeks"
-msgstr "Lembre-se de mim por 2 semanas"
-
-msgid "Forgot your password?"
-msgstr "Esqueceu sua senha?"
-
-msgid "Don't have an account?"
-msgstr "Não tem uma conta?"
-
-msgid "Register here"
-msgstr "Cadastre-se aqui"
-
-msgid "Your connection is secure. We never store your password in plain text."
-msgstr "Sua conexão é segura. Nunca armazenamos sua senha em texto simples."
-
-# Profile page - additional strings
-msgid "Basic Information"
-msgstr "Informações Básicas"
-
-msgid "Profile Details"
-msgstr "Detalhes do Perfil"
-
-msgid "Tell us about yourself"
-msgstr "Conte-nos sobre você"
-
-msgid "Profile Picture"
-msgstr "Foto de Perfil"
-
-msgid "Current"
-msgstr "Atual"
-
-msgid "View current avatar"
-msgstr "Ver avatar atual"
-
-msgid "Phone Number"
-msgstr "Número de Telefone"
-
-msgid "Birth Date"
-msgstr "Data de Nascimento"
-
-msgid "Save Changes"
-msgstr "Salvar Alterações"
-
-msgid "Cancel"
-msgstr "Cancelar"
-
-# Footer
-msgid "All rights reserved"
-msgstr "Todos os direitos reservados"
-
-# Home page - Features section
-msgid "Get Started"
-msgstr "Registre-se"
-
-msgid "Latest Django 5.2 with Django REST Framework for building robust APIs"
-msgstr "Django 5.2 com Django REST Framework para construir APIs robustas"
-
-msgid "Bootstrap 5.3 + HTMX for responsive, dynamic interfaces"
-msgstr "Bootstrap 5.3 + HTMX para interfaces responsivas e dinâmicas"
-
-msgid "Complete user authentication system with profiles"
-msgstr "Sistema completo de autenticação de usuário com perfis"
-
-# Home page - Dashboard section
-msgid "Your Dashboard"
-msgstr "Seu Dashboard"
-
-# Home page - Quick Links section
-msgid "Quick Links"
-msgstr "Links Úteis"
-
-msgid "Explore the API and documentation"
-msgstr "Explore a API e a documentação"
-
-msgid "API Documentation"
-msgstr "Documentação da API"
-
-msgid "Alternative API docs"
-msgstr "Documentação alternativa da API"
-
-msgid "System status"
-msgstr "Status do sistema"
-
-msgid "Edit Profile"
-msgstr "Editar Perfil"
-
-msgid "Features & Technologies"
-msgstr "Recursos & Tecnologias"
-
-msgid "Everything you need for a modern Django application"
-msgstr "Tudo que você precisa para uma aplicação Django moderna"
-
-msgid "Showing %(start)s to %(end)s of %(total)s items"
-msgstr "Mostrando %(start)s a %(end)s de %(total)s itens"
-
-
-msgid "Real-time system status and diagnostics"
-msgstr "Status do sistema e diagnósticos em tempo real"
-
-msgid "System Information"
-msgstr "Informações do Sistema"
-
-msgid "Auto-refresh every 30 seconds"
-msgstr "Atualização automática a cada 30 segundos"
-
-msgid "Version"
-msgstr "Versão"
-
-msgid "Environment"
-msgstr "Ambiente"
-
-msgid "Last Check"
-msgstr "Última Verificação"
-
-msgid "About Django Base"
-msgstr "Sobre o Django Base"
-
-msgid "A production-ready Django template"
-msgstr "Um template Django pronto para produção"
-
-msgid "Project Information"
-msgstr "Informações do Projeto"
-
-msgid "Technology Stack"
-msgstr "Tecnologias"
-
-msgid "Features"
-msgstr "Recursos"
-
-msgid "Authentication System"
-msgstr "Sistema de Autenticação"
-
-msgid "Pre-commit Hooks"
-msgstr "Hooks de Pre-commit"
-
-msgid "Developer"
-msgstr "Desenvolvedor"
-
-msgid "Full Stack Developer"
-msgstr "Desenvolvedor Full Stack"
-
-msgid "View GitHub Profile"
-msgstr "Ver Perfil no GitHub"
-
-msgid "This project was created as a production-ready Django template with best practices, modern tooling, and comprehensive documentation. Feel free to use it as a starting point for your own projects!"
-msgstr "Este projeto foi criado como um template Django pronto para produção com melhores práticas, ferramentas modernas e documentação abrangente. Sinta-se à vontade para usá-lo como ponto de partida para seus próprios projetos!"
-
-msgid "Repository"
-msgstr "Repositório"
-
-msgid "License"
-msgstr "Licença"
-
-msgid "Contributing"
-msgstr "Contribuindo"
-
-msgid "Contributions are welcome! If you'd like to improve this project, please:"
-msgstr "Contribuições são bem-vindas! Se você gostaria de melhorar este projeto, por favor:"
-
-msgid "Commit your changes"
-msgstr "Faça commit das suas mudanças"
-
-msgid "Push to the branch"
-msgstr "Faça push para a branch"
-
-msgid "Open a Pull Request"
-msgstr "Abra um Pull Request"
-
-msgid "Back to Home"
-msgstr "Voltar ao Início"
-
-msgid "1. Acceptance of Terms"
-msgstr "1. Aceite dos Termos"
-
-msgid "By accessing and using this Django Base template, you accept and agree to be bound by the terms and provision of this agreement."
-msgstr "Ao acessar e usar este template Django Base, você aceita e concorda em estar vinculado aos termos e provisões deste acordo."
-
-msgid "2. Use License"
-msgstr "2. Licença de Uso"
-
-msgid "This is an open-source template. Permission is granted to use, copy, modify, and distribute this software and its documentation for any purpose, provided that the above copyright notice and this permission notice appear in all copies."
-msgstr "Este é um template de código aberto. É concedida permissão para usar, copiar, modificar e distribuir este software e sua documentação para qualquer finalidade, desde que o aviso de copyright acima e este aviso de permissão apareçam em todas as cópias."
-
-msgid "3. Disclaimer"
-msgstr "3. Isenção de Responsabilidade"
-
-msgid "This template is provided 'as is' without warranty of any kind, express or implied. In no event shall the authors be liable for any claim, damages or other liability arising from the use of the software."
-msgstr "Este template é fornecido 'como está' sem garantia de qualquer tipo, expressa ou implícita. Em nenhum caso os autores serão responsáveis por qualquer reivindicação, danos ou outra responsabilidade decorrente do uso do software."
-
-msgid "4. Privacy"
-msgstr "4. Privacidade"
-
-msgid "We respect your privacy. Any personal information collected will be handled in accordance with applicable data protection laws."
-msgstr "Respeitamos sua privacidade. Qualquer informação pessoal coletada será tratada de acordo com as leis de proteção de dados aplicáveis."
-
-msgid "5. Modifications"
-msgstr "5. Modificações"
-
-msgid "We reserve the right to modify these terms at any time. Continued use of the template constitutes acceptance of modified terms."
-msgstr "Reservamo-nos o direito de modificar estes termos a qualquer momento. O uso continuado do template constitui aceitação dos termos modificados."
-
-msgid "Close"
-msgstr "Fechar"
-
-msgid "Swagger UI"
-msgstr "Swagger UI"
-
-msgid "ReDoc"
-msgstr "ReDoc"
-
-msgid "Health Check"
-msgstr "Verificação de Saúde do Sistema"
-
-msgid "Django & DRF"
-msgstr "Django & DRF"
-
-msgid "Docker Ready"
-msgstr "Dockerizado"
-
-msgid "PostgreSQL"
-msgstr "PostgreSQL"
-
-msgid "Redis Cache"
-msgstr "Cache Redis"
-
-msgid "Modern Frontend"
-msgstr "Frontend Moderno"
-
-msgid "Member Since"
-msgstr "Membro Desde"
-
-msgid "Joined"
-msgstr "Entrou em"
-
-msgid "System Health Check"
-msgstr "Verificação de Saúde do Sistema"
-
-msgid "Loading..."
-msgstr "Carregando..."
-
-msgid "System Healthy"
-msgstr "Sistema Saudável"
-
-msgid "System Issues Detected"
-msgstr "Problemas do Sistema Detectados"
-
-msgid "Unable to Fetch Status"
-msgstr "Não Foi Possível Obter o Status"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "ERROR"
-msgstr "ERRO"
-
-msgid "Product created successfully!"
-msgstr "Produto criado com sucesso!"
-
-msgid "Hold Ctrl/Cmd to select multiple tags"
-msgstr "Segure Ctrl/Cmd para selecionar múltiplas tags"
-
-# Portfolio / Home Page - New strings
-msgid "Portfolio"
-msgstr "Portfólio"
-
-msgid "Bio"
-msgstr "Biografia"
-
-msgid "About Me"
-msgstr "Sobre Mim"
-
-msgid "Featured Project"
-msgstr "Projeto em Destaque"
-
-msgid "A production-ready Django boilerplate with Docker, DRF, authentication system, and complete features. Includes REST API, JWT authentication, monitoring with Prometheus/Grafana, and bilingual documentation (EN/PT)."
-msgstr "Um boilerplate Django pronto para produção com Docker, DRF, sistema de autenticação e recursos completos. Inclui API REST, autenticação JWT, monitoramento com Prometheus/Grafana e documentação bilíngue (EN/PT)."
-
-msgid "Skills & Technologies"
-msgstr "Habilidades & Tecnologias"
-
-msgid "Backend"
-msgstr "Backend"
-
-msgid "DevOps & Tools"
-msgstr "DevOps & Ferramentas"
-
-msgid "Frontend"
-msgstr "Frontend"
-
-msgid "Best Practices"
-msgstr "Melhores Práticas"
-
-msgid "API Docs"
-msgstr "Docs da API"
-
-msgid "Metrics"
-msgstr "Métricas"
-
-msgid "Dashboards"
-msgstr "Painéis"
-
-msgid "Get in Touch"
-msgstr "Entre em Contato"
-
-msgid "Interested in collaborating or have questions? Feel free to reach out!"
-msgstr "Interessado em colaborar ou tem dúvidas? Sinta-se à vontade para entrar em contato!"
-
-msgid "View GitHub"
-msgstr "Ver GitHub"
-
-msgid "Send Email"
-msgstr "Enviar E-mail"
-
-# Project Info Page
-msgid "Django Base Project"
-msgstr "Projeto Django Base"
-
-msgid "Production-Ready Django Boilerplate"
-msgstr "Boilerplate Django Pronto para Produção"
-
-msgid "Django 5.2 with Django REST Framework for building robust APIs"
-msgstr "Django 5.2 com Django REST Framework para construir APIs robustas"
-
-msgid "Fully containerized with Docker Compose for easy development and deployment"
-msgstr "Totalmente containerizado com Docker Compose para desenvolvimento e deploy fáceis"
-
-msgid "Production-grade database with optimized configurations"
-msgstr "Banco de dados de nível de produção com configurações otimizadas"
-
-msgid "High-performance caching and session storage"
-msgstr "Cache de alta performance e armazenamento de sessão"
-
-msgid "JWT Authentication"
-msgstr "Autenticação JWT"
-
-msgid "Stateless authentication with refresh tokens and blacklisting"
-msgstr "Autenticação stateless com tokens de refresh e blacklisting"
-
-msgid "Monitoring"
-msgstr "Monitoramento"
-
-msgid "Prometheus metrics and Grafana dashboards for observability"
-msgstr "Métricas Prometheus e painéis Grafana para observabilidade"
-
-msgid "Architecture & Design Principles"
-msgstr "Arquitetura & Princípios de Design"
-
-msgid "Bilingual by Default"
-msgstr "Bilíngue por Padrão"
-
-msgid "All code, documentation, and templates are in English and Portuguese"
-msgstr "Todo código, documentação e templates estão em Inglês e Português"
-
-msgid "Security First"
-msgstr "Segurança em Primeiro Lugar"
-
-msgid "HSTS, secure cookies, rate limiting, JWT tokens, Bandit security analysis"
-msgstr "HSTS, cookies seguros, limitação de taxa, tokens JWT, análise de segurança Bandit"
-
-msgid "Developer Experience"
-msgstr "Experiência do Desenvolvedor"
-
-msgid "Automated setup script, pre-commit hooks, comprehensive documentation"
-msgstr "Script de configuração automatizado, hooks de pre-commit, documentação abrangente"
-
-msgid "Performance Optimized"
-msgstr "Otimizado para Performance"
-
-msgid "Redis caching, optimized queries, Gzip compression, database indexes"
-msgstr "Cache Redis, queries otimizadas, compressão Gzip, índices de banco de dados"
-
-msgid "Soft Deletion"
-msgstr "Exclusão Suave"
-
-msgid "Data never permanently deleted - maintains referential integrity"
-msgstr "Dados nunca são excluídos permanentemente - mantém integridade referencial"
-
-msgid "Key Components"
-msgstr "Componentes Principais"
-
-msgid "Models"
-msgstr "Modelos"
-
-msgid "API Endpoints"
-msgstr "Endpoints da API"
-
-msgid "Utilities"
-msgstr "Utilitários"
-
-msgid "Infrastructure"
-msgstr "Infraestrutura"
-
-msgid "Getting Started"
-msgstr "Começando"
-
-msgid "Clone and run the project in minutes:"
-msgstr "Clone e execute o projeto em minutos:"
-
-msgid "Automated setup"
-msgstr "Configuração automatizada"
-
-msgid "Access"
-msgstr "Acesso"
-
-msgid "The setup script handles everything: Docker setup, migrations, superuser creation, and database seeding."
-msgstr "O script de configuração cuida de tudo: configuração Docker, migrações, criação de superusuário e seed do banco de dados."
-
-msgid "Repository & License"
-msgstr "Repositório & Licença"
-
-msgid "Source Code"
-msgstr "Código Fonte"
-
-msgid "Free to use and modify"
-msgstr "Livre para usar e modificar"
-
-msgid "Report Issues"
-msgstr "Reportar Problemas"
-
-msgid "Fork Repository"
-msgstr "Fazer Fork do Repositório"
-
-msgid "Star on GitHub"
-msgstr "Dar Star no GitHub"
-
-msgid "Contributions are welcome! See CONTRIBUTING.md for guidelines:"
-msgstr "Contribuições são bem-vindas! Veja CONTRIBUTING.md para diretrizes:"
-
-msgid "Fork the repository"
-msgstr "Faça fork do repositório"
-
-msgid "Create a feature branch"
-msgstr "Crie uma branch de feature"
-
-msgid "Make your changes with tests"
-msgstr "Faça suas alterações com testes"
-
-msgid "Run linting and formatting"
-msgstr "Execute linting e formatação"
-
-msgid "Submit a Pull Request"
-msgstr "Envie um Pull Request"
-
-msgid "Questions or suggestions?"
-msgstr "Dúvidas ou sugestões?"
-
-msgid "Feel free to open an issue on GitHub!"
-msgstr "Sinta-se à vontade para abrir uma issue no GitHub!"
-
-msgid "Back to Portfolio"
-msgstr "Voltar ao Portfólio"
-
-msgid "Interactive demonstration of product management features"
-msgstr "Demonstração interativa dos recursos de gerenciamento de produtos"
-
-msgid "Create Product"
-msgstr "Criar Produto"
-
-msgid "Filters"
-msgstr "Filtros"
-
+#: src/core/forms.py:84 src/core/forms.py:193
+#: templates/registration/login.html:55 templates/registration/register.html:80
+msgid "Password"
+msgstr "Senha"
+
+#: src/core/forms.py:139 src/core/forms.py:369
+msgid "Email"
+msgstr "E-mail"
+
+#: src/core/forms.py:149 src/core/forms.py:361
+#: templates/registration/profile.html:126
+#: templates/registration/register.html:33
+msgid "First Name"
+msgstr "Primeiro Nome"
+
+#: src/core/forms.py:159 src/core/forms.py:365
+#: templates/registration/profile.html:139
+#: templates/registration/register.html:42
+msgid "Last Name"
+msgstr "Sobrenome"
+
+# Forms - Login/Register/Profile
+#: src/core/forms.py:179 templates/registration/register.html:54
+msgid "Username"
+msgstr "Nome de usuário"
+
+#: src/core/forms.py:196 templates/registration/register.html:99
+msgid "Confirm Password"
+msgstr "Confirmar Senha"
+
+#: src/core/forms.py:221
+#, fuzzy
+#| msgid "This email is already in use."
+msgid "This email is already registered."
+msgstr "Este e-mail já está sendo utilizado."
+
+# Validation
+#: src/core/forms.py:282
+msgid "Tell us about yourself..."
+msgstr "Conte-nos sobre você..."
+
+#: src/core/forms.py:289
+msgid "+1 234 567 8900"
+msgstr "+55 61 98765-4321"
+
+#: src/core/forms.py:297 src/core/models.py:521
+#: templates/registration/profile.html:235
+msgid "City"
+msgstr "Cidade"
+
+#: src/core/forms.py:301 src/core/models.py:528
+#: templates/registration/profile.html:248
+msgid "Country"
+msgstr "País"
+
+#: src/core/forms.py:396
+msgid "This email is already in use."
+msgstr "Este e-mail já está sendo utilizado."
+
+#: src/core/forms.py:465
+#, fuzzy
+#| msgid "Product"
+msgid "Product name"
+msgstr "Produto"
+
+#: src/core/forms.py:498 src/core/models.py:681 src/core/models.py:855
+#: templates/admin/product_datatable.html:18
+#: templates/core/products/create.html:31
+msgid "Name"
+msgstr "Nome"
+
+#: src/core/forms.py:499 src/core/models.py:89
+#: templates/admin/product_datatable.html:19
+#: templates/core/products/create.html:54
+msgid "Price"
+msgstr "Preço"
+
+#: src/core/forms.py:500 src/core/models.py:97
+#: templates/core/products/list.html:106
+msgid "Stock"
+msgstr "Estoque"
+
+#: src/core/forms.py:501 src/core/models.py:109 src/core/models.py:718
+#: templates/core/products/create.html:65 templates/core/products/list.html:37
 msgid "Category"
 msgstr "Categoria"
 
-msgid "All Categories"
-msgstr "Todas as Categorias"
-
+#: src/core/forms.py:502 src/core/models.py:117 src/core/models.py:882
+#: templates/core/products/create.html:77 templates/core/products/list.html:50
 msgid "Tags"
 msgstr "Tags"
 
-msgid "Price Range"
-msgstr "Faixa de Preço"
+#: src/core/forms.py:505
+msgid "Enter the product name"
+msgstr "Digite o nome do produto"
 
-msgid "Min"
-msgstr "Mín"
+#: src/core/forms.py:506
+msgid "Enter the product price"
+msgstr "Digite o preço do produto"
 
-msgid "Max"
-msgstr "Máx"
+#: src/core/forms.py:507
+msgid "Enter the stock quantity"
+msgstr "Digite a quantidade em estoque"
 
-msgid "Apply Filters"
-msgstr "Aplicar Filtros"
+#: src/core/forms.py:508
+msgid "Select a category (optional)"
+msgstr "Selecione uma categoria (opcional)"
 
-msgid "Clear"
-msgstr "Limpar"
+#: src/core/forms.py:509 templates/core/products/create.html:83
+msgid "Hold Ctrl/Cmd to select multiple tags"
+msgstr "Segure Ctrl/Cmd para selecionar múltiplas tags"
 
-msgid "Inactive"
-msgstr "Inativo"
+#: src/core/forms.py:529
+msgid "Price must be positive."
+msgstr "O preço deve ser positivo."
 
-msgid "No products found"
-msgstr "Nenhum produto encontrado"
+#: src/core/mixins.py:86
+#, fuzzy
+#| msgid "Created at"
+msgid "Created At"
+msgstr "Criado em"
+
+#: src/core/mixins.py:87
+msgid "Timestamp when the record was created"
+msgstr "Data e hora em que o registro foi criado"
+
+#: src/core/mixins.py:92
+#, fuzzy
+#| msgid "Updated at"
+msgid "Updated At"
+msgstr "Atualizado em"
+
+#: src/core/mixins.py:93
+msgid "Timestamp when the record was last updated"
+msgstr "Data e hora da última atualização do registro"
+
+#: src/core/mixins.py:126
+msgid "Is Deleted"
+msgstr "Está Deletado"
+
+#: src/core/mixins.py:127
+msgid "Indicates if the record is soft deleted"
+msgstr "Indica se o registro foi deletado (soft delete)"
+
+#: src/core/mixins.py:133
+#, fuzzy
+#| msgid "Created at"
+msgid "Deleted At"
+msgstr "Deletado em"
+
+#: src/core/mixins.py:134
+msgid "Timestamp when the record was deleted"
+msgstr "Data e hora em que o registro foi deletado"
+
+#: src/core/mixins.py:173
+#, fuzzy
+#| msgid "Created by"
+msgid "Created By"
+msgstr "Criado por"
+
+#: src/core/mixins.py:174
+msgid "User who created this record"
+msgstr "Usuário que criou este registro"
+
+#: src/core/mixins.py:183
+#, fuzzy
+#| msgid "Updated at"
+msgid "Updated By"
+msgstr "Atualizado por"
+
+#: src/core/mixins.py:184
+msgid "User who last updated this record"
+msgstr "Usuário que atualizou este registro pela última vez"
+
+#: src/core/mixins.py:210
+msgid "Is Published"
+msgstr "Está Publicado"
+
+#: src/core/mixins.py:211
+msgid "Indicates if the record is published"
+msgstr "Indica se o registro está publicado"
+
+#: src/core/mixins.py:217
+msgid "Published At"
+msgstr "Publicado em"
+
+#: src/core/mixins.py:218
+msgid "Timestamp when the record was published"
+msgstr "Data e hora em que o registro foi publicado"
+
+#: src/core/mixins.py:328
+msgid "You don't have permission to access this resource."
+msgstr "Você não tem permissão para acessar este recurso."
+
+#: src/core/models.py:80
+#, fuzzy
+#| msgid "Product"
+msgid "Product Name"
+msgstr "Produto"
+
+#: src/core/models.py:82
+msgid ""
+"The name of the product (max 200 characters) / Nome do produto (máx 200 "
+"caracteres)"
+msgstr "O nome do produto (máx 200 caracteres) / Nome do produto (máx 200 caracteres)"
+
+#: src/core/models.py:91
+msgid ""
+"Product price in currency units / Preço do produto em unidades monetárias"
+msgstr "Preço do produto em unidades monetárias / Preço do produto em unidades monetárias"
+
+#: src/core/models.py:98
+msgid "Product stock quantity / Quantidade em estoque do produto"
+msgstr "Quantidade em estoque do produto / Quantidade em estoque do produto"
+
+#: src/core/models.py:110
+#, fuzzy
+#| msgid "Parent category"
+msgid "Product category"
+msgstr "Categoria do produto"
+
+#: src/core/models.py:118
+msgid "Product tags / Tags do produto"
+msgstr "Tags do produto / Tags do produto"
+
+#: src/core/models.py:130
+msgid "Product"
+msgstr "Produto"
+
+#: src/core/models.py:131 src/core/views.py:380 templates/base/base.html:174
+#: templates/core/home.html:125 templates/core/products/list.html:4
+#: templates/core/products/list.html:13 templates/registration/profile.html:45
+msgid "Products"
+msgstr "Produtos"
+
+# Models
+#: src/core/models.py:479
+msgid "User"
+msgstr "Usuário"
+
+#: src/core/models.py:480
+msgid "Related Django user / Usuário Django relacionado"
+msgstr "Usuário Django relacionado / Usuário Django relacionado"
+
+#: src/core/models.py:487 templates/registration/profile.html:174
+msgid "Biography"
+msgstr "Biografia"
+
+#: src/core/models.py:489
+msgid "User biography (max 500 chars) / Biografia do usuário (máx 500 chars)"
+msgstr "Biografia do usuário (máx 500 caracteres) / Biografia do usuário (máx 500 chars)"
+
+#: src/core/models.py:497
+msgid "Avatar"
+msgstr "Avatar"
+
+#: src/core/models.py:498
+msgid "Profile picture / Foto de perfil"
+msgstr "Foto de perfil / Foto de perfil"
+
+#: src/core/models.py:504
+msgid "Phone"
+msgstr "Celular"
+
+#: src/core/models.py:506
+msgid "Phone number with country code / Número de telefone com código do país"
+msgstr "Número de telefone com código do país / Número de telefone com código do país"
+
+#: src/core/models.py:513
+msgid "Birth date"
+msgstr "Data de nascimento"
+
+#: src/core/models.py:514
+msgid "User's birth date / Data de nascimento do usuário"
+msgstr "Data de nascimento do usuário / Data de nascimento do usuário"
+
+#: src/core/models.py:522
+msgid "User's city / Cidade do usuário"
+msgstr "Cidade do usuário / Cidade do usuário"
+
+#: src/core/models.py:529
+msgid "User's country / País do usuário"
+msgstr "País do usuário / País do usuário"
+
+#: src/core/models.py:535 templates/registration/profile.html:87
+#: templates/registration/profile.html:262
+msgid "Website"
+msgstr "Site"
+
+#: src/core/models.py:536
+msgid "Personal website or portfolio / Website pessoal ou portfólio"
+msgstr "Website pessoal ou portfólio / Website pessoal ou portfólio"
+
+#: src/core/models.py:542 templates/registration/profile.html:34
+msgid "Verified"
+msgstr "Verificado"
+
+#: src/core/models.py:543
+msgid "Indicates if user is verified / Indica se usuário é verificado"
+msgstr "Indica se o usuário é verificado / Indica se usuário é verificado"
+
+#: src/core/models.py:549
+msgid "User Profile"
+msgstr "Perfil do Usuário"
+
+#: src/core/models.py:550
+msgid "User Profiles"
+msgstr "Perfis de Usuário"
+
+#: src/core/models.py:682
+msgid "Category name (unique) / Nome da categoria (único)"
+msgstr "Nome da categoria (único) / Nome da categoria (único)"
+
+#: src/core/models.py:688 src/core/models.py:862
+msgid "Slug"
+msgstr "Slug"
+
+#: src/core/models.py:690 src/core/models.py:864
+msgid ""
+"URL-friendly identifier (auto-generated) / Identificador amigável para URL "
+"(auto-gerado)"
+msgstr "Identificador amigável para URL (auto-gerado) / Identificador amigável para URL (auto-gerado)"
+
+#: src/core/models.py:696 templates/core/products/create.html:42
+msgid "Description"
+msgstr "Descrição"
+
+#: src/core/models.py:697
+msgid "Category description / Descrição da categoria"
+msgstr "Descrição da categoria / Descrição da categoria"
+
+#: src/core/models.py:707
+msgid "Parent category"
+msgstr "Categoria pai"
+
+#: src/core/models.py:709
+msgid ""
+"Parent category for hierarchical structure / Categoria pai para estrutura "
+"hierárquica"
+msgstr "Categoria pai para estrutura hierárquica / Categoria pai para estrutura hierárquica"
+
+#: src/core/models.py:719
+msgid "Categories"
+msgstr "Categorias"
+
+#: src/core/models.py:856
+msgid "Tag name (unique) / Nome da tag (único)"
+msgstr "Nome da tag (único) / Nome da tag (único)"
+
+#: src/core/models.py:871
+msgid "Color"
+msgstr "Cor"
+
+#: src/core/models.py:873
+msgid ""
+"Hex color code for badge display / Código de cor hex para exibição do badge"
+msgstr "Código de cor hexadecimal para exibição do badge / Código de cor hex para exibição do badge"
+
+#: src/core/models.py:881
+msgid "Tag"
+msgstr "Tag"
+
+#: src/core/validators.py:82
+msgid ""
+"Enter a valid phone number. Formats: +55 11 98765-4321, (11) 98765-4321, or "
+"11987654321"
+msgstr ""
+"Digite um número de telefone válido. Formatos: +55 11 98765-4321, (11) 98765-4321, "
+"ou 11987654321"
+
+#: src/core/validators.py:106
+msgid "Phone number must have between 10 and 15 digits."
+msgstr "O número de telefone deve ter entre 10 e 15 dígitos."
+
+#: src/core/validators.py:133
+msgid "Enter a valid CPF number."
+msgstr "Digite um número de CPF válido."
+
+#: src/core/validators.py:282
+msgid "Enter a valid YouTube URL."
+msgstr "Digite uma URL válida do YouTube."
+
+#: src/core/validators.py:308
+msgid "Date must be in the future."
+msgstr "A data deve ser no futuro."
+
+#: src/core/validators.py:331
+msgid "Date must be in the past."
+msgstr "A data deve ser no passado."
+
+#: src/core/validators.py:377
+msgid "Username can only contain letters, numbers, underscores, and hyphens."
+msgstr "O nome de usuário pode conter apenas letras, números, underscores e hífens."
+
+#: src/core/validators.py:385
+msgid "Slug can only contain lowercase letters, numbers, and hyphens."
+msgstr "O slug pode conter apenas letras minúsculas, números e hífens."
+
+#: src/core/validators.py:393
+msgid "Enter a valid hex color code (e.g., #FF5733)."
+msgstr "Digite um código de cor hexadecimal válido (ex: #FF5733)."
+
+#: src/core/views.py:77
+msgid "Welcome to Django Base"
+msgstr "Bem-vindo ao Django Base"
+
+# Messages
+#: src/core/views.py:153
+#, python-brace-format
+msgid "Welcome back, {username}!"
+msgstr "Bem-vindo de volta, {username}!"
+
+#: src/core/views.py:161
+msgid "Invalid username or password."
+msgstr "Nome de usuário ou senha inválidos."
+
+#: src/core/views.py:163 src/core/views.py:217 src/core/views.py:282
+#: src/core/views.py:730 src/core/views.py:761
+#: templates/core/products/edit.html:22
+msgid "Please correct the errors below."
+msgstr "Por favor, corrija os erros abaixo."
+
+#: src/core/views.py:167 templates/base/base.html:239
+#: templates/registration/login.html:16 templates/registration/login.html:77
+msgid "Login"
+msgstr "Entrar"
+
+#: src/core/views.py:210
+#, python-brace-format
+msgid "Account created successfully! Welcome, {username}!"
+msgstr "Conta criada com sucesso! Bem-vindo, {username}!"
+
+#: src/core/views.py:221 templates/base/base.html:242
+msgid "Register"
+msgstr "Registre-se"
+
+#: src/core/views.py:240
+#, python-brace-format
+msgid "Goodbye, {username}!"
+msgstr "Até logo, {username}!"
+
+#: src/core/views.py:279
+msgid "Profile updated successfully!"
+msgstr "Perfil atualizado com sucesso!"
+
+#: src/core/views.py:290
+msgid "My Profile"
+msgstr "Meu Perfil"
+
+#: src/core/views.py:323 templates/core/about.html:22
+#: templates/core/project_info.html:4
+msgid "Project Information"
+msgstr "Informações do Projeto"
+
+#: src/core/views.py:727
+msgid "Product created successfully!"
+msgstr "Produto criado com sucesso!"
+
+#: src/core/views.py:737 templates/core/products/create.html:13
+#: templates/core/products/create.html:100 templates/core/products/list.html:19
+msgid "Create Product"
+msgstr "Criar Produto"
+
+#: src/core/views.py:758
+#, fuzzy
+#| msgid "Product created successfully!"
+msgid "Product updated successfully!"
+msgstr "Produto criado com sucesso!"
+
+#: src/core/views.py:768 templates/core/products/edit.html:4
+#: templates/core/products/edit.html:13
+#, fuzzy
+#| msgid "Product"
+msgid "Edit Product"
+msgstr "Produto"
+
+#: templates/admin/product_datatable.html:20
+#: templates/core/products/edit.html:107
+msgid "Created at"
+msgstr "Criado em"
+
+# Common
+#: templates/base/base.html:164
+msgid "Home"
+msgstr "Início"
 
 # Navigation
+#: templates/base/base.html:169
 msgid "Project"
 msgstr "Projeto"
 
-msgid "Examples"
-msgstr "Produtos"
+#: templates/base/base.html:179 templates/core/project_info.html:103
+#: templates/core/project_info.html:187
+msgid "Monitoring"
+msgstr "Monitoramento"
 
-msgid "API Authentication"
-msgstr "Autenticação da API"
+#: templates/base/base.html:182
+msgid "Health Check"
+msgstr "Verificação de Saúde do Sistema"
 
-msgid "For API access, use JWT tokens. See documentation:"
-msgstr "Para acesso à API, use tokens JWT. Veja a documentação:"
+#: templates/base/base.html:186 templates/base/base.html:187
+#: templates/core/home.html:198
+msgid "API Docs"
+msgstr "Docs da API"
 
-msgid "Project Details"
-msgstr "Detalhes do Projeto"
+#: templates/base/base.html:231
+msgid "Profile"
+msgstr "Perfil"
 
-msgid "View on GitHub"
-msgstr "Ver no GitHub"
+#: templates/base/base.html:232
+msgid "Admin"
+msgstr "Admin"
 
+#: templates/base/base.html:234
+msgid "Logout"
+msgstr "Sair"
+
+# Footer
+#: templates/base/base.html:272
+msgid "All rights reserved"
+msgstr "Todos os direitos reservados"
+
+#: templates/base/base.html:273
 msgid "Project Info"
 msgstr "Info do Projeto"
 
+#: templates/base/base.html:275
 msgid "Terms"
 msgstr "Termos"
+
+#: templates/base/base.html:285 templates/registration/register.html:115
+#: templates/registration/register.html:144
+msgid "Terms and Conditions"
+msgstr "Termos e Condições"
+
+#: templates/base/base.html:289 templates/registration/register.html:148
+msgid "1. Acceptance of Terms"
+msgstr "1. Aceite dos Termos"
+
+#: templates/base/base.html:290 templates/registration/register.html:149
+msgid ""
+"By accessing and using this Django Base template, you accept and agree to be "
+"bound by the terms and provision of this agreement."
+msgstr ""
+"Ao acessar e usar este template Django Base, você aceita e concorda em estar "
+"vinculado aos termos e provisões deste acordo."
+
+#: templates/base/base.html:292 templates/registration/register.html:151
+msgid "2. Use License"
+msgstr "2. Licença de Uso"
+
+#: templates/base/base.html:293 templates/registration/register.html:152
+msgid ""
+"This is an open-source template. Permission is granted to use, copy, modify, "
+"and distribute this software and its documentation for any purpose, provided "
+"that the above copyright notice and this permission notice appear in all "
+"copies."
+msgstr ""
+"Este é um template de código aberto. É concedida permissão para usar, "
+"copiar, modificar e distribuir este software e sua documentação para "
+"qualquer finalidade, desde que o aviso de copyright acima e este aviso de "
+"permissão apareçam em todas as cópias."
+
+#: templates/base/base.html:295 templates/registration/register.html:154
+msgid "3. Disclaimer"
+msgstr "3. Isenção de Responsabilidade"
+
+#: templates/base/base.html:296 templates/registration/register.html:155
+msgid ""
+"This template is provided 'as is' without warranty of any kind, express or "
+"implied. In no event shall the authors be liable for any claim, damages or "
+"other liability arising from the use of the software."
+msgstr ""
+"Este template é fornecido 'como está' sem garantia de qualquer tipo, "
+"expressa ou implícita. Em nenhum caso os autores serão responsáveis por "
+"qualquer reivindicação, danos ou outra responsabilidade decorrente do uso do "
+"software."
+
+#: templates/base/base.html:298 templates/registration/register.html:157
+msgid "4. Privacy"
+msgstr "4. Privacidade"
+
+#: templates/base/base.html:299 templates/registration/register.html:158
+msgid ""
+"We respect your privacy. Any personal information collected will be handled "
+"in accordance with applicable data protection laws."
+msgstr ""
+"Respeitamos sua privacidade. Qualquer informação pessoal coletada será "
+"tratada de acordo com as leis de proteção de dados aplicáveis."
+
+#: templates/base/base.html:301 templates/registration/register.html:160
+msgid "5. Modifications"
+msgstr "5. Modificações"
+
+#: templates/base/base.html:302 templates/registration/register.html:161
+msgid ""
+"We reserve the right to modify these terms at any time. Continued use of the "
+"template constitutes acceptance of modified terms."
+msgstr ""
+"Reservamo-nos o direito de modificar estes termos a qualquer momento. O uso "
+"continuado do template constitui aceitação dos termos modificados."
+
+#: templates/base/base.html:305 templates/registration/register.html:164
+msgid "Close"
+msgstr "Fechar"
+
+#: templates/components/pagination.html:57
+#, python-format
+msgid "Showing %(start)s to %(end)s of %(total)s items"
+msgstr "Mostrando %(start)s a %(end)s de %(total)s itens"
+
+#: templates/core/about.html:4
+#, fuzzy
+#| msgid "About Me"
+msgid "About"
+msgstr "Sobre Mim"
+
+#: templates/core/about.html:13
+msgid "About Django Base"
+msgstr "Sobre o Django Base"
+
+#: templates/core/about.html:15
+msgid "A production-ready Django template"
+msgstr "Um template Django pronto para produção"
+
+#: templates/core/about.html:27
+msgid "Technology Stack"
+msgstr "Tecnologias"
+
+#: templates/core/about.html:37
+msgid "Features"
+msgstr "Recursos"
+
+#: templates/core/about.html:39
+msgid "REST API with DRF"
+msgstr "API REST com DRF"
+
+#: templates/core/about.html:40
+msgid "Authentication System"
+msgstr "Sistema de Autenticação"
+
+#: templates/core/about.html:41
+msgid "Monitoring & Observability"
+msgstr "Monitoramento & Observabilidade"
+
+#: templates/core/about.html:42
+msgid "Pre-commit Hooks"
+msgstr "Hooks de Pre-commit"
+
+#: templates/core/about.html:43
+msgid "Internationalization (i18n)"
+msgstr "Internacionalização (i18n)"
+
+#: templates/core/about.html:53
+msgid "Developer"
+msgstr "Desenvolvedor"
+
+#: templates/core/about.html:60
+msgid "Full Stack Developer"
+msgstr "Desenvolvedor Full Stack"
+
+#: templates/core/about.html:62
+msgid "View GitHub Profile"
+msgstr "Ver Perfil no GitHub"
+
+#: templates/core/about.html:68
+msgid ""
+"This project was created as a production-ready Django template with best "
+"practices, modern tooling, and comprehensive documentation. Feel free to use "
+"it as a starting point for your own projects!"
+msgstr ""
+"Este projeto foi criado como um template Django pronto para produção com "
+"melhores práticas, ferramentas modernas e documentação abrangente. Sinta-se "
+"à vontade para usá-lo como ponto de partida para seus próprios projetos!"
+
+#: templates/core/about.html:76
+msgid "Repository"
+msgstr "Repositório"
+
+#: templates/core/about.html:81 templates/core/project_info.html:284
+msgid "Source Code"
+msgstr "Código Fonte"
+
+#: templates/core/about.html:87 templates/core/project_info.html:290
+msgid "License"
+msgstr "Licença"
+
+#: templates/core/about.html:91 templates/core/project_info.html:294
+msgid "Free to use and modify"
+msgstr "Livre para usar e modificar"
+
+#: templates/core/about.html:98 templates/core/project_info.html:301
+msgid "Report Issues"
+msgstr "Reportar Problemas"
+
+#: templates/core/about.html:101 templates/core/project_info.html:304
+msgid "Fork Repository"
+msgstr "Fazer Fork do Repositório"
+
+#: templates/core/about.html:104 templates/core/project_info.html:307
+msgid "Star on GitHub"
+msgstr "Dar Star no GitHub"
+
+#: templates/core/about.html:113 templates/core/project_info.html:316
+msgid "Contributing"
+msgstr "Contribuindo"
+
+#: templates/core/about.html:117
+msgid ""
+"Contributions are welcome! If you'd like to improve this project, please:"
+msgstr ""
+"Contribuições são bem-vindas! Se você gostaria de melhorar este projeto, por "
+"favor:"
+
+#: templates/core/about.html:120 templates/core/project_info.html:323
+msgid "Fork the repository"
+msgstr "Faça fork do repositório"
+
+#: templates/core/about.html:121 templates/core/project_info.html:324
+msgid "Create a feature branch"
+msgstr "Crie uma branch de feature"
+
+#: templates/core/about.html:122
+msgid "Commit your changes"
+msgstr "Faça commit das suas mudanças"
+
+#: templates/core/about.html:123
+msgid "Push to the branch"
+msgstr "Faça push para a branch"
+
+#: templates/core/about.html:124
+msgid "Open a Pull Request"
+msgstr "Abra um Pull Request"
+
+#: templates/core/about.html:127 templates/core/project_info.html:330
+msgid "Questions or suggestions?"
+msgstr "Dúvidas ou sugestões?"
+
+#: templates/core/about.html:128 templates/core/project_info.html:331
+msgid "Feel free to open an issue on GitHub!"
+msgstr "Sinta-se à vontade para abrir uma issue no GitHub!"
+
+#: templates/core/about.html:136
+msgid "Back to Home"
+msgstr "Voltar ao Início"
+
+#: templates/core/health_check.html:30
+msgid "System Health Check"
+msgstr "Verificação de Saúde do Sistema"
+
+#: templates/core/health_check.html:31
+msgid "Real-time system status and diagnostics"
+msgstr "Status do sistema e diagnósticos em tempo real"
+
+#: templates/core/health_check.html:41
+msgid "Loading..."
+msgstr "Carregando..."
+
+#: templates/core/health_check.html:59
+msgid "System Information"
+msgstr "Informações do Sistema"
+
+#: templates/core/health_check.html:75
+msgid "Auto-refresh every 30 seconds"
+msgstr "Atualização automática a cada 30 segundos"
+
+#: templates/core/health_check.html:86
+msgid "System Healthy"
+msgstr "Sistema Saudável"
+
+#: templates/core/health_check.html:87
+msgid "System Issues Detected"
+msgstr "Problemas do Sistema Detectados"
+
+#: templates/core/health_check.html:88
+msgid "Unable to Fetch Status"
+msgstr "Não Foi Possível Obter o Status"
+
+#: templates/core/health_check.html:89
+msgid "OK"
+msgstr "OK"
+
+#: templates/core/health_check.html:90
+msgid "ERROR"
+msgstr "ERRO"
+
+#: templates/core/health_check.html:140
+msgid "Version"
+msgstr "Versão"
+
+#: templates/core/health_check.html:141
+msgid "Environment"
+msgstr "Ambiente"
+
+#: templates/core/health_check.html:144
+msgid "Status"
+msgstr "Status"
+
+#: templates/core/health_check.html:147
+msgid "Last Check"
+msgstr "Última Verificação"
+
+# Portfolio / Home Page - New strings
+#: templates/core/home.html:5
+msgid "Portfolio"
+msgstr "Portfólio"
+
+#: templates/core/home.html:39
+msgid "Bio"
+msgstr "Biografia"
+
+#: templates/core/home.html:49
+msgid "Featured Project"
+msgstr "Projeto em Destaque"
+
+#: templates/core/home.html:54
+msgid ""
+"A production-ready Django boilerplate with Docker, DRF, authentication "
+"system, and complete features. Includes REST API, JWT authentication, "
+"monitoring with Prometheus/Grafana, and bilingual documentation (EN/PT)."
+msgstr ""
+"Um boilerplate Django pronto para produção com Docker, DRF, sistema de "
+"autenticação e recursos completos. Inclui API REST, autenticação JWT, "
+"monitoramento com Prometheus/Grafana e documentação bilíngue (EN/PT)."
+
+#: templates/core/home.html:116
+msgid "Project Details"
+msgstr "Detalhes do Projeto"
+
+#: templates/core/home.html:120
+msgid "View on GitHub"
+msgstr "Ver no GitHub"
+
+#: templates/core/home.html:135
+msgid "Skills & Technologies"
+msgstr "Habilidades & Tecnologias"
+
+#: templates/core/home.html:140
+msgid "Backend"
+msgstr "Backend"
+
+#: templates/core/home.html:153
+msgid "DevOps & Tools"
+msgstr "DevOps & Ferramentas"
+
+#: templates/core/home.html:166
+msgid "Frontend"
+msgstr "Frontend"
+
+#: templates/core/home.html:177
+msgid "Best Practices"
+msgstr "Melhores Práticas"
+
+#: templates/core/home.html:210
+msgid "Metrics"
+msgstr "Métricas"
+
+#: templates/core/home.html:221
+msgid "Dashboards"
+msgstr "Painéis"
+
+#: templates/core/home.html:231
+msgid "Get in Touch"
+msgstr "Entre em Contato"
+
+#: templates/core/home.html:233
+msgid "Interested in collaborating or have questions? Feel free to reach out!"
+msgstr ""
+"Interessado em colaborar ou tem dúvidas? Sinta-se à vontade para entrar em "
+"contato!"
+
+#: templates/core/home.html:238
+msgid "View GitHub"
+msgstr "Ver GitHub"
+
+#: templates/core/home.html:243
+msgid "Send Email"
+msgstr "Enviar E-mail"
+
+#: templates/core/products/create.html:90
+msgid "Active"
+msgstr "Ativo"
+
+#: templates/core/products/create.html:103
+#: templates/core/products/edit.html:118
+#: templates/registration/profile.html:279
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/core/products/edit.html:22
+msgid "Error!"
+msgstr "Erro!"
+
+#: templates/core/products/edit.html:69
+msgid "Current stock quantity"
+msgstr "Quantidade atual em estoque"
+
+#: templates/core/products/edit.html:98
+#, fuzzy
+#| msgid "Hold Ctrl/Cmd to select multiple tags"
+msgid "Hold Ctrl (Windows) or Cmd (Mac) to select multiple tags"
+msgstr "Segure Ctrl (Windows) ou Cmd (Mac) para selecionar múltiplas tags"
+
+#: templates/core/products/edit.html:104
+#, fuzzy
+#| msgid "Project Information"
+msgid "Product Information"
+msgstr "Informações do Produto"
+
+#: templates/core/products/edit.html:106
+msgid "Created by"
+msgstr "Criado por"
+
+#: templates/core/products/edit.html:109
+msgid "Last updated by"
+msgstr "Última atualização por"
+
+#: templates/core/products/edit.html:110
+msgid "Updated at"
+msgstr "Atualizado em"
+
+#: templates/core/products/edit.html:121
+#, fuzzy
+#| msgid "Create Product"
+msgid "Update Product"
+msgstr "Atualizar Produto"
+
+#: templates/core/products/edit.html:131
+msgid "Required fields"
+msgstr "Campos obrigatórios"
+
+#: templates/core/products/list.html:15
+msgid "Browse our product catalog"
+msgstr "Navegue por nosso catálogo de produtos"
+
+#: templates/core/products/list.html:31
+msgid "Filters"
+msgstr "Filtros"
+
+#: templates/core/products/list.html:39
+msgid "All Categories"
+msgstr "Todas as Categorias"
+
+#: templates/core/products/list.html:63
+msgid "Price Range"
+msgstr "Faixa de Preço"
+
+#: templates/core/products/list.html:65
+msgid "Min"
+msgstr "Mín"
+
+#: templates/core/products/list.html:70
+msgid "Max"
+msgstr "Máx"
+
+#: templates/core/products/list.html:77
+msgid "Apply Filters"
+msgstr "Aplicar Filtros"
+
+#: templates/core/products/list.html:80
+msgid "Clear"
+msgstr "Limpar"
+
+#: templates/core/products/list.html:97
+msgid "Deleted"
+msgstr "Deletado"
+
+#: templates/core/products/list.html:141
+msgid "Edit"
+msgstr "Editar"
+
+#: templates/core/products/list.html:151
+msgid "No products found"
+msgstr "Nenhum produto encontrado"
+
+# Project Info Page
+#: templates/core/project_info.html:13
+msgid "Django Base Project"
+msgstr "Projeto Django Base"
+
+#: templates/core/project_info.html:15
+msgid "Production-Ready Django Boilerplate"
+msgstr "Boilerplate Django Pronto para Produção"
+
+#: templates/core/project_info.html:28
+msgid "Django & DRF"
+msgstr "Django & DRF"
+
+#: templates/core/project_info.html:30
+msgid "Django 5.2 with Django REST Framework for building robust APIs"
+msgstr "Django 5.2 com Django REST Framework para construir APIs robustas"
+
+#: templates/core/project_info.html:43
+msgid "Docker Ready"
+msgstr "Dockerizado"
+
+#: templates/core/project_info.html:45
+msgid ""
+"Fully containerized with Docker Compose for easy development and deployment"
+msgstr ""
+"Totalmente containerizado com Docker Compose para desenvolvimento e deploy "
+"fáceis"
+
+#: templates/core/project_info.html:58
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#: templates/core/project_info.html:60
+msgid "Production-grade database with optimized configurations"
+msgstr "Banco de dados de nível de produção com configurações otimizadas"
+
+#: templates/core/project_info.html:73
+msgid "Redis Cache"
+msgstr "Cache Redis"
+
+#: templates/core/project_info.html:75
+msgid "High-performance caching and session storage"
+msgstr "Cache de alta performance e armazenamento de sessão"
+
+#: templates/core/project_info.html:88
+msgid "JWT Authentication"
+msgstr "Autenticação JWT"
+
+#: templates/core/project_info.html:90
+msgid "Stateless authentication with refresh tokens and blacklisting"
+msgstr "Autenticação stateless com tokens de refresh e blacklisting"
+
+#: templates/core/project_info.html:105
+msgid "Prometheus metrics and Grafana dashboards for observability"
+msgstr "Métricas Prometheus e painéis Grafana para observabilidade"
+
+#: templates/core/project_info.html:115
+msgid "Architecture & Design Principles"
+msgstr "Arquitetura & Princípios de Design"
+
+#: templates/core/project_info.html:120
+msgid "Bilingual by Default"
+msgstr "Bilíngue por Padrão"
+
+#: templates/core/project_info.html:121
+msgid "All code, documentation, and templates are in English and Portuguese"
+msgstr "Todo código, documentação e templates estão em Inglês e Português"
+
+#: templates/core/project_info.html:124
+msgid "Security First"
+msgstr "Segurança em Primeiro Lugar"
+
+#: templates/core/project_info.html:125
+msgid ""
+"HSTS, secure cookies, rate limiting, JWT tokens, Bandit security analysis"
+msgstr ""
+"HSTS, cookies seguros, limitação de taxa, tokens JWT, análise de segurança "
+"Bandit"
+
+#: templates/core/project_info.html:128
+msgid "Developer Experience"
+msgstr "Experiência do Desenvolvedor"
+
+#: templates/core/project_info.html:129
+msgid "Automated setup script, pre-commit hooks, comprehensive documentation"
+msgstr ""
+"Script de configuração automatizado, hooks de pre-commit, documentação "
+"abrangente"
+
+#: templates/core/project_info.html:132
+msgid "Performance Optimized"
+msgstr "Otimizado para Performance"
+
+#: templates/core/project_info.html:133
+msgid "Redis caching, optimized queries, Gzip compression, database indexes"
+msgstr ""
+"Cache Redis, queries otimizadas, compressão Gzip, índices de banco de dados"
+
+#: templates/core/project_info.html:136
+msgid "Soft Deletion"
+msgstr "Exclusão Suave"
+
+#: templates/core/project_info.html:137
+msgid "Data never permanently deleted - maintains referential integrity"
+msgstr ""
+"Dados nunca são excluídos permanentemente - mantém integridade referencial"
+
+#: templates/core/project_info.html:146
+msgid "Technologies & Documentation"
+msgstr "Tecnologias & Documentação"
+
+#: templates/core/project_info.html:151
+#, fuzzy
+#| msgid "Backend"
+msgid "Backend & API"
+msgstr "Backend & API"
+
+#: templates/core/project_info.html:161
+#, fuzzy
+#| msgid "Authentication System"
+msgid "Authentication & Security"
+msgstr "Autenticação & Segurança"
+
+#: templates/core/project_info.html:169
+msgid "Database & Cache"
+msgstr "Banco de Dados & Cache"
+
+#: templates/core/project_info.html:177
+#, fuzzy
+#| msgid "Infrastructure"
+msgid "DevOps & Infrastructure"
+msgstr "DevOps & Infraestrutura"
+
+#: templates/core/project_info.html:195
+msgid "Code Quality"
+msgstr "Qualidade de Código"
+
+#: templates/core/project_info.html:210
+msgid "Key Components"
+msgstr "Componentes Principais"
+
+#: templates/core/project_info.html:215
+msgid "Models"
+msgstr "Modelos"
+
+#: templates/core/project_info.html:224
+msgid "API Endpoints"
+msgstr "Endpoints da API"
+
+#: templates/core/project_info.html:233
+msgid "Utilities"
+msgstr "Utilitários"
+
+#: templates/core/project_info.html:242
+msgid "Infrastructure"
+msgstr "Infraestrutura"
+
+#: templates/core/project_info.html:257
+msgid "Getting Started"
+msgstr "Começando"
+
+#: templates/core/project_info.html:260
+msgid "Clone and run the project in minutes:"
+msgstr "Clone e execute o projeto em minutos:"
+
+#: templates/core/project_info.html:265
+msgid "Automated setup"
+msgstr "Configuração automatizada"
+
+#: templates/core/project_info.html:266
+msgid "Access"
+msgstr "Acesso"
+
+#: templates/core/project_info.html:271
+msgid ""
+"The setup script handles everything: Docker setup, migrations, superuser "
+"creation, and database seeding."
+msgstr ""
+"O script de configuração cuida de tudo: configuração Docker, migrações, "
+"criação de superusuário e seed do banco de dados."
+
+#: templates/core/project_info.html:279
+msgid "Repository & License"
+msgstr "Repositório & Licença"
+
+#: templates/core/project_info.html:320
+msgid "Contributions are welcome! See CONTRIBUTING.md for guidelines:"
+msgstr "Contribuições são bem-vindas! Veja CONTRIBUTING.md para diretrizes:"
+
+#: templates/core/project_info.html:325
+msgid "Make your changes with tests"
+msgstr "Faça suas alterações com testes"
+
+#: templates/core/project_info.html:326
+msgid "Run linting and formatting"
+msgstr "Execute linting e formatação"
+
+#: templates/core/project_info.html:327
+msgid "Submit a Pull Request"
+msgstr "Envie um Pull Request"
+
+#: templates/core/project_info.html:339
+msgid "Back to Portfolio"
+msgstr "Voltar ao Portfólio"
+
+#: templates/registration/login.html:17
+msgid "Access your account"
+msgstr "Acesse sua conta"
+
+#: templates/registration/login.html:48
+msgid "Enter your username or email address"
+msgstr "Digite seu nome de usuário ou endereço de e-mail"
+
+#: templates/registration/login.html:69
+msgid "Remember me for 2 weeks"
+msgstr "Lembre-se de mim por 2 semanas"
+
+#: templates/registration/login.html:84
+msgid "Forgot your password?"
+msgstr "Esqueceu sua senha?"
+
+#: templates/registration/login.html:91
+msgid "Don't have an account?"
+msgstr "Não tem uma conta?"
+
+#: templates/registration/login.html:93
+msgid "Register here"
+msgstr "Cadastre-se aqui"
+
+#: templates/registration/login.html:103
+msgid "Your connection is secure. We never store your password in plain text."
+msgstr "Sua conexão é segura. Nunca armazenamos sua senha em texto simples."
+
+#: templates/registration/login.html:110
+msgid "API Authentication"
+msgstr "Autenticação da API"
+
+#: templates/registration/login.html:113
+msgid "For API access, use JWT tokens. See documentation:"
+msgstr "Para acesso à API, use tokens JWT. Veja a documentação:"
+
+#: templates/registration/profile.html:49
+msgid "Member Since"
+msgstr "Membro Desde"
+
+#: templates/registration/profile.html:109
+msgid "Edit Profile"
+msgstr "Editar Perfil"
+
+# Profile page - additional strings
+#: templates/registration/profile.html:119
+msgid "Basic Information"
+msgstr "Informações Básicas"
+
+#: templates/registration/profile.html:153
+#: templates/registration/register.html:68
+msgid "Email Address"
+msgstr "Endereço de E-mail"
+
+#: templates/registration/profile.html:168
+msgid "Profile Details"
+msgstr "Detalhes do Perfil"
+
+#: templates/registration/profile.html:182
+msgid "Tell us about yourself"
+msgstr "Conte-nos sobre você"
+
+#: templates/registration/profile.html:188
+msgid "Profile Picture"
+msgstr "Foto de Perfil"
+
+#: templates/registration/profile.html:198
+msgid "Current"
+msgstr "Atual"
+
+#: templates/registration/profile.html:198
+msgid "View current avatar"
+msgstr "Ver avatar atual"
+
+#: templates/registration/profile.html:207
+msgid "Phone Number"
+msgstr "Número de Telefone"
+
+#: templates/registration/profile.html:220
+msgid "Birth Date"
+msgstr "Data de Nascimento"
+
+#: templates/registration/profile.html:276
+msgid "Save Changes"
+msgstr "Salvar Alterações"
+
+#: templates/registration/register.html:13
+#: templates/registration/register.html:122
+msgid "Create Account"
+msgstr "Criar Conta"
+
+#: templates/registration/register.html:14
+msgid "Join us today!"
+msgstr "Junte-se a nós!"
+
+#: templates/registration/register.html:61
+msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr ""
+"Obrigatório. 150 caracteres ou menos. Apenas letras, dígitos e @/./+/-/_."
+
+#: templates/registration/register.html:74
+msgid "We'll never share your email with anyone else."
+msgstr "Nunca compartilharemos seu e-mail com terceiros."
+
+#: templates/registration/register.html:88
+msgid "Your password can't be too similar to your other personal information."
+msgstr ""
+"Sua senha não pode ser muito similar às suas outras informações pessoais."
+
+#: templates/registration/register.html:89
+msgid "Your password must contain at least 8 characters."
+msgstr "Sua senha deve conter pelo menos 8 caracteres."
+
+#: templates/registration/register.html:90
+msgid "Your password can't be a commonly used password."
+msgstr "Sua senha não pode ser uma senha comumente usada."
+
+#: templates/registration/register.html:91
+msgid "Your password can't be entirely numeric."
+msgstr "Sua senha não pode ser inteiramente numérica."
+
+#: templates/registration/register.html:106
+msgid "Enter the same password as before, for verification."
+msgstr "Digite a mesma senha de antes, para verificação."
+
+#: templates/registration/register.html:114
+msgid "I agree to the"
+msgstr "Eu concordo com os"
+
+#: templates/registration/register.html:129
+msgid "Already have an account?"
+msgstr "Já tem uma conta?"
+
+#: templates/registration/register.html:130
+msgid "Login here"
+msgstr "Faça login"
+
+#~ msgid "Remember me"
+#~ msgstr "Lembre-se de mim"
+
+#~ msgid "https://example.com"
+#~ msgstr "https://exemplo.com.br"
+
+# Admin
+#~ msgid "User Info"
+#~ msgstr "Informações do Usuário"
+
+#~ msgid "Contact"
+#~ msgstr "Contato"
+
+#~ msgid "Location"
+#~ msgstr "Local"
+
+#~ msgid "Timestamps"
+#~ msgstr "Datas"
+
+# Home page - Features section
+#~ msgid "Get Started"
+#~ msgstr "Registre-se"
+
+#~ msgid ""
+#~ "Latest Django 5.2 with Django REST Framework for building robust APIs"
+#~ msgstr "Django 5.2 com Django REST Framework para construir APIs robustas"
+
+#~ msgid "Bootstrap 5.3 + HTMX for responsive, dynamic interfaces"
+#~ msgstr "Bootstrap 5.3 + HTMX para interfaces responsivas e dinâmicas"
+
+#~ msgid "Complete user authentication system with profiles"
+#~ msgstr "Sistema completo de autenticação de usuário com perfis"
+
+# Home page - Dashboard section
+#~ msgid "Your Dashboard"
+#~ msgstr "Seu Dashboard"
+
+# Home page - Quick Links section
+#~ msgid "Quick Links"
+#~ msgstr "Links Úteis"
+
+#~ msgid "Explore the API and documentation"
+#~ msgstr "Explore a API e a documentação"
+
+#~ msgid "Alternative API docs"
+#~ msgstr "Documentação alternativa da API"
+
+#~ msgid "System status"
+#~ msgstr "Status do sistema"
+
+#~ msgid "Features & Technologies"
+#~ msgstr "Recursos & Tecnologias"
+
+#~ msgid "Everything you need for a modern Django application"
+#~ msgstr "Tudo que você precisa para uma aplicação Django moderna"
+
+#~ msgid "Swagger UI"
+#~ msgstr "Swagger UI"
+
+#~ msgid "ReDoc"
+#~ msgstr "ReDoc"
+
+#~ msgid "Modern Frontend"
+#~ msgstr "Frontend Moderno"
+
+#~ msgid "Joined"
+#~ msgstr "Entrou em"
+
+#~ msgid "Interactive demonstration of product management features"
+#~ msgstr "Demonstração interativa dos recursos de gerenciamento de produtos"
+
+#~ msgid "Inactive"
+#~ msgstr "Inativo"
+
+#~ msgid "Examples"
+#~ msgstr "Produtos"

@@ -32,7 +32,7 @@ jobs:
 
       # Provide a dummy secret key for the Django application to initialize during tests
       # Fornece uma chave secreta falsa para a aplicação Django inicializar durante os testes
-      SECRET_KEY: "a-dummy-secret-key-for-ci-tests-must-be-at-least-50-chars-long-for-security"
+      SECRET_KEY: "django-ci-test-key-1234567890-abcdefghijklmnopqrstuvwxyz-0987654321"
 
       DEBUG: "False"
       ALLOWED_HOSTS: "localhost,127.0.0.1"
@@ -58,10 +58,10 @@ jobs:
 
       # Step 2: Sets up the Python environment
       # Passo 2: Configura o ambiente Python
-      - name: Configure Python 3.14 / Configurar Python 3.14
+      - name: Configure Python 3.13 / Configurar Python 3.13
         uses: actions/setup-python@v5
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       # Step 3: Sets up uv
       # Passo 3: Configura o uv
@@ -72,29 +72,47 @@ jobs:
       # uv will use caching automatically to speed up future builds
       # Passo 4: Instala as dependências de desenvolvimento
       # O uv usará o cache automaticamente para acelerar builds futuros
-      - name: InstallInstalar dependências
-        run: uv venv && source .venv/bin/activate && uv pip install -e .[dev]
+      - name: Install dependencies / Instalar dependências
+        run: |
+          uv venv --python 3.13
+          source .venv/bin/activate
+          uv pip install -e .[dev]
 
       # Step 5: Run Ruff to check formatting and linting
       # The --check flag does not modify files, it just fails if they are not formatted
       # Passo 5: Rodar o Ruff para verificar a formatação e o linting
       # A flag --check não altera os arquivos, apenas falha se não estiverem formatados
       - name: Verify formatting with Ruff / Verificar formatação com Ruff
-        run: uv run ruff format --check .
+        run: .venv/bin/ruff format --check . --exclude .claude
       - name: Verify linting with Ruff / Verificar linting com Ruff
-        run: uv run ruff check .
+        run: .venv/bin/ruff check . --exclude .claude
 
       # Step 6: Run tests with coverage
-      # For CI, tests run against an in-memory SQLite database, which is fast
-      # and requires no external database service. Django does this by default.
+      # Tests run against PostgreSQL service configured above
       # Passo 6: Rodar os testes com coverage
-      # Para CI, os testes rodam contra um banco de dados SQLite em memória, que é
-      # rápido e não requer um serviço de banco de dados externo. O Django faz isso por padrão.
-      # - name: Run tests and generate coverage / Rodar testes e gerar cobertura
-      #   run: uv run coverage run manage.py test src
-      # Step 7: Check if test coverage meets the target
-      # The pipeline will fail if the total coverage is below 80%
-      # Passo 7: Verificar se a cobertura de testes atingiu a meta
-      # O pipeline falhará se a cobertura total for menor que 80%
-      # - name: Verify test coverage / Verificar cobertura de testes
-      #   run: uv run coverage report -m
+      # Testes rodam contra o serviço PostgreSQL configurado acima
+      - name: Run tests and generate coverage / Rodar testes e gerar cobertura
+        run: |
+          export PYTHONPATH="${{ github.workspace }}/src"
+          .venv/bin/coverage run --source='src' manage.py test core.tests --verbosity=2
+
+      # Step 7: Generate coverage report
+      # Shows which lines are covered and the overall percentage
+      # Passo 7: Gerar relatório de cobertura
+      # Mostra quais linhas estão cobertas e a porcentagem geral
+      - name: Generate coverage report / Gerar relatório de cobertura
+        run: |
+          export PYTHONPATH="${{ github.workspace }}/src"
+          .venv/bin/coverage report -m
+
+      # Step 8: Upload coverage to artifacts (optional)
+      # Passo 8: Fazer upload da cobertura para artifacts (opcional)
+      - name: Upload coverage data / Upload dados de cobertura
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: |
+            .coverage
+            htmlcov/
+          retention-days: 7

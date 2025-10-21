@@ -53,6 +53,7 @@ urlpatterns = [
     path("profile/", views.profile_view, name="profile"),
     # Product Management / Gerenciamento de Produtos
     path("products/create/", views.product_create_view, name="product_create"),
+    path("products/<int:pk>/edit/", views.product_edit_view, name="product_edit"),
     # API Endpoints / Endpoints da API
     path("api/hello/", views.hello_api, name="hello-api"),
     path("api/info/", views.api_info, name="api-info"),

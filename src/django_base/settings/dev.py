@@ -49,19 +49,16 @@ ALLOWED_HOSTS = ["*"]
 
 # Development-Specific Apps / Apps Específicas de Desenvolvimento
 
+# Django Debug Toolbar is enabled by default in development
+# Django Debug Toolbar está habilitado por padrão em desenvolvimento
 INSTALLED_APPS += [  # noqa: F405
-    # Django Debug Toolbar for performance profiling
-    # Django Debug Toolbar para profiling de performance
-    # "debug_toolbar",  # Uncomment if you install it / Descomente se instalar
+    "debug_toolbar",
 ]
 
 # Development Middleware / Middleware de Desenvolvimento
-
-# MIDDLEWARE = [
-#     "debug_toolbar.middleware.DebugToolbarMiddleware",
-# ] + MIDDLEWARE
-# Uncomment above if using debug toolbar
-# Descomente acima se usar debug toolbar
+MIDDLEWARE = [  # noqa: RUF005
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+] + MIDDLEWARE  # noqa: F405
 
 # Debug Toolbar Configuration
 # Configuração do Debug Toolbar
@@ -238,20 +235,28 @@ DEBUG_PROPAGATE_EXCEPTIONS = True
 # Imprime queries SQL (útil para debugging)
 # LOGGING["loggers"]["django.db.backends"]["level"] = "DEBUG"
 
-# Environment Variables Validation (Development)
-# Validação de Variáveis de Ambiente (Desenvolvimento)
-
-# Light validation for development (warnings only, no critical errors)
-# Validação leve para desenvolvimento (apenas avisos, sem erros críticos)
-from django_base.settings.env_validator import validate_environment  # noqa: E402
-
-validate_environment(
-    environment="development",
-    debug=DEBUG,
-    secret_key=SECRET_KEY,  # noqa: F405
-    allowed_hosts=ALLOWED_HOSTS,
-    database_config=DATABASES["default"],  # noqa: F405
-    secure_ssl_redirect=SECURE_SSL_REDIRECT,
-    session_cookie_secure=SESSION_COOKIE_SECURE,
-    csrf_cookie_secure=CSRF_COOKIE_SECURE,
-)
+# Environment Variables Validation (Development) - OPTIONAL
+# Validação de Variáveis de Ambiente (Desenvolvimento) - OPCIONAL
+#
+# To enable environment validation, set ENABLE_ENV_VALIDATION=true in your .env file
+# Para habilitar validação de ambiente, defina ENABLE_ENV_VALIDATION=true no seu .env
+#
+# Uncomment the code below to enable validation:
+# Descomente o código abaixo para habilitar a validação:
+#
+# import os
+# import sys
+#
+# if "test" not in sys.argv and os.getenv("ENABLE_ENV_VALIDATION", "false").lower() == "true":
+#     from django_base.settings.env_validator import validate_environment
+#
+#     validate_environment(
+#         environment="development",
+#         debug=DEBUG,
+#         secret_key=SECRET_KEY,
+#         allowed_hosts=ALLOWED_HOSTS,
+#         database_config=DATABASES["default"],
+#         secure_ssl_redirect=SECURE_SSL_REDIRECT,
+#         session_cookie_secure=SESSION_COOKIE_SECURE,
+#         csrf_cookie_secure=CSRF_COOKIE_SECURE,
+#     )
