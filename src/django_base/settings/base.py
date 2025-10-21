@@ -205,11 +205,11 @@ LOCALE_PATHS = [
 # Static Files (CSS, JavaScript, Images)
 # Arquivos Estáticos (CSS, JavaScript, Imagens)
 
-STATIC_URL = "staticfiles/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = []
 
-MEDIA_URL = "mediafiles/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 # Default Primary Key Field Type

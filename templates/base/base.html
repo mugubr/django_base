@@ -9,12 +9,20 @@
   Bootstrap 5.3 com cor primária verde personalizada e suporte HTMX.
 {% endcomment %}
 <!DOCTYPE html>
-<html lang="{% firstof LANGUAGE_CODE 'en' %}" class="h-100">
+<html lang="{% firstof LANGUAGE_CODE 'en' %}" class="h-100" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{% block meta_description %}Django Base - Modern web application{% endblock %}">
     <title>{% block title %}Django Base{% endblock %}</title>
+
+    {# Dark Mode - Load theme before page renders / Carregar tema antes da página renderizar #}
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+        })();
+    </script>
 
     {# Bootstrap 5.3 CSS / CSS Bootstrap 5.3 #}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -23,12 +31,30 @@
     {# HTMX for dynamic interactions / HTMX para interações dinâmicas #}
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
-    {# Custom CSS - Green primary color / CSS customizado - Cor primária verde #}
+    {# Custom CSS - Green primary color & Dark Mode / CSS customizado - Cor primária verde & Dark Mode #}
     <style>
+        /* Custom green primary color / Cor primária verde customizada */
         :root {
             --bs-primary: #198754;
             --bs-primary-rgb: 25, 135, 84;
+            --bs-success: #198754;
+            --bs-success-rgb: 25, 135, 84;
         }
+
+        /* Smooth transitions for theme change / Transições suaves para mudança de tema */
+        html {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .card, .modal-content, .dropdown-menu, footer {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Primary color overrides / Sobrescrições de cor primária */
         .bg-primary {
             background-color: #198754 !important;
         }
@@ -43,18 +69,79 @@
         .text-primary {
             color: #198754 !important;
         }
+
+        /* Navbar styles / Estilos da navbar */
         .navbar-dark .navbar-brand,
         .navbar-dark .navbar-nav .nav-link {
             color: rgba(255, 255, 255, 0.95);
         }
+
+        /* Hover effects / Efeitos de hover */
         .nav-link:hover,
         .dropdown-item:hover,
         .card:hover {
             transform: translateY(-2px);
             transition: transform 0.2s ease;
         }
+
         a.text-decoration-none:hover .card {
             box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+        }
+
+        /* Dark mode specific styles / Estilos específicos dark mode */
+        [data-bs-theme="dark"] {
+            --bs-body-bg: #212529;
+            --bs-body-color: #dee2e6;
+        }
+
+        [data-bs-theme="dark"] .bg-light {
+            background-color: #343a40 !important;
+        }
+
+        [data-bs-theme="dark"] .text-muted {
+            color: #adb5bd !important;
+        }
+
+        [data-bs-theme="dark"] .card {
+            background-color: #2b3035;
+            border-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .modal-content {
+            background-color: #2b3035;
+            border-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .dropdown-menu {
+            background-color: #2b3035;
+            border-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .dropdown-item:hover {
+            background-color: #343a40;
+        }
+
+        /* Theme toggle button / Botão de troca de tema */
+        .theme-toggle {
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0.5rem;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover .theme-icon {
+            transform: rotate(20deg);
         }
     </style>
 
@@ -82,13 +169,11 @@
                             <i class="bi bi-info-circle"></i> {% trans "Project" %}
                         </a>
                     </li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link {% is_active_url 'products' %}" href="{% url 'products' %}">
-                                <i class="bi bi-box-seam"></i> {% trans "Products" %}
-                            </a>
-                        </li>
-                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link {% is_active_url 'products' %}" href="{% url 'products' %}">
+                            <i class="bi bi-box-seam"></i> {% trans "Products" %}
+                        </a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-speedometer2"></i> {% trans "Monitoring" %}
@@ -101,6 +186,41 @@
                             <li><a class="dropdown-item" href="/api/docs/" target="_blank"><i class="bi bi-book text-success"></i> {% trans "API Docs" %} (Swagger)</a></li>
                             <li><a class="dropdown-item" href="/api/redoc/" target="_blank"><i class="bi bi-file-text text-info"></i> {% trans "API Docs" %} (ReDoc)</a></li>
                         </ul>
+                    </li>
+                    {# Language Selector / Seletor de Idioma #}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-label="Select language">
+                            <i class="bi bi-translate"></i>
+                            {% if LANGUAGE_CODE == 'pt-br' %}PT{% else %}EN{% endif %}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post" class="px-3 py-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="en">
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-flag"></i> English
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="{% url 'set_language' %}" method="post" class="px-3 py-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="language" value="pt-br">
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-flag-fill"></i> Português (Brasil)
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    {# Dark Mode Toggle / Toggle Dark Mode #}
+                    <li class="nav-item">
+                        <button class="nav-link theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                            <i class="bi bi-sun-fill theme-icon" id="themeIcon"></i>
+                        </button>
                     </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
@@ -217,6 +337,36 @@
                 }, 5000);
             });
         });
+
+        // Dark Mode Toggle / Toggle Dark Mode
+        (function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const html = document.documentElement;
+
+            // Update icon based on current theme / Atualizar ícone baseado no tema atual
+            function updateIcon(theme) {
+                if (theme === 'dark') {
+                    themeIcon.className = 'bi bi-moon-stars-fill theme-icon';
+                } else {
+                    themeIcon.className = 'bi bi-sun-fill theme-icon';
+                }
+            }
+
+            // Set initial icon / Definir ícone inicial
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            updateIcon(currentTheme);
+
+            // Toggle theme on button click / Alternar tema ao clicar no botão
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                html.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateIcon(newTheme);
+            });
+        })();
     </script>
 
     {% block extrajs %}{% endblock %}

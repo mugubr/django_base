@@ -49,19 +49,16 @@ ALLOWED_HOSTS = ["*"]
 
 # Development-Specific Apps / Apps Específicas de Desenvolvimento
 
-INSTALLED_APPS += [  # noqa: F405
-    # Django Debug Toolbar for performance profiling
-    # Django Debug Toolbar para profiling de performance
-    # "debug_toolbar",  # Uncomment if you install it / Descomente se instalar
-]
-
-# Development Middleware / Middleware de Desenvolvimento
-
+# Uncomment below to enable Django Debug Toolbar (requires: uv pip install django-debug-toolbar)
+# Descomente abaixo para habilitar Django Debug Toolbar (requer: uv pip install django-debug-toolbar)
+# INSTALLED_APPS += [
+#     "debug_toolbar",
+# ]
+#
+# # Development Middleware / Middleware de Desenvolvimento
 # MIDDLEWARE = [
 #     "debug_toolbar.middleware.DebugToolbarMiddleware",
 # ] + MIDDLEWARE
-# Uncomment above if using debug toolbar
-# Descomente acima se usar debug toolbar
 
 # Debug Toolbar Configuration
 # Configuração do Debug Toolbar

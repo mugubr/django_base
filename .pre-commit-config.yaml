@@ -20,12 +20,14 @@ repos:
         args: [--fix, --exit-non-zero-on-fix, --ignore=RUF012]
         name: Ruff Linter (Python)
         description: Run Ruff linter with auto-fix
+        exclude: ^\.claude/
 
       # Ruff formatter (replaces Black)
       # Formatador Ruff (substitui Black)
       - id: ruff-format
         name: Ruff Format (Python)
         description: Format Python code with Ruff
+        exclude: ^\.claude/
 
   # General Pre-commit Hooks / Hooks Gerais do Pre-commit
   # Quality of life improvements and common fixes
@@ -38,22 +40,26 @@ repos:
         name: Trim Trailing Whitespace
         description: Remove trailing whitespace from files
         args: [--markdown-linebreak-ext=md]
+        exclude: ^\.claude/
 
       # Ensure files end with newline / Garante que arquivos terminem com nova linha
       - id: end-of-file-fixer
         name: Fix End of Files
         description: Ensure files end with a newline
+        exclude: ^\.claude/
 
       # Check YAML syntax / Verifica sintaxe YAML
       - id: check-yaml
         name: Check YAML
         description: Validate YAML file syntax
         args: [--allow-multiple-documents]
+        exclude: ^\.claude/
 
       # Check JSON syntax / Verifica sintaxe JSON
       - id: check-json
         name: Check JSON
         description: Validate JSON file syntax
+        exclude: ^\.claude/
 
       # Check TOML syntax / Verifica sintaxe TOML
       - id: check-toml
@@ -107,6 +113,7 @@ repos:
         name: Fix Mixed Line Endings
         description: Ensure consistent line endings
         args: ["--fix=lf"]
+        exclude: ^\.claude/
 
   # Security Checks with Bandit / Verificações de Segurança com Bandit
   # Scans Python code for common security issues
@@ -177,6 +184,7 @@ repos:
         description: Format YAML, JSON, and Markdown files
         types_or: [yaml, json, markdown]
         args: ["--write", "--prose-wrap", "always"]
+        exclude: ^\.claude/
 # Configuration for specific hooks / Configuração para hooks específicos
 # Add this to pyproject.toml:
 # Adicione isso ao pyproject.toml:

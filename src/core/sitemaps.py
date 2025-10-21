@@ -50,7 +50,7 @@ class ProductSitemap(Sitemap):
         Return all active products.
         Retorna todos os produtos ativos.
         """
-        return Product.objects.filter(is_active=True)
+        return Product.objects.filter(is_deleted=False)
 
     def lastmod(self, obj):
         """

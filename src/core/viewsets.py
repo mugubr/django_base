@@ -225,7 +225,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     filterset_fields = {
         "name": ["exact", "icontains"],  # name=value or name__icontains=value
         "price": ["exact", "gte", "lte"],  # price__gte=10&price__lte=100
-        "is_active": ["exact"],  # is_active=true
+        "is_deleted": ["exact"],  # is_deleted=true
         "created_at": ["exact", "gte", "lte"],  # created_at__gte=2024-01-01
     }
 
@@ -240,7 +240,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         "price",
         "created_at",
         "updated_at",
-        "is_active",
+        "is_deleted",
     ]
 
     # Default ordering if not specified in query params
@@ -335,6 +335,14 @@ class ProductViewSet(viewsets.ModelViewSet):
         # Inicia com queryset base
         queryset = super().get_queryset()
 
+        # Performance optimization: select_related() for foreign keys
+        # Otimização de performance: select_related() para chaves estrangeiras
+        queryset = queryset.select_related("category", "created_by", "updated_by")
+
+        # Performance optimization: prefetch_related() for many-to-many
+        # Otimização de performance: prefetch_related() para muitos-para-muitos
+        queryset = queryset.prefetch_related("tags")
+
         # Custom filter: price range using min_price and max_price params
         # Filtro customizado: faixa de preço usando parâmetros
         # min_price e max_price
@@ -357,17 +365,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         # Filtro customizado: apenas produtos ativos se especificado
         active_only = self.request.query_params.get("active_only")
         if active_only and active_only.lower() == "true":
-            queryset = queryset.filter(is_active=True)
-
-        # Performance optimization: select_related() for foreign keys
-        # Otimização de performance: select_related() para chaves estrangeiras
-        # (Not applicable here, but would be used if Product had ForeignKeys)
-        # queryset = queryset.select_related('category', 'manufacturer')
-
-        # Performance optimization: prefetch_related() for many-to-many
-        # Otimização de performance: prefetch_related() para muitos-para-muitos
-        # (Not applicable here, but would be used if Product had M2M fields)
-        # queryset = queryset.prefetch_related('tags', 'images')
+            queryset = queryset.filter(is_deleted=False)
 
         return queryset
 
@@ -431,7 +429,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         # Filter products
         # Filtra produtos
         recent_products = self.get_queryset().filter(
-            created_at__gte=cutoff_date, is_active=True
+            created_at__gte=cutoff_date, is_deleted=False
         )
 
         # Paginate results
@@ -484,7 +482,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         # Check if already inactive
         # Verifica se já está inativo
-        if not product.is_active:
+        if not not product.is_deleted:
             return Response(
                 {"message": "Product is already inactive. / Produto já está inativo."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -544,7 +542,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
         # Check if already active
         # Verifica se já está ativo
-        if product.is_active:
+        if not product.is_deleted:
             return Response(
                 {"message": "Product is already active. / Produto já está ativo."},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -693,9 +691,9 @@ class ProductViewSet(viewsets.ModelViewSet):
         Args:
             instance: The product instance to delete
         """
-        # Soft delete: mark as inactive instead of deleting from DB
-        # Soft delete: marca como inativo ao invés de deletar do BD
-        instance.deactivate()
+        # Soft delete: mark as deleted instead of deleting from DB
+        # Soft delete: marca como deletado ao invés de deletar do BD
+        instance.soft_delete()
 
 
 # Category ViewSet
@@ -747,7 +745,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     filterset_fields = {
         "name": ["exact", "icontains"],
-        "is_active": ["exact"],
+        "is_deleted": ["exact"],
         "parent": ["exact", "isnull"],  # parent__isnull=true for root categories
     }
 
@@ -779,8 +777,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
             QuerySet: Optimized category queryset
         """
         queryset = super().get_queryset()
-        queryset = queryset.select_related("parent")
-        queryset = queryset.prefetch_related("children", "products")
+        queryset = queryset.select_related("parent", "created_by", "updated_by")
+        queryset = queryset.prefetch_related("children")
         return queryset
 
     @action(detail=False, methods=["get"], url_path="tree")
@@ -814,7 +812,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
         # Get only root categories (no parent)
         # Obtém apenas categorias raiz (sem pai)
         root_categories = self.get_queryset().filter(
-            parent__isnull=True, is_active=True
+            parent__isnull=True, is_deleted=False
         )
 
         def build_tree(category):
@@ -829,7 +827,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
                 dict: Nested category data
             """
             data = CategorySerializer(category).data
-            children = category.children.filter(is_active=True)
+            children = category.children.filter(is_deleted=False)
             if children.exists():
                 data["children"] = [build_tree(child) for child in children]
             return data
@@ -904,17 +902,17 @@ class TagViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Optimize queryset with prefetch_related for products.
-        Prevents N+1 queries on many-to-many relationships.
+        Optimize queryset with select_related for created_by.
+        Prevents N+1 queries on foreign key relationship.
 
-        Otimiza queryset com prefetch_related para products.
-        Previne queries N+1 em relacionamentos muitos-para-muitos.
+        Otimiza queryset com select_related para created_by.
+        Previne queries N+1 em relacionamento de chave estrangeira.
 
         Returns / Retorna:
             QuerySet: Optimized tag queryset
         """
         queryset = super().get_queryset()
-        queryset = queryset.prefetch_related("products")
+        queryset = queryset.select_related("created_by")
         return queryset
 
     @action(detail=False, methods=["get"], url_path="popular")
